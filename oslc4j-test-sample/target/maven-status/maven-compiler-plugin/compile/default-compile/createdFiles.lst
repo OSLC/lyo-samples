@@ -1,0 +1,10 @@
+org/eclipse/lyo/oslc4j/test/servlet/ServiceProviderFactory.class
+org/eclipse/lyo/oslc4j/test/servlet/ServiceProviderSingleton.class
+org/eclipse/lyo/oslc4j/test/servlet/ServletListener.class
+org/eclipse/lyo/oslc4j/test/resources/TestResource.class
+org/eclipse/lyo/oslc4j/test/resources/TestCollectionResource.class
+org/eclipse/lyo/oslc4j/test/resources/TestMessageBodyWriterErrorResource.class
+org/eclipse/lyo/oslc4j/test/resources/TestErrorResource.class
+org/eclipse/lyo/oslc4j/test/servlet/ServletListener$RegistrationTask.class
+org/eclipse/lyo/oslc4j/test/Persistence.class
+org/eclipse/lyo/oslc4j/test/resources/Oslc4JTestApplication.class

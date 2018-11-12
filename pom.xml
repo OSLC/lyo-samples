@@ -1,0 +1,37 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.eclipse.lyo.oslc4j.core</groupId>
+	<artifactId>oslc4j-test-build</artifactId>
+	<version>2.4.0.M1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+    <name>OSLC4J Build (Test Projects)</name>
+    <scm>
+        <url>http://git.eclipse.org/c/lyo/org.eclipse.lyo.core.git</url>
+    </scm>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+	</properties>
+	<modules>
+		<module>oslc4j-stockquote-sample</module>
+		<module>oslc4j-stockquote-common</module>
+		<module>oslc4j-stockquote-test</module>
+		<module>oslc4j-test-sample</module>
+		<module>oslc4j-test-common</module>
+		<module>oslc4j-test-test</module>
+	</modules>
+	<repositories>
+		<repository>
+		<id>lyo-releases</id>
+		<name>lyo-releases repository</name>
+		<url>https://repo.eclipse.org/content/repositories/lyo-releases/</url>
+		</repository>
+		<repository>
+		<id>lyo-snapshots</id>
+		<name>lyo-snapshots repository</name>
+		<url>https://repo.eclipse.org/content/repositories/lyo-snapshots/</url>
+		</repository>
+	</repositories>
+</project>
