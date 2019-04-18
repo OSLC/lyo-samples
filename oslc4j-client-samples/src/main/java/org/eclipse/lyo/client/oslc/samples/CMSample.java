@@ -22,20 +22,28 @@ import java.io.InputStreamReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.core.Response;
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.apache.http.HttpStatus;
-import org.apache.wink.client.ClientResponse;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.ssl.SSLContextBuilder;
+import org.eclipse.lyo.client.oslc.JEEFormAuthenticator;
 import org.eclipse.lyo.client.oslc.OSLCConstants;
 import org.eclipse.lyo.client.oslc.OslcClient;
 import org.eclipse.lyo.client.oslc.resources.ChangeRequest;
 import org.eclipse.lyo.client.oslc.resources.OslcQuery;
 import org.eclipse.lyo.client.oslc.resources.OslcQueryParameters;
 import org.eclipse.lyo.client.oslc.resources.OslcQueryResult;
-
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.ParseException;
+import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 
 /**
  * Samples of accessing a generic ChangeManagement provider and running OSLC operations.
@@ -50,12 +58,12 @@ import org.apache.commons.cli.ParseException;
  * - update an existing ChangeRequest
  *
  */
-public class GenericCMSample {
+public class CMSample {
 
-	private static final Logger logger = Logger.getLogger(GenericCMSample.class.getName());
+	private static final Logger logger = Logger.getLogger(CMSample.class.getName());
 
 	/**
-	 * Access a CM service provider and perform some OSLC actions
+	 * Access a CM server and perform some OSLC actions.
 	 * @param args
 	 * @throws ParseException
 	 */
@@ -63,8 +71,10 @@ public class GenericCMSample {
 
 		Options options=new Options();
 
-		options.addOption("url", true, "url");  //the OSLC catalog URL
-		options.addOption("providerTitle", true, "Service Provider title");
+		options.addOption("catalogURL", true, "OSLC ServiceProviderCatalog URL");
+		options.addOption("providerTitle", true, "Service Provider title in the ServiceProviderCatalog");
+		options.addOption("user", true, "User ID");
+		options.addOption("password", true, "User's password");
 
 		CommandLineParser cliParser = new GnuParser();
 
@@ -72,30 +82,53 @@ public class GenericCMSample {
 		CommandLine cmd = cliParser.parse(options, args);
 
 		if (!validateOptions(cmd)) {
-			logger.severe("Syntax:  java <class_name> -url https://<server>:port/<context>/<catalog_location> -providerTitle \"<provider title>\"");
-			logger.severe("Example: java GenericCMSample -url https://exmple.com:8080/OSLC4JRegistry/catalog/1 -providerTitle \"OSLC Lyo Change Management Service Provider\"");
+			logger.severe("Syntax:  java <class_name> -catalogURL https://<server>:port/<context>/<catalog_location> -providerTitle \"<provider title>\" -user userID -password password");
+			logger.severe("Example: java GenericCMSample -catalogURL https://exmple.com:8080/OSLC4JRegistry/catalog/1 -providerTitle \"OSLC Lyo Change Management Service Provider\" -user fred -password pasw0rd");
 			return;
 		}
 
-		String catalogUrl = cmd.getOptionValue("url");
+		// for jazz.net apps, this is the baseUri for the server, e.g., https://ce4iot.rtp.raleigh.ibm.com:9443/ccm
+		String catalogUrl = cmd.getOptionValue("catalogURL");
 		String providerTitle = cmd.getOptionValue("providerTitle");
+		String userId = cmd.getOptionValue("user");
+		String password = cmd.getOptionValue("password");
 
 		try {
 
-			//STEP 1: Create a new generic OslcClient
-			OslcClient client = new OslcClient();
+			// STEP 0: Configure the ClientBuilder as needed for your client application
+			
+			// Use HttpClient instead of the default HttpUrlConnection
+			ClientConfig clientConfig = new ClientConfig().connectorProvider(new ApacheConnectorProvider());
+			ClientBuilder clientBuilder = ClientBuilder.newBuilder();
+			clientBuilder.withConfig(clientConfig);
+			
+			// Setup SSL support to ignore self-assigned SSL certificates - for testing only!!
+		    SSLContextBuilder sslContextBuilder = new SSLContextBuilder();
+		    sslContextBuilder.loadTrustMaterial(TrustSelfSignedStrategy.INSTANCE);
+		    clientBuilder.sslContext(sslContextBuilder.build());
+		    clientBuilder.hostnameVerifier(NoopHostnameVerifier.INSTANCE);
+		    
+		    // Use preemptive Basic authentication
+		    HttpAuthenticationFeature authFeature = HttpAuthenticationFeature.basic(userId, password);
+		    clientBuilder.register(authFeature);
+		    
+		    //STEP 1: Create a new OslcClient
+			OslcClient client = new OslcClient(clientBuilder);
 
 			//STEP 2: Find the OSLC Service Provider for the service provider we want to work with
 			String serviceProviderUrl = client.lookupServiceProviderUrl(catalogUrl, providerTitle);
+			System.out.println("serviceProviderUrl: "+serviceProviderUrl);
 
 			//STEP 3: Get the Query Capabilities and Creation Factory URLs so that we can run some OSLC queries
 			String queryCapability = client.lookupQueryCapability(serviceProviderUrl,
 																  OSLCConstants.OSLC_CM_V2,
 																  OSLCConstants.CM_CHANGE_REQUEST_TYPE);
+			System.out.println("queryCapability: "+queryCapability);
 
 			String creationFactory = client.lookupCreationFactory(serviceProviderUrl,
 					  											  OSLCConstants.OSLC_CM_V2,
 					  											  OSLCConstants.CM_CHANGE_REQUEST_TYPE);
+			System.out.println("creationFactory: "+creationFactory);
 
 			//SCENARIO A: Run a query for all ChangeRequests
 
@@ -105,17 +138,17 @@ public class GenericCMSample {
 			OslcQueryResult result = query.submit();
 
 			boolean processAsJavaObjects = true;
-			processPagedQueryResults(result,client, processAsJavaObjects);
+			processPagedQueryResults(result, client, processAsJavaObjects);
 
 			System.out.println("\n------------------------------\n");
 
 			//SCENARIO B:  Run a query for a specific ChangeRequest and then print it as raw XML.
 			//Change the URL below to match a real ChangeRequest
 
-			ClientResponse rawResponse = client.getResource("http://localhost:8080/OSLC4JChangeManagement/services/changeRequests/1",
+			Response rawResponse = client.getResource("http://localhost:8080/OSLC4JChangeManagement/services/changeRequests/2",
 									 					     OSLCConstants.CT_XML);
 			processRawResponse(rawResponse);
-			rawResponse.consumeContent();
+			rawResponse.readEntity(String.class);
 
 			//SCENARIO C:  ChangeRequest creation and update
 			ChangeRequest newChangeRequest = new ChangeRequest();
@@ -123,17 +156,17 @@ public class GenericCMSample {
 			newChangeRequest.setTitle("Need to update the database schema to reflect the data model changes");
 
 			rawResponse = client.createResource(creationFactory, newChangeRequest, OSLCConstants.CT_RDF);
-			int statusCode = rawResponse.getStatusCode();
-			rawResponse.consumeContent();
+			int statusCode = rawResponse.getStatus();
+			rawResponse.readEntity(String.class);
 			System.out.println("Status code for POST of new artifact: " + statusCode);
 
 			if (statusCode == HttpStatus.SC_CREATED) {
-				String location = rawResponse.getHeaders().getFirst("Location");
+				String location = rawResponse.getStringHeaders().getFirst("Location");
 				newChangeRequest.setClosed(false);
 				newChangeRequest.setInProgress(true);
 				rawResponse = client.updateResource(location, newChangeRequest, OSLCConstants.CT_RDF);
-				rawResponse.consumeContent();
-				System.out.println("Status code for PUT of updated artifact: " + rawResponse.getStatusCode());
+				rawResponse.readEntity(String.class);
+				System.out.println("Status code for PUT of updated artifact: " + rawResponse.getStatus());
 			}
 
 
@@ -165,7 +198,7 @@ public class GenericCMSample {
 		for (String resultsUrl : result.getMembersUrls()) {
 			System.out.println(resultsUrl);
 
-			ClientResponse response = null;
+			Response response = null;
 			try {
 
 				//Get a single artifact by its URL
@@ -174,7 +207,7 @@ public class GenericCMSample {
 				if (response != null) {
 					//De-serialize it as a Java object
 					if (asJavaObjects) {
-						   ChangeRequest cr = response.getEntity(ChangeRequest.class);
+						   ChangeRequest cr = response.readEntity(ChangeRequest.class);
 						   printChangeRequestInfo(cr);   //print a few attributes
 					} else {
 
@@ -191,8 +224,8 @@ public class GenericCMSample {
 
 	}
 
-	private static void processRawResponse(ClientResponse response) throws IOException {
-		InputStream is = response.getEntity(InputStream.class);
+	private static void processRawResponse(Response response) throws IOException {
+		InputStream is = response.readEntity(InputStream.class);
 		BufferedReader in = new BufferedReader(new InputStreamReader(is));
 
 		String line = null;
@@ -212,7 +245,7 @@ public class GenericCMSample {
 	private static boolean validateOptions(CommandLine cmd) {
 		boolean isValid = true;
 
-		if (! (cmd.hasOption("url") &&
+		if (! (cmd.hasOption("catalogURL") &&
 			  (cmd.hasOption("providerTitle")))) {
 
 			isValid = false;
