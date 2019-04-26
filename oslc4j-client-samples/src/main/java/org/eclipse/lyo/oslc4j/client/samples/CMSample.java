@@ -13,7 +13,7 @@
  *
  *     Michael Fiedler     - initial API and implementation
  *******************************************************************************/
-package org.eclipse.lyo.client.oslc.samples;
+package org.eclipse.lyo.oslc4j.client.samples;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,13 +34,13 @@ import org.apache.http.HttpStatus;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
-import org.eclipse.lyo.client.oslc.JEEFormAuthenticator;
-import org.eclipse.lyo.client.oslc.OSLCConstants;
-import org.eclipse.lyo.client.oslc.OslcClient;
-import org.eclipse.lyo.client.oslc.resources.ChangeRequest;
-import org.eclipse.lyo.client.oslc.resources.OslcQuery;
-import org.eclipse.lyo.client.oslc.resources.OslcQueryParameters;
-import org.eclipse.lyo.client.oslc.resources.OslcQueryResult;
+import org.eclipse.lyo.oslc4j.client.JEEFormAuthenticator;
+import org.eclipse.lyo.oslc4j.client.OSLCConstants;
+import org.eclipse.lyo.oslc4j.client.OslcClient;
+import org.eclipse.lyo.oslc4j.client.resources.ChangeRequest;
+import org.eclipse.lyo.oslc4j.client.resources.OslcQuery;
+import org.eclipse.lyo.oslc4j.client.resources.OslcQueryParameters;
+import org.eclipse.lyo.oslc4j.client.resources.OslcQueryResult;
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;

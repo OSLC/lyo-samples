@@ -14,7 +14,7 @@
  *     Michael Fiedler     - initial API and implementation
  *     Gabriel Ruelas      - Fix handling of Rich text, include parsing extended properties
  *******************************************************************************/
-package org.eclipse.lyo.client.oslc.samples;
+package org.eclipse.lyo.oslc4j.client.samples;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -40,17 +40,17 @@ import org.apache.http.HttpHeaders;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
-import org.eclipse.lyo.client.exception.RootServicesException;
-import org.eclipse.lyo.client.oslc.JEEFormAuthenticator;
-import org.eclipse.lyo.client.oslc.OSLCConstants;
-import org.eclipse.lyo.client.oslc.OslcClient;
-import org.eclipse.lyo.client.oslc.resources.OslcQuery;
-import org.eclipse.lyo.client.oslc.resources.OslcQueryParameters;
-import org.eclipse.lyo.client.oslc.resources.OslcQueryResult;
-import org.eclipse.lyo.client.oslc.resources.Requirement;
-import org.eclipse.lyo.client.oslc.resources.RequirementCollection;
-import org.eclipse.lyo.client.oslc.resources.RmConstants;
-import org.eclipse.lyo.client.oslc.resources.RmUtil;
+import org.eclipse.lyo.oslc4j.client.exception.RootServicesException;
+import org.eclipse.lyo.oslc4j.client.JEEFormAuthenticator;
+import org.eclipse.lyo.oslc4j.client.OSLCConstants;
+import org.eclipse.lyo.oslc4j.client.OslcClient;
+import org.eclipse.lyo.oslc4j.client.resources.OslcQuery;
+import org.eclipse.lyo.oslc4j.client.resources.OslcQueryParameters;
+import org.eclipse.lyo.oslc4j.client.resources.OslcQueryResult;
+import org.eclipse.lyo.oslc4j.client.resources.Requirement;
+import org.eclipse.lyo.oslc4j.client.resources.RequirementCollection;
+import org.eclipse.lyo.oslc4j.client.resources.RmConstants;
+import org.eclipse.lyo.oslc4j.client.resources.RmUtil;
 import org.eclipse.lyo.oslc4j.core.OSLC4JUtils;
 import org.eclipse.lyo.oslc4j.core.model.Link;
 import org.eclipse.lyo.oslc4j.core.model.OslcMediaType;
@@ -63,7 +63,7 @@ import org.glassfish.jersey.client.ClientConfig;
 
 
 /**
- * Samples of logging in to Rational Requirements Composer or Rational DOORS Next Generation
+ * Samples of logging in to IBM Enterprise Requirements Manager
  * and running OSLC operations
  *
  *
@@ -71,15 +71,15 @@ import org.glassfish.jersey.client.ClientConfig;
  * - TODO:  Add more requirement sample scenarios
  *
  */
-public class IERMSample {
+public class ERMSample {
 
-	private static final Logger logger = Logger.getLogger(IERMSample.class.getName());
+	private static final Logger logger = Logger.getLogger(ERMSample.class.getName());
 
 	// Following is a workaround for primaryText issue in DNG ( it is PrimaryText instead of primaryText
 	private static final QName PROPERTY_PRIMARY_TEXT_WORKAROUND   = new QName(RmConstants.JAZZ_RM_NAMESPACE, "PrimaryText");
 
 	/**
-	 * Login to the RRC server and perform some OSLC actions
+	 * Login to the ERM server and perform some OSLC actions
 	 * @param args
 	 * @throws ParseException
 	 */
@@ -99,7 +99,7 @@ public class IERMSample {
 
 		if (!validateOptions(cmd)) {
 			logger.severe("Syntax:  java <class_name> -url https://<server>:port/<context>/ -user <user> -password <password> -project \"<project_area>\"");
-			logger.severe("Example: java RRCFormSample -url https://exmple.com:9443/rm -user ADMIN -password ADMIN -project \"JKE Banking (Requirements Management)\"");
+			logger.severe("Example: java ERMSample -url https://exmple.com:9443/rm -user ADMIN -password ADMIN -project \"JKE Banking (Requirements Management)\"");
 			return;
 		}
 

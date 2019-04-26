@@ -14,9 +14,9 @@
  *     Michael Fiedler     - initial API and implementation
  *     Samuel Padgett      - handle test case creation errors
  *     Samuel Padgett      - update command line example to use correct context
- *     Samuel Padgett      - set member property for RQM query results
+ *     Samuel Padgett      - set member property for RTM query results
  *******************************************************************************/
-package org.eclipse.lyo.client.oslc.samples;
+package org.eclipse.lyo.oslc4j.client.samples;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -39,22 +39,23 @@ import org.apache.http.HttpStatus;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
-import org.eclipse.lyo.client.exception.RootServicesException;
-import org.eclipse.lyo.client.oslc.JEEFormAuthenticator;
-import org.eclipse.lyo.client.oslc.OSLCConstants;
-import org.eclipse.lyo.client.oslc.OslcClient;
-import org.eclipse.lyo.client.oslc.resources.OslcQuery;
-import org.eclipse.lyo.client.oslc.resources.OslcQueryParameters;
-import org.eclipse.lyo.client.oslc.resources.OslcQueryResult;
-import org.eclipse.lyo.client.oslc.resources.TestCase;
-import org.eclipse.lyo.client.oslc.resources.TestResult;
+import org.eclipse.lyo.oslc4j.client.JEEFormAuthenticator;
+import org.eclipse.lyo.oslc4j.client.OSLCConstants;
+import org.eclipse.lyo.oslc4j.client.OslcClient;
+import org.eclipse.lyo.oslc4j.client.exception.RootServicesException;
+import org.eclipse.lyo.oslc4j.client.resources.OslcQuery;
+import org.eclipse.lyo.oslc4j.client.resources.OslcQueryParameters;
+import org.eclipse.lyo.oslc4j.client.resources.OslcQueryResult;
+import org.eclipse.lyo.oslc4j.client.resources.TestCase;
+import org.eclipse.lyo.oslc4j.client.resources.TestResult;
 import org.eclipse.lyo.oslc4j.core.model.Link;
 import org.eclipse.lyo.oslc4j.core.model.OslcMediaType;
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 
 /**
- * Samples of logging in to Rational Quality Manager and running OSLC operations
+ * Samples of logging in to IBM Enterprise Test Manager and running OSLC operations
  *
  * - run an OLSC TestResult query and retrieve OSLC TestResults and de-serialize them as Java objects
  * - retrieve an OSLC TestResult and print it as XML
@@ -62,12 +63,12 @@ import org.glassfish.jersey.client.ClientConfig;
  * - update an existing TestCase
  *
  */
-public class IEQMSample {
+public class ETMSample {
 
-	private static final Logger logger = Logger.getLogger(IEQMSample.class.getName());
+	private static final Logger logger = Logger.getLogger(ETMSample.class.getName());
 
 	/**
-	 * Login to the RQM server and perform some OSLC actions
+	 * Login to the ETM server and perform some OSLC actions
 	 * @param args
 	 * @throws ParseException
 	 */
@@ -87,7 +88,7 @@ public class IEQMSample {
 
 		if (!validateOptions(cmd)) {
 			logger.severe("Syntax:  java <class_name> -url https://<server>:port/<context>/ -user <user> -password <password> -project \"<project_area>\"");
-			logger.severe("Example: java RQMFormSample -url https://exmple.com:9443/qm -user ADMIN -password ADMIN -project \"JKE Banking (Quality Management)\"");
+			logger.severe("Example: java ETMSample -url https://exmple.com:9443/qm -user ADMIN -password ADMIN -project \"JKE Banking (Quality Management)\"");
 			return;
 		}
 
@@ -102,6 +103,7 @@ public class IEQMSample {
 			
 			// Use HttpClient instead of the default HttpUrlConnection
 			ClientConfig clientConfig = new ClientConfig().connectorProvider(new ApacheConnectorProvider());
+			clientConfig.register(MultiPartFeature.class);
 			ClientBuilder clientBuilder = ClientBuilder.newBuilder();
 			clientBuilder.withConfig(clientConfig);
 			
@@ -146,7 +148,7 @@ public class IEQMSample {
 
 			//SCENARIO B:  Run a query for a specific TestResult selecting only certain
 			//attributes and then print it as raw XML.  Change the dcterms:title below to match a
-			//real TestResult in your RQM project area
+			//real TestResult in your RTM project area
 			OslcQueryParameters queryParams2 = new OslcQueryParameters();
 			queryParams2.setWhere("dcterms:title=\"Consistent_display_of_currency_Firefox_DB2_WAS_Windows_S1\"");
 			queryParams2.setSelect("dcterms:identifier,dcterms:title,dcterms:creator,dcterms:created,oslc_qm:status");
@@ -157,7 +159,7 @@ public class IEQMSample {
 			Response rawResponse = result2.getRawResponse();
 			processRawResponse(rawResponse);
 
-			//SCENARIO C:  RQM TestCase creation and update
+			//SCENARIO C:  ETM TestCase creation and update
 			TestCase testcase = new TestCase();
 			testcase.setTitle("Accessibility verification using a screen reader");
 			testcase.setDescription("This test case uses a screen reader application to ensure that the web browser content fully complies with accessibility standards");

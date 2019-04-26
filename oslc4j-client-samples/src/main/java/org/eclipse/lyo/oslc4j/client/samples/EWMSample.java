@@ -16,7 +16,7 @@
  *     Samuel Padgett      - examine oslc:usage to find the right creation factory,
  *                           use resource shapes to discover allowed values for Filed Against
  *******************************************************************************/
-package org.eclipse.lyo.client.oslc.samples;
+package org.eclipse.lyo.oslc4j.client.samples;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -40,14 +40,14 @@ import org.apache.http.HttpStatus;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
-import org.eclipse.lyo.client.exception.RootServicesException;
-import org.eclipse.lyo.client.oslc.JEEFormAuthenticator;
-import org.eclipse.lyo.client.oslc.OSLCConstants;
-import org.eclipse.lyo.client.oslc.OslcClient;
-import org.eclipse.lyo.client.oslc.resources.ChangeRequest;
-import org.eclipse.lyo.client.oslc.resources.OslcQuery;
-import org.eclipse.lyo.client.oslc.resources.OslcQueryParameters;
-import org.eclipse.lyo.client.oslc.resources.OslcQueryResult;
+import org.eclipse.lyo.oslc4j.client.exception.RootServicesException;
+import org.eclipse.lyo.oslc4j.client.JEEFormAuthenticator;
+import org.eclipse.lyo.oslc4j.client.OSLCConstants;
+import org.eclipse.lyo.oslc4j.client.OslcClient;
+import org.eclipse.lyo.oslc4j.client.resources.ChangeRequest;
+import org.eclipse.lyo.oslc4j.client.resources.OslcQuery;
+import org.eclipse.lyo.oslc4j.client.resources.OslcQueryParameters;
+import org.eclipse.lyo.oslc4j.client.resources.OslcQueryResult;
 import org.eclipse.lyo.oslc4j.core.model.AllowedValues;
 import org.eclipse.lyo.oslc4j.core.model.CreationFactory;
 import org.eclipse.lyo.oslc4j.core.model.Link;
@@ -59,7 +59,7 @@ import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
 
 /**
- * Samples of logging in to Rational Team Concert and running OSLC operations
+ * Samples of logging in to IBM Enterprise Workflow Manager and running OSLC operations
  *
  *
  * - run an OLSC ChangeRequest query and retrieve OSLC ChangeRequests and de-serialize them as Java objects
@@ -68,11 +68,11 @@ import org.glassfish.jersey.client.ClientConfig;
  * - update an existing ChangeRequest
  *
  */
-public class IECMSample {
+public class EWMSample {
 
 	private static final String RTC_NAMESPACE = "http://jazz.net/xmlns/prod/jazz/rtc/cm/1.0/";
 	private static final String RTC_FILED_AGAINST = "filedAgainst";
-	private static final Logger logger = Logger.getLogger(IECMSample.class.getName());
+	private static final Logger logger = Logger.getLogger(EWMSample.class.getName());
 
 	/**
 	 * Login to the RTC server and perform some OSLC actions
@@ -95,11 +95,11 @@ public class IECMSample {
 
 		if (!validateOptions(cmd)) {
 			logger.severe("Syntax:  java <class_name> -url https://<server>:port/<context>/ -user <user> -password <password> -project \"<project_area>\"");
-			logger.severe("Example: java RTCFormSample -url https://exmple.com:9443/ccm -user ADMIN -password ADMIN -project \"JKE Banking (Change Management)\"");
+			logger.severe("Example: java EWMSample -url https://exmple.com:9443/ccm -user ADMIN -password ADMIN -project \"JKE Banking (Change Management)\"");
 			return;
 		}
 
-		// RTC sometimes will declare a property's type, but leave the value
+		// EWM sometimes will declare a property's type, but leave the value
 		// empty, which causes errors when parsed by OSLC4J. Set a system property
 		// to tell OSLC4J to skip these invalid values.
 		System.setProperty(AbstractOslcRdfXmlProvider.OSLC4J_STRICT_DATATYPES, "false");
@@ -156,7 +156,7 @@ public class IECMSample {
 
 			//SCENARIO B:  Run a query for a specific ChangeRequest selecting only certain
 			//attributes and then print it as raw XML.  Change the dcterms:identifier below to match a
-			//real workitem in your RTC project area
+			//real workitem in your EWM project area
 			OslcQueryParameters queryParams2 = new OslcQueryParameters();
 			queryParams2.setWhere("dcterms:identifier=7");
 			queryParams2.setSelect("dcterms:identifier,dcterms:title,dcterms:creator,dcterms:created,oslc_cm:status");
@@ -167,7 +167,7 @@ public class IECMSample {
 			processRawResponse(rawResponse);
 			rawResponse.close();
 
-			//SCENARIO C:  RTC task creation and update
+			//SCENARIO C:  EWM task creation and update
 			ChangeRequest task = new ChangeRequest();
 			task.setTitle("Implement accessibility in Pet Store application");
 			task.setDescription("Image elements must provide a description in the 'alt' attribute for consumption by screen readers.");
@@ -251,7 +251,7 @@ public class IECMSample {
 				AllowedValues allowedValues = allowedValuesResponse.readEntity(AllowedValues.class);
 				Object[] values = allowedValues.getValues().toArray();
 				//If this fails, you might need to check that the value is
-				//not "Unassigned", which is an allowed value in some RTC
+				//not "Unassigned", which is an allowed value in some EWM
 				//project areas. Try the second value instead of the first, most project area processes
 				//create more than one category
 				defect.getExtendedProperties().put(new QName(RTC_NAMESPACE, RTC_FILED_AGAINST), (URI) values[1]);
