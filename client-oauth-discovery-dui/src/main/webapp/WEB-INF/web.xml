@@ -6,11 +6,6 @@
     id="WebApp_ID" 
     version="4.0">
   <display-name>OSLC Discovery</display-name>
-  <context-param>
-    <description>Base URI for the adaptor.</description>
-    <param-name>org.eclipse.lyo.oslc4j.client.samples.baseurl</param-name>
-    <param-value>http://localhost:8081</param-value>
-  </context-param>
   <servlet>
     <servlet-name>JAX-RS Servlet</servlet-name>
     <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
