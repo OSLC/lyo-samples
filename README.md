@@ -9,30 +9,40 @@ Lyo Client is an SDK that provides helpful APIs to interact with OSLC Servers. I
 
 You can find more resources for developing OSLC applications with Lyo, under the [OSLC Developer Guide](http://oslc.github.io/developing-oslc-applications/eclipse_lyo/eclipse-lyo.html).
 
-> **Please note:** Most of code in this repo is not always up to date. You are welcome to [contribute](https://github.com/eclipse/lyo.core#contributing) fixes and suggestions.
+You are also welcome to contact the development team via [lyo-dev mailing list](https://dev.eclipse.org/mailman/listinfo/lyo-dev)
 
-## License
+> **Please note:** Most of code in this repo is not always up to date. You are welcome to [contribute](https://github.com/eclipse/lyo#contributing) fixes and suggestions.
 
-This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 and Eclipse Distribution License v. 1.0 which accompanies this distribution ([LICENSE](LICENSE) and [LICENSE.EPL](LICENSE.EPL)).
+# Selected Project Descriptions
 
-## Selected Project Descriptions
+Below is a selected subset of projects in this repository. 
 
-Below is a selected subset of projects in this repository.
+The latest samplest target the Lyo release 4.0.0, which supports JAX-RS 2.0, and no longer depend on any particlar implementation of JAX-RS. This gives the developer the chance to adopt any preferred implementation such as [Jersey](https://jersey.github.io/), [RESTEasy](https://resteasy.github.io/), etc.
 
-But first ... **Lyo 2.4.0 (JAX-RS 1.0) or Lyo 4.0.0 (JAX-RS 2.0)?**
+Earlier samples targetting Lyo 2.4.0 (and earlier) supports JAX-RS 1.0, and assumes the [Apache Wink implementation](https://svn.apache.org/repos/infra/websites/production/wink/content/index.html).
 
-Starting with the upcoming release 4.0.0, Lyo will support JAX-RS 2.0, and will no longer depend on any particlar implementation of JAX-RS. This gives the developer the chance to adopt any preferred implementation such as [Jersey](https://jersey.github.io/), [RESTEasy](https://resteasy.github.io/), etc.  
-On the other hand, the current Lyo release 2.4.0 (and earlier) supports JAX-RS 1.0, and assumes the [Apache Wink implementation](https://svn.apache.org/repos/infra/websites/production/wink/content/index.html).
+## [OSLC Client Authentication, Service Discovery & Delegated UIs](https://github.com/OSLC/lyo-samples/tree/master/client-oauth-discovery-dui) - Sample code for Lyo 4.0.0 (JAX-RS 2.0)
 
-We recommend you adopt the latest versions of Lyo.
+This OSLC client application 
+* Explores the different client authentication alternatives of (1) oauth (2) basic authentication (3) no authentication.
+* Demonstrates how to discover OSLC services.
+* Demonstrates how to integrate Delegated-UI iframes into your own web-based application.
 
-Depending on the Lyo version you are using, please refer to different folders under this repository:
+To run the adaptor as a regular web application, run:
 
-* Sample code for Lyo release 4.0.0 - See folder [oslc4j-client-samples](https://github.com/OSLC/lyo-samples/tree/master/oslc4j-client-samples).
-* Sample code for Lyo release 2.4.0 and earlier - See folder [oslc-java-samples](https://github.com/OSLC/lyo-samples/tree/master/oslc-java-samples).
+    mvn clean jetty:run-exploded
+
+You can then explore the server starting with http://localhost:8081/discovery/services/discovery. 
+
+## [oslc4j-client-samples](https://github.com/OSLC/lyo-samples/tree/master/oslc4j-client-samples) - Sample code for Lyo 4.0.0 (JAX-RS 2.0)
+This is a subset of the sample code from Lyo 2.4.0 detailed under [oslc-java-samples](https://github.com/OSLC/lyo-samples#oslc-java-samples).
 
 
-### **GenericCMSample**
+
+## [oslc-java-samples](https://github.com/OSLC/lyo-samples/tree/master/oslc-java-samples) - Sample code for Lyo 2.4.0 (JAX-RS 1.0)
+This project contains a set of simple stand-alone java applications. 
+
+### [GenericCMSample](https://github.com/OSLC/lyo-samples/blob/master/oslc-java-samples/src/main/java/org/eclipse/lyo/client/oslc/samples/GenericCMSample.java)
 
 This sample demonstrates how to use the Lyo client to interact with a
 Change Management (CM) Service Provider in the following ways:
@@ -59,7 +69,7 @@ application.
 
 ![](./images/RunGenericCMSample.png "RunGenericCMSample.png")
 
-### **RQMFormSample**
+### [RQMFormSample](https://github.com/OSLC/lyo-samples/blob/master/oslc-java-samples/src/main/java/org/eclipse/lyo/client/oslc/samples/RQMFormSample.java)
 
 This sample demonstrates how to use the Lyo client to interact with a
 Quality Management (QM) Service Provider in the following ways:
@@ -77,7 +87,7 @@ passing in values for the command line arguments as shown below:
 
 ![](./images/RunRQMFormSample.png "RunRQMFormSample.png")
 
-### **RTCFormSample**
+### [RTCFormSample](https://github.com/OSLC/lyo-samples/blob/master/oslc-java-samples/src/main/java/org/eclipse/lyo/client/oslc/samples/RTCFormSample.java)
 
 This sample demonstrates how to use the Lyo client to interact with a
 Change Management (CM) Service Provider in the following ways:
@@ -95,7 +105,7 @@ passing in values for the command line arguments as shown below:
 
 ![](./images/RunRTCFormSample.png "RunRTCFormSample.png")
 
-### **DoorsOauthSample**
+### [DoorsOauthSample](https://github.com/OSLC/lyo-samples/blob/master/oslc-java-samples/src/main/java/org/eclipse/lyo/client/oslc/samples/DoorsOauthSample.java)
 
 This sample demonstrates how to use the Lyo client to interact with IBM
 Rational DOORS in the following ways:
@@ -136,7 +146,7 @@ the connection details for your DOORS Web Access and a module name. e.g.
 
 Run it by right click Run As - Java Application.
 
-### **RQMAutomationSample**
+### [RQMAutomationSample](https://github.com/OSLC/lyo-samples/blob/master/oslc-java-samples/src/main/java/org/eclipse/lyo/client/oslc/samples/RQMFormSample.java)
 
 This sample demonstrates how to use the Lyo client to interact with an
 Automation Service Provider. It provides an Automation Adapter resource
@@ -167,7 +177,7 @@ Finally, to run the Sample application right click
 RQMAutomationSample.java in your Explorer view and select Run As-\>Java
 Application.
 
-### **Two-legged OAuth Sample**
+## [Two-legged OAuth Sample](https://github.com/OSLC/lyo-samples/tree/master/oauth-cli-helper)
 
 This is a simple example of how to sign requests using two-legged OAuth
 in Java. You\'ll need to set up an OAuth consumer on the server you want
@@ -191,5 +201,8 @@ the requests. Performing two-legged OAuth is generally preferable to
 storing a username and password on the client, although you should treat
 the consumer secret like it\'s a password.
 
+## License
+
+This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 and Eclipse Distribution License v. 1.0 which accompanies this distribution ([LICENSE](LICENSE) and [LICENSE.EPL](LICENSE.EPL)).
 
 
