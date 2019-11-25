@@ -11,6 +11,7 @@ import java.util.Optional;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -236,7 +237,19 @@ public class DiscoveryServices
 
             //Get details about the serviceProviderCatalog
             String serviceProviderCatalogUrl = rootService.getCatalogUrl();
-            Response response = client.getResource(serviceProviderCatalogUrl);
+            Response response = null;
+            try {
+                response = client.getResource(serviceProviderCatalogUrl);
+            } catch (IllegalStateException e) {
+                client = resetClientNegotiation(httpServletRequest, rootService, consumerKey, consumerSecret, clientBuilder);
+                Optional<String> negotiation = client.performOAuthNegotiation(getCompleteUri(httpServletRequest));
+                if (negotiation.isPresent()) {
+                    httpServletResponse.sendRedirect(negotiation.get());
+                    return;
+                } else {
+                    throw new IllegalStateException("Newly initialised client cannot have negotiation passed");
+                }
+            }
             if (response.getStatus() != HttpStatus.SC_OK) {
                 logger.warn("Cannot read {} status: {}", serviceProviderCatalogUrl, response.getStatus());
                 throw new ResourceNotFoundException(serviceProviderCatalogUrl, "serviceProviderCatalog");
@@ -251,6 +264,17 @@ public class DiscoveryServices
 
         RequestDispatcher rd = httpServletRequest.getRequestDispatcher("/discovery.jsp");
         rd.forward(httpServletRequest, httpServletResponse);
+    }
+
+    private OslcOAuthClient resetClientNegotiation(HttpServletRequest request, RootServicesHelper rootService, String consumerKey, String consumerSecret, ClientBuilder clientBuilder) {
+        OslcOAuthClientBuilder oAuthClientBuilder = OslcClientFactory.oslcOAuthClientBuilder();
+        oAuthClientBuilder.setFromRootService(rootService);
+        oAuthClientBuilder.setOAuthConsumer("", consumerKey, consumerSecret);
+        oAuthClientBuilder.setClientBuilder(clientBuilder);
+        oAuthClientBuilder.setUnderlyingHttpClient(client -> ApacheConnectorProvider.getHttpClient(client));
+        OslcOAuthClient client = (OslcOAuthClient) oAuthClientBuilder.build();
+        bindClientToSession(httpServletRequest, client, consumerKey);
+        return client;
     }
 
     @GET
@@ -389,7 +413,7 @@ public class DiscoveryServices
             
             //Initialize a Jazz rootservices helper 
             OslcClient rootServicesClient = new OslcClient(clientBuilder);
-            RootServicesHelper rootServicesHelper = new RootServicesHelper(rootServicesUrl, OSLCConstants.OSLC_RM_V2, rootServicesClient);
+            RootServicesHelper rootServicesHelper = new RootServicesHelper(rootServicesUrl, OSLCConstants.OSLC_CM_V2, rootServicesClient);
 
             String consumerKey = rootServicesHelper.requestConsumerKey(consumerName, consumerSecret);
             String approveKeyUrl = rootServicesHelper.getConsumerApprovalUrl(consumerKey);
