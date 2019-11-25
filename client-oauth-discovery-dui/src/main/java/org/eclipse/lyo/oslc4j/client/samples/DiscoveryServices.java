@@ -149,12 +149,21 @@ public class DiscoveryServices
         return clientBuilder;
     }
 
-    public static void bindClientToSession(HttpServletRequest request, OslcOAuthClient client) {
+    public static void bindClientToSession(HttpServletRequest request, OslcOAuthClient client, String consumerKey) {
         request.getSession().setAttribute("client", client);
+        request.getSession().setAttribute("consumerKey", consumerKey);
     }
 
-    public static OslcOAuthClient getClientFromSession(HttpServletRequest request) {
-        return (OslcOAuthClient) request.getSession().getAttribute("client");
+    public static OslcOAuthClient getClientFromSession(HttpServletRequest request, String consumerKey) {
+        HttpSession session = request.getSession();
+        Object key = session.getAttribute("consumerKey");
+        if(consumerKey.equalsIgnoreCase(String.valueOf(key))) {
+            return (OslcOAuthClient) session.getAttribute("client");
+        } else {
+            // reset the client for a new consumer key
+            session.setAttribute("client", null);
+            return null;
+        }
     }
 
     private String getCompleteUri(HttpServletRequest httpServletRequest) {
@@ -203,7 +212,7 @@ public class DiscoveryServices
             RootServicesHelper rootService = new RootServicesHelper(rootServicesUrl, OSLCConstants.OSLC_RM_V2, rootServicesClient);
             
             //Create a new OSLC OAuth capable client
-            OslcOAuthClient client = getClientFromSession(httpServletRequest);
+            OslcOAuthClient client = getClientFromSession(httpServletRequest, consumerKey);
             if (null == client) {
                 OslcOAuthClientBuilder oAuthClientBuilder = OslcClientFactory.oslcOAuthClientBuilder();
                 oAuthClientBuilder.setFromRootService(rootService);
@@ -216,7 +225,7 @@ public class DiscoveryServices
                     }
                 });
                 client = (OslcOAuthClient) oAuthClientBuilder.build();
-                bindClientToSession(httpServletRequest, client);
+                bindClientToSession(httpServletRequest, client, consumerKey);
             }
            
             Optional<String> performOAuthNegotiation = client.performOAuthNegotiation(getCompleteUri(httpServletRequest));
