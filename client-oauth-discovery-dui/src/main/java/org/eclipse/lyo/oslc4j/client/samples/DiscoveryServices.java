@@ -413,7 +413,7 @@ public class DiscoveryServices
             
             //Initialize a Jazz rootservices helper 
             OslcClient rootServicesClient = new OslcClient(clientBuilder);
-            RootServicesHelper rootServicesHelper = new RootServicesHelper(rootServicesUrl, OSLCConstants.OSLC_CM_V2, rootServicesClient);
+            RootServicesHelper rootServicesHelper = new RootServicesHelper(rootServicesUrl, OSLCConstants.OSLC_RM_V2, rootServicesClient);
 
             String consumerKey = rootServicesHelper.requestConsumerKey(consumerName, consumerSecret);
             String approveKeyUrl = rootServicesHelper.getConsumerApprovalUrl(consumerKey);
