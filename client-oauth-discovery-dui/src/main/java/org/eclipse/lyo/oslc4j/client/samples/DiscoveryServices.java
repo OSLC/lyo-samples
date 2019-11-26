@@ -11,6 +11,7 @@ import java.util.Optional;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -149,12 +150,21 @@ public class DiscoveryServices
         return clientBuilder;
     }
 
-    public static void bindClientToSession(HttpServletRequest request, OslcOAuthClient client) {
+    public static void bindClientToSession(HttpServletRequest request, OslcOAuthClient client, String consumerKey) {
         request.getSession().setAttribute("client", client);
+        request.getSession().setAttribute("consumerKey", consumerKey);
     }
 
-    public static OslcOAuthClient getClientFromSession(HttpServletRequest request) {
-        return (OslcOAuthClient) request.getSession().getAttribute("client");
+    public static OslcOAuthClient getClientFromSession(HttpServletRequest request, String consumerKey) {
+        HttpSession session = request.getSession();
+        Object key = session.getAttribute("consumerKey");
+        if(consumerKey.equalsIgnoreCase(String.valueOf(key))) {
+            return (OslcOAuthClient) session.getAttribute("client");
+        } else {
+            // reset the client for a new consumer key
+            session.setAttribute("client", null);
+            return null;
+        }
     }
 
     private String getCompleteUri(HttpServletRequest httpServletRequest) {
@@ -203,7 +213,7 @@ public class DiscoveryServices
             RootServicesHelper rootService = new RootServicesHelper(rootServicesUrl, OSLCConstants.OSLC_RM_V2, rootServicesClient);
             
             //Create a new OSLC OAuth capable client
-            OslcOAuthClient client = getClientFromSession(httpServletRequest);
+            OslcOAuthClient client = getClientFromSession(httpServletRequest, consumerKey);
             if (null == client) {
                 OslcOAuthClientBuilder oAuthClientBuilder = OslcClientFactory.oslcOAuthClientBuilder();
                 oAuthClientBuilder.setFromRootService(rootService);
@@ -216,7 +226,7 @@ public class DiscoveryServices
                     }
                 });
                 client = (OslcOAuthClient) oAuthClientBuilder.build();
-                bindClientToSession(httpServletRequest, client);
+                bindClientToSession(httpServletRequest, client, consumerKey);
             }
            
             Optional<String> performOAuthNegotiation = client.performOAuthNegotiation(getCompleteUri(httpServletRequest));
@@ -227,7 +237,19 @@ public class DiscoveryServices
 
             //Get details about the serviceProviderCatalog
             String serviceProviderCatalogUrl = rootService.getCatalogUrl();
-            Response response = client.getResource(serviceProviderCatalogUrl);
+            Response response = null;
+            try {
+                response = client.getResource(serviceProviderCatalogUrl);
+            } catch (IllegalStateException e) {
+                client = resetClientNegotiation(httpServletRequest, rootService, consumerKey, consumerSecret, clientBuilder);
+                Optional<String> negotiation = client.performOAuthNegotiation(getCompleteUri(httpServletRequest));
+                if (negotiation.isPresent()) {
+                    httpServletResponse.sendRedirect(negotiation.get());
+                    return;
+                } else {
+                    throw new IllegalStateException("Newly initialised client cannot have negotiation passed");
+                }
+            }
             if (response.getStatus() != HttpStatus.SC_OK) {
                 logger.warn("Cannot read {} status: {}", serviceProviderCatalogUrl, response.getStatus());
                 throw new ResourceNotFoundException(serviceProviderCatalogUrl, "serviceProviderCatalog");
@@ -242,6 +264,17 @@ public class DiscoveryServices
 
         RequestDispatcher rd = httpServletRequest.getRequestDispatcher("/discovery.jsp");
         rd.forward(httpServletRequest, httpServletResponse);
+    }
+
+    private OslcOAuthClient resetClientNegotiation(HttpServletRequest request, RootServicesHelper rootService, String consumerKey, String consumerSecret, ClientBuilder clientBuilder) {
+        OslcOAuthClientBuilder oAuthClientBuilder = OslcClientFactory.oslcOAuthClientBuilder();
+        oAuthClientBuilder.setFromRootService(rootService);
+        oAuthClientBuilder.setOAuthConsumer("", consumerKey, consumerSecret);
+        oAuthClientBuilder.setClientBuilder(clientBuilder);
+        oAuthClientBuilder.setUnderlyingHttpClient(client -> ApacheConnectorProvider.getHttpClient(client));
+        OslcOAuthClient client = (OslcOAuthClient) oAuthClientBuilder.build();
+        bindClientToSession(httpServletRequest, client, consumerKey);
+        return client;
     }
 
     @GET
