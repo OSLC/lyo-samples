@@ -21,6 +21,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,6 +49,7 @@ import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.apache.jena.ext.com.google.common.base.Strings;
 import org.apache.wink.client.ClientResponse;
 import org.eclipse.lyo.client.exception.ResourceNotFoundException;
 import org.eclipse.lyo.client.exception.RootServicesException;
@@ -471,12 +474,16 @@ public class DoorsOauthSample {
 			throws IOException, OAuthException, URISyntaxException, ResourceNotFoundException
 	{
 		String retval = null;
+		final Instant catalogReqStart = Instant.now();
 		ClientResponse response = client.getResource(catalogUrl,OSLCConstants.CT_RDF);
+		long catalogMs = Duration.between(catalogReqStart, Instant.now()).toMillis();
+		logger.info("Catalog fetched in " + catalogMs + "ms");
 		Model rdfModel = ModelFactory.createDefaultModel();
 
 		rdfModel.read(response.getEntity(InputStream.class),catalogUrl);
 
 		// Step 1 Check if it is the service provider we are looking for by comparing the name
+		final Instant resourceIterStart = Instant.now();
 		ResIterator listResources = rdfModel.listResourcesWithProperty(RDF.type,rdfModel.createResource("http://open-services.net/ns/core#ServiceProvider"));
 		Property titleProp = rdfModel.createProperty(OSLCConstants.DC,"title");
 		//check each serviceProvider's title and match it to the one passed in
@@ -488,13 +495,15 @@ public class DoorsOauthSample {
 			String mytitle = titlestatement.getLiteral().getString();
 			System.out.println(mytitle);
 			if (( mytitle != null) && (mytitle.equalsIgnoreCase(serviceProviderTitle))) {
-				System.out.println("Project Found");
 				retval =  catalogUrl;
+				long iterMs = Duration.between(resourceIterStart, Instant.now()).toMillis();
+				logger.info("Project resource found (" + iterMs + "ms)");
 			}
 		}
 
 		// Step 2 Check if there are Service providers properties to recursively look in them
 		if ( retval == null) {
+			final Instant fallbackIterStart = Instant.now();
 			Property spPredicate = rdfModel.createProperty(OSLCConstants.OSLC_V2,"serviceProvider");
 			Selector select = new SimpleSelector(null, spPredicate, (RDFNode)null);
 			StmtIterator listStatements = rdfModel.listStatements(select);
@@ -507,17 +516,23 @@ public class DoorsOauthSample {
 					// Recursively look for the project Name
 					String newURL = spRes.getURI();
 					try {
-						return lookupServiceProviderUrl(newURL, serviceProviderTitle, client);
+						final String providerUrl = lookupServiceProviderUrl(newURL, serviceProviderTitle,
+								client);
+						long fallbackIterMs = Duration.between(resourceIterStart, Instant.now()).toMillis();
+						logger.info("Project property found (" + fallbackIterMs + "ms)");
+						return providerUrl;
 					} catch (ResourceNotFoundException nf){
 
 					}
 				}
 			}
-
+			long fallbackIterMs = Duration.between(resourceIterStart, Instant.now()).toMillis();
+			logger.fine("Fallback property search did not succeed (" + fallbackIterMs + "ms)");
 		}
 
 		// Step 3 Check if there are ServiceProvider catalog and recursively look in them
 		if ( retval == null) {
+			Instant catalogSearchStart = Instant.now();
 			Property spcPredicate = rdfModel.createProperty(OSLCConstants.OSLC_V2,"serviceProviderCatalog");
 			Selector select = new SimpleSelector(null, spcPredicate, (RDFNode)null);
 			StmtIterator listStatements = rdfModel.listStatements(select);
@@ -530,13 +545,23 @@ public class DoorsOauthSample {
 					// Recursively look for the project Name
 					String newURL = spRes.getURI();
 					try {
-						return lookupServiceProviderUrl(newURL, serviceProviderTitle, client);
+						retval = lookupServiceProviderUrl(newURL, serviceProviderTitle,
+								client);
+						break;
 					} catch (ResourceNotFoundException nf){
 
 					}
 				}
 			}
+			long fallbackIterMs = Duration.between(resourceIterStart, Instant.now()).toMillis();
+			if(Strings.isNullOrEmpty(retval)) {
+				logger.fine("Recursive catalog search completed (" + fallbackIterMs + "ms)");
+			} else {
+				logger.info("Project found via recursive catalog search (" + fallbackIterMs + "ms)");
+			}
 		}
+
+		logger.finest("Total project search duration: " + Duration.between(catalogReqStart, Instant.now()).toMillis() + "ms");
 
 		if (retval == null ) {
 			throw new ResourceNotFoundException(catalogUrl, serviceProviderTitle);
