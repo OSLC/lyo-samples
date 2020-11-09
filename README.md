@@ -1,7 +1,7 @@
 # Eclise Lyo Client - Sample Code
 
-[![Discourse status](https://img.shields.io/discourse/https/meta.discourse.org/status.svg)](https://forum.open-services.net/)
-[![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/OSLC/chat)
+![CI](https://github.com/OSLC/lyo-samples/workflows/CI/badge.svg)
+![Discourse users](https://img.shields.io/discourse/users?color=28bd84&server=https%3A%2F%2Fforum.open-services.net%2F)
 
 This is a repository of sample code for the [OSLC](https://open-services.net/) [Lyo Client](https://oslc.github.io/developing-oslc-applications/eclipse_lyo/eclipse-lyo.html).
 
