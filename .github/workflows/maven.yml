@@ -1,0 +1,44 @@
+# This workflow will build a Java project with Maven
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  schedule:
+  - cron: "30 4 * * 5" # catch SNAPSHOT breaking changes
+  
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK 1.8
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.8
+    - name: Build OAuth samples
+      run: |
+        mvn -B package --file client-oauth-discovery-dui/pom.xml
+        mvn -B package --file oauth-cli-helper/pom.xml
+        mvn -B package --file oauth.sample/pom.xml
+    - name: Build Lyo Client samples
+      run: |
+        mvn -B package --file oslc4j-client-samples/pom.xml
+        mvn -B package --file oslc-java-samples/pom.xml
+    - name: Build StockQuote & Test samples
+      run: mvn -B package --file pom.xml
+    - name: Build Bugzilla samples
+      run: |
+        mvn -B package --file oslc4j-bugzilla-sample/pom.xml
+        mvn -B package --file trs4j-bugzilla-sample/pom.xml
+    - name: Build non-OSLC tool samples
+      run: |
+        mvn -B package --file org.eclipse.lyo.samples.excel/pom.xml
+        mvn -B package --file hudson-oslc-auto/pom.xml
+        mvn -B package --file OSLCSharepoint/pom.xml
