@@ -14,7 +14,7 @@
 		<!-- This jersey version is the one supported by the latest Swagger 1.5 -->
 		<version.jersey>2.25.1</version.jersey>
 		<version.swagger>1.5.22</version.swagger>
-		<version.lyo>4.0.0-SNAPSHOT</version.lyo>
+		<version.lyo>4.0.0.M2</version.lyo>
 	</properties>
 	<repositories>
 		<repository>
