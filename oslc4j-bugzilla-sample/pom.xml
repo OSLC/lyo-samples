@@ -4,7 +4,7 @@
     <groupId>org.eclipse.lyo.oslc4j.rio</groupId>
     <artifactId>oslc4j-bugzilla-sample</artifactId>
     <packaging>war</packaging>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>4.0.0-SNAPSHOT</version>
     <repositories>
         <repository>
             <id>lyo-releases</id>
@@ -17,7 +17,7 @@
     </repositories>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <oslc4j.version>3.0.0-SNAPSHOT</oslc4j.version>
+        <oslc4j.version>2.2.0</oslc4j.version>
     </properties>
     <dependencies>
         <dependency>
