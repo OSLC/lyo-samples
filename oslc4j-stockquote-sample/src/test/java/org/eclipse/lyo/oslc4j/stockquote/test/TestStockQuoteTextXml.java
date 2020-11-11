@@ -21,8 +21,10 @@ import java.net.URISyntaxException;
 import org.eclipse.lyo.oslc4j.core.model.OslcMediaType;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore
 public class TestStockQuoteTextXml
 	   extends TestBase
 {
