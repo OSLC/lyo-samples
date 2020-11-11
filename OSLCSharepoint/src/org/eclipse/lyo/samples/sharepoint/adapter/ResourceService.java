@@ -48,8 +48,8 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.poi.hslf.model.Slide;
-import org.apache.poi.hslf.usermodel.SlideShow;
+import org.apache.poi.hslf.usermodel.HSLFSlide;
+import org.apache.poi.hslf.usermodel.HSLFSlideShow;
 import org.eclipse.lyo.samples.sharepoint.SharepointConnector;
 import org.eclipse.lyo.samples.sharepoint.common.IAmConstants;
 import org.eclipse.lyo.samples.sharepoint.core.IConstants;
@@ -372,13 +372,13 @@ public class ResourceService extends ShareBaseService {
 				
 				store.storeBinaryResource(bais, id);
 				bais.reset();
-				
-				SlideShow ppt = new SlideShow(bais);
+
+				HSLFSlideShow ppt = new HSLFSlideShow(bais);
 				Dimension pgsize = ppt.getPageSize();
 
-				Slide[] slide = ppt.getSlides();
-				for (int i = 0; i < slide.length; i++) {
-					String slideTitle = extractTitle( slide[i] );
+				List<HSLFSlide> slide = ppt.getSlides();
+				for (int i = 0; i < slide.size(); i++) {
+					String slideTitle = extractTitle( slide.get(i) );
 					String slideUri = store.nextAvailableUri(IAmConstants.SERVICE_RESOURCE);
 					SharepointResource slideResource = new SharepointResource(slideUri);
 					slideResource.addRdfType(IAmConstants.OSLC_AM_TYPE_RESOURCE);
@@ -394,7 +394,7 @@ public class ResourceService extends ShareBaseService {
 					Graphics2D graphics = img.createGraphics();
 					graphics.setPaint(Color.white);
 					graphics.fill(new Rectangle2D.Float(0, 0, pgsize.width, pgsize.height));
-					slide[i].draw(graphics);
+					slide.get(i).draw(graphics);
 					ByteArrayOutputStream out = new ByteArrayOutputStream();
 					javax.imageio.ImageIO.write(img, "png", out);
 					ByteArrayInputStream is = new ByteArrayInputStream(out.toByteArray());
@@ -493,7 +493,7 @@ public class ResourceService extends ShareBaseService {
 		return outBuf.toString();
 	}
 	
-	private String extractTitle(Slide slide) {
+	private String extractTitle(HSLFSlide slide) {
 		String title = slide.getTitle();
 		if( title == null ) {
 			title = "(untitled)";

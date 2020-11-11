@@ -37,10 +37,10 @@ jobs:
           mvn -B package --file trs4j-bugzilla-sample/pom.xml
       - name: Build non-OSLC tool samples
         run: |
-          mvn -B package --file org.eclipse.lyo.samples.excel/pom.xml
-          mvn -B package --file hudson-oslc-auto/pom.xml
           mvn -B package --file OSLCSharepoint/pom.xml
       - name: Catchall group for failiing builds (temporary)
-        # see https://github.com/OSLC/lyo-samples/issues/38
+
         run: |
-          mvn -B package --file oslc4j-client-samples/pom.xml
+          mvn -B package --file oslc4j-client-samples/pom.xml         # see https://github.com/OSLC/lyo-samples/issues/38
+          mvn -B package --file org.eclipse.lyo.samples.excel/pom.xml # see https://github.com/OSLC/lyo-samples/issues/41
+          mvn -B package --file hudson-oslc-auto/pom.xml              # see https://github.com/OSLC/lyo-samples/issues/42
