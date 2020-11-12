@@ -40,6 +40,7 @@ import org.apache.http.HttpStatus;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
+import org.eclipse.lyo.oslc4j.client.RootServicesHelper;
 import org.eclipse.lyo.oslc4j.client.exception.RootServicesException;
 import org.eclipse.lyo.oslc4j.client.JEEFormAuthenticator;
 import org.eclipse.lyo.oslc4j.client.OSLCConstants;
@@ -131,7 +132,7 @@ public class EWMSample {
 			OslcClient client = new OslcClient(clientBuilder);
 
 			//STEP 4: Get the URL of the OSLC ChangeManagement service from the rootservices document
-			String catalogUrl = client.getCatalogUrl(webContextUrl, OSLCConstants.OSLC_CM_V2);
+			String catalogUrl = new RootServicesHelper(webContextUrl, OSLCConstants.OSLC_CM_V2, client).getCatalogUrl();
 
 			//STEP 5: Find the OSLC Service Provider for the project area we want to work with
 			String serviceProviderUrl = client.lookupServiceProviderUrl(catalogUrl, projectArea);

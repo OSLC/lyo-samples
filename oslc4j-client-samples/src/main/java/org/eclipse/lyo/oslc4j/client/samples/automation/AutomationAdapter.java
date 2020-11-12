@@ -43,6 +43,7 @@ import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.vocabulary.RDF;
 import org.eclipse.lyo.oslc4j.client.OSLCConstants;
 import org.eclipse.lyo.oslc4j.client.OslcClient;
+import org.eclipse.lyo.oslc4j.client.RootServicesHelper;
 import org.eclipse.lyo.oslc4j.client.exception.ResourceNotFoundException;
 import org.eclipse.lyo.oslc4j.client.exception.RootServicesException;
 import org.eclipse.lyo.oslc4j.client.resources.AutomationConstants;
@@ -467,8 +468,6 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
 	 * @throws URISyntaxException
 	 * @throws ResourceNotFoundException
 	 * @see {@link IAutomationRequestHandler}
-	 * @see #login()
-	 * @see #registerWithServiceProvider()
 	 */
 	public void start(IAutomationRequestHandler requestHandler)
 			throws AutomationException, InterruptedException, IOException,
@@ -562,8 +561,8 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
 				// work with
 				String serviceProviderUrl = null;
 				try {
-					serviceProviderUrl = client.lookupServiceProviderUrl(
-							client.getCatalogUrl(getServerUrl(), OSLCConstants.OSLC_AUTO), projectArea);
+					String catalogUrl = new RootServicesHelper(getServerUrl(), OSLCConstants.OSLC_AUTO, client).getCatalogUrl();
+					serviceProviderUrl = client.lookupServiceProviderUrl(catalogUrl, projectArea);
 				} catch (RootServicesException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -754,7 +753,6 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
 	 * @throws IOException
 	 * @throws URISyntaxException
 	 * @throws ResourceNotFoundException
-	 * @see #login()
 	 */
 	public void register() throws AutomationException, IOException,
 			URISyntaxException, ResourceNotFoundException {
@@ -777,8 +775,9 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
 				// to work with
 				String serviceProviderUrl = null;
 				try {
+					String catalogUrl = new RootServicesHelper(getServerUrl(), OSLCConstants.OSLC_AUTO, client).getCatalogUrl();
 					serviceProviderUrl = client.lookupServiceProviderUrl(
-							client.getCatalogUrl(getServerUrl(), OSLCConstants.OSLC_AUTO), projectArea);
+							catalogUrl, projectArea);
 				} catch (RootServicesException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -1399,7 +1398,6 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
 	 *
 	 * @param request
 	 * @throws AutomationException
-	 * @see http://open-services.net/wiki/automation/OSLC-Automation-Specification-Version-2.0/#Canceling-the-execution-of-an-automation
 	 */
 	public void cancel(AutomationRequest request) throws AutomationException {
 
