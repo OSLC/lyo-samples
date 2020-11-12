@@ -28,6 +28,7 @@ jobs:
           mvn -B package --file oauth.sample/pom.xml
       - name: Build Lyo Client samples
         run: |
+          mvn -B package --file oslc4j-client-samples/pom.xml
           mvn -B package --file oslc-java-samples/pom.xml
       - name: Build StockQuote & Test samples
         run: mvn -B package --file pom.xml
@@ -39,8 +40,6 @@ jobs:
         run: |
           mvn -B package --file OSLCSharepoint/pom.xml
       - name: Catchall group for failiing builds (temporary)
-
         run: |
-          mvn -B package --file oslc4j-client-samples/pom.xml         # see https://github.com/OSLC/lyo-samples/issues/38
           mvn -B package --file org.eclipse.lyo.samples.excel/pom.xml # see https://github.com/OSLC/lyo-samples/issues/41
           mvn -B package --file hudson-oslc-auto/pom.xml              # see https://github.com/OSLC/lyo-samples/issues/42
