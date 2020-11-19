@@ -27,6 +27,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.cli.CommandLine;
@@ -36,6 +37,8 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
@@ -51,6 +54,7 @@ import org.eclipse.lyo.oslc4j.client.resources.TestCase;
 import org.eclipse.lyo.oslc4j.client.resources.TestResult;
 import org.eclipse.lyo.oslc4j.core.model.Link;
 import org.eclipse.lyo.oslc4j.core.model.OslcMediaType;
+import org.glassfish.jersey.apache.connector.ApacheClientProperties;
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
@@ -104,10 +108,17 @@ public class ETMSample {
 			
 			// Use HttpClient instead of the default HttpUrlConnection
 			ClientConfig clientConfig = new ClientConfig().connectorProvider(new ApacheConnectorProvider());
+			// Fixes Invalid cookie header: ... Invalid 'expires' attribute: Thu, 01 Dec 1994 16:00:00 GMT
+			clientConfig.property(ApacheClientProperties.REQUEST_CONFIG, RequestConfig.custom()
+					.setCookieSpec(CookieSpecs.STANDARD)
+					.setRedirectsEnabled(true)
+					.setRelativeRedirectsAllowed(true)
+					.build());
 			clientConfig.register(MultiPartFeature.class);
+//			clientConfig.getConnector().
 			ClientBuilder clientBuilder = ClientBuilder.newBuilder();
 			clientBuilder.withConfig(clientConfig);
-			
+
 			// Setup SSL support to ignore self-assigned SSL certificates - for testing only!!
 		    SSLContextBuilder sslContextBuilder = new SSLContextBuilder();
 		    sslContextBuilder.loadTrustMaterial(TrustSelfSignedStrategy.INSTANCE);
@@ -119,6 +130,7 @@ public class ETMSample {
 
 		    //STEP 3: Create a new OslcClient
 			OslcClient client = new OslcClient(clientBuilder);
+
 
 			//STEP 4: Get the URL of the OSLC ChangeManagement service from the rootservices document
 			String catalogUrl = new RootServicesHelper(webContextUrl, OSLCConstants.OSLC_QM_V2, client).getCatalogUrl();
