@@ -10,7 +10,7 @@ COPY src ./src
 # Build a release artifact.
 RUN mvn package -DskipTests
 
-FROM jetty:9.4-alpine
+FROM jetty:9-jre11-slim
 
 # WARNING DO NOT CHANGE WORKDIR or set it back to what it was before
 # $JETTY_BASE must be correct before starting Jetty
