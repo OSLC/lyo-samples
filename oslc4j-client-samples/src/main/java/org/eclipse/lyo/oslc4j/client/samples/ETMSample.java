@@ -40,7 +40,6 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
-import org.apache.log4j.Logger;
 import org.eclipse.lyo.oslc4j.client.JEEFormAuthenticator;
 import org.eclipse.lyo.oslc4j.client.OSLCConstants;
 import org.eclipse.lyo.oslc4j.client.OslcClient;
@@ -57,6 +56,8 @@ import org.glassfish.jersey.apache.connector.ApacheClientProperties;
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Samples of logging in to IBM Enterprise Test Manager and running OSLC operations
@@ -69,7 +70,7 @@ import org.glassfish.jersey.media.multipart.MultiPartFeature;
  */
 public class ETMSample {
 
-	private static final Logger logger = Logger.getLogger(ETMSample.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(ETMSample.class.getName());
 
 
 
