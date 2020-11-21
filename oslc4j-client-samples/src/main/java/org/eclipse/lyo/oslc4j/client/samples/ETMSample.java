@@ -24,10 +24,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.cli.CommandLine;
@@ -42,6 +40,7 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
+import org.apache.log4j.Logger;
 import org.eclipse.lyo.oslc4j.client.JEEFormAuthenticator;
 import org.eclipse.lyo.oslc4j.client.OSLCConstants;
 import org.eclipse.lyo.oslc4j.client.OslcClient;
@@ -72,6 +71,8 @@ public class ETMSample {
 
 	private static final Logger logger = Logger.getLogger(ETMSample.class.getName());
 
+
+
 	/**
 	 * Login to the ETM server and perform some OSLC actions
 	 * @param args
@@ -92,8 +93,8 @@ public class ETMSample {
 		CommandLine cmd = cliParser.parse(options, args);
 
 		if (!validateOptions(cmd)) {
-			logger.severe("Syntax:  java <class_name> -url https://<server>:port/<context>/ -user <user> -password <password> -project \"<project_area>\"");
-			logger.severe("Example: java ETMSample -url https://exmple.com:9443/qm -user ADMIN -password ADMIN -project \"JKE Banking (Quality Management)\"");
+			logger.error("Syntax:  java <class_name> -url https://<server>:port/<context>/ -user <user> -password <password> -project \"<project_area>\"");
+			logger.error("Example: java ETMSample -url https://exmple.com:9443/qm -user ADMIN -password ADMIN -project \"JKE Banking (Quality Management)\"");
 			return;
 		}
 
@@ -111,11 +112,8 @@ public class ETMSample {
 			// Fixes Invalid cookie header: ... Invalid 'expires' attribute: Thu, 01 Dec 1994 16:00:00 GMT
 			clientConfig.property(ApacheClientProperties.REQUEST_CONFIG, RequestConfig.custom()
 					.setCookieSpec(CookieSpecs.STANDARD)
-					.setRedirectsEnabled(true)
-					.setRelativeRedirectsAllowed(true)
 					.build());
 			clientConfig.register(MultiPartFeature.class);
-//			clientConfig.getConnector().
 			ClientBuilder clientBuilder = ClientBuilder.newBuilder();
 			clientBuilder.withConfig(clientConfig);
 
@@ -134,7 +132,7 @@ public class ETMSample {
 
 			//STEP 4: Get the URL of the OSLC ChangeManagement service from the rootservices document
 			String catalogUrl = new RootServicesHelper(webContextUrl, OSLCConstants.OSLC_QM_V2, client).getCatalogUrl();
-			logger.log(Level.INFO, String.format("Using %s catalog URI", catalogUrl));
+			logger.info(String.format("Using %s catalog URI", catalogUrl));
 
 			//STEP 5: Find the OSLC Service Provider for the project area we want to work with
 			String serviceProviderUrl = client.lookupServiceProviderUrl(catalogUrl, projectArea);
@@ -212,9 +210,9 @@ public class ETMSample {
 					OslcMediaType.APPLICATION_RDF_XML).readEntity(String.class);
 
 		} catch (RootServicesException re) {
-			logger.log(Level.SEVERE,"Unable to access the Jazz rootservices document at: " + webContextUrl + "/rootservices", re);
+			logger.error("Unable to access the Jazz rootservices document at: " + webContextUrl + "/rootservices", re);
 		} catch (Exception e) {
-			logger.log(Level.SEVERE,e.getMessage(),e);
+			logger.error(e.getMessage(),e);
 		}
 
 
@@ -259,7 +257,7 @@ public class ETMSample {
 					}
 				}
 			} catch (Exception e) {
-				logger.log(Level.SEVERE, "Unable to process artifact at url: " + resultsUrl, e);
+				logger.error("Unable to process artifact at url: " + resultsUrl, e);
 			}
 
 		}
