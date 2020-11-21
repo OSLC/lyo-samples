@@ -39,7 +39,7 @@ jobs:
       - name: Build non-OSLC tool samples
         run: |
           mvn -B package --file OSLCSharepoint/pom.xml
-      - name: Catchall group for failiing builds (temporary)
-        run: |
-          mvn -B package --file org.eclipse.lyo.samples.excel/pom.xml # see https://github.com/OSLC/lyo-samples/issues/41
-          mvn -B package --file hudson-oslc-auto/pom.xml              # see https://github.com/OSLC/lyo-samples/issues/42
+      # - name: Catchall group for failiing builds (temporary)
+      #   run: |
+      #     mvn -B package --file org.eclipse.lyo.samples.excel/pom.xml # see https://github.com/OSLC/lyo-samples/issues/41
+      #     mvn -B package --file hudson-oslc-auto/pom.xml              # see https://github.com/OSLC/lyo-samples/issues/42
