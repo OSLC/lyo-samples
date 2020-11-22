@@ -18,46 +18,46 @@
  *******************************************************************************/
 package org.eclipse.lyo.oslc4j.client.samples;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URI;
-import java.util.logging.Level;
-
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.core.Response;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.http.HttpHeaders;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
-import org.eclipse.lyo.oslc4j.client.JEEFormAuthenticator;
-import org.eclipse.lyo.oslc4j.client.OSLCConstants;
-import org.eclipse.lyo.oslc4j.client.OslcClient;
-import org.eclipse.lyo.oslc4j.client.RootServicesHelper;
-import org.eclipse.lyo.oslc4j.client.exception.RootServicesException;
-import org.eclipse.lyo.oslc4j.client.resources.OslcQuery;
-import org.eclipse.lyo.oslc4j.client.resources.OslcQueryParameters;
-import org.eclipse.lyo.oslc4j.client.resources.OslcQueryResult;
-import org.eclipse.lyo.oslc4j.client.resources.TestCase;
-import org.eclipse.lyo.oslc4j.client.resources.TestResult;
+import org.eclipse.lyo.client.JEEFormAuthenticator;
+import org.eclipse.lyo.client.OSLCConstants;
+import org.eclipse.lyo.client.OslcClient;
+import org.eclipse.lyo.client.RootServicesHelper;
+import org.eclipse.lyo.client.exception.RootServicesException;
+import org.eclipse.lyo.client.oslc.resources.TestCase;
+import org.eclipse.lyo.client.oslc.resources.TestResult;
+import org.eclipse.lyo.client.query.OslcQuery;
+import org.eclipse.lyo.client.query.OslcQueryParameters;
+import org.eclipse.lyo.client.query.OslcQueryResult;
 import org.eclipse.lyo.oslc4j.core.model.Link;
 import org.eclipse.lyo.oslc4j.core.model.OslcMediaType;
 import org.glassfish.jersey.apache.connector.ApacheClientProperties;
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.core.Response;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URI;
 
 /**
  * Samples of logging in to IBM Enterprise Test Manager and running OSLC operations
@@ -113,16 +113,22 @@ public class ETMSample {
 			// Fixes Invalid cookie header: ... Invalid 'expires' attribute: Thu, 01 Dec 1994 16:00:00 GMT
 			clientConfig.property(ApacheClientProperties.REQUEST_CONFIG, RequestConfig.custom()
 					.setCookieSpec(CookieSpecs.STANDARD)
+//					.setProxy(new HttpHost("localhost", 12345))
 					.build());
 			clientConfig.register(MultiPartFeature.class);
 			ClientBuilder clientBuilder = ClientBuilder.newBuilder();
 			clientBuilder.withConfig(clientConfig);
 
 			// Setup SSL support to ignore self-assigned SSL certificates - for testing only!!
-		    SSLContextBuilder sslContextBuilder = new SSLContextBuilder();
-		    sslContextBuilder.loadTrustMaterial(TrustSelfSignedStrategy.INSTANCE);
-		    clientBuilder.sslContext(sslContextBuilder.build());
-		    clientBuilder.hostnameVerifier(NoopHostnameVerifier.INSTANCE);
+//		    SSLContextBuilder sslContextBuilder = new SSLContextBuilder();
+//		    sslContextBuilder.loadTrustMaterial(TrustSelfSignedStrategy.INSTANCE);
+//			logger.warn("Self-signed TLS cert trust enabled");
+//
+////			sslContextBuilder.loadTrustMaterial((chain, authType) -> true); // WARNING! Only use with mitmproxy
+////			logger.warn("MITM Proxy TLS cert trust enabled");
+//
+//			clientBuilder.sslContext(sslContextBuilder.build());
+//		    clientBuilder.hostnameVerifier(NoopHostnameVerifier.INSTANCE);
 		    		    
 		    // IBM jazz-apps use JEE Form based authentication
 		    clientBuilder.register(new JEEFormAuthenticator(webContextUrl, userId, password));

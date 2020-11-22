@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.eclipse.lyo.oslc4j.client.samples.automation;
 
-import org.eclipse.lyo.oslc4j.client.resources.AutomationRequest;
+import org.eclipse.lyo.client.oslc.resources.AutomationRequest;
 
 /**
  * An exception thrown when an AutomationRequest has been canceled

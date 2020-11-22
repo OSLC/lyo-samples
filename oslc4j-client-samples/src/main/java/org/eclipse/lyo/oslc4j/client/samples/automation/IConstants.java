@@ -17,7 +17,7 @@ package org.eclipse.lyo.oslc4j.client.samples.automation;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.lyo.oslc4j.client.OSLCConstants;
+import org.eclipse.lyo.client.OSLCConstants;
 
 public interface IConstants {
 

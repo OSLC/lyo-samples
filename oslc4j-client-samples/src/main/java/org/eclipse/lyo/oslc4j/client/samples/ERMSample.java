@@ -30,6 +30,8 @@ import java.util.logging.Logger;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Response;
 import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -40,18 +42,18 @@ import org.apache.http.HttpHeaders;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
-import org.eclipse.lyo.oslc4j.client.RootServicesHelper;
-import org.eclipse.lyo.oslc4j.client.exception.RootServicesException;
-import org.eclipse.lyo.oslc4j.client.JEEFormAuthenticator;
-import org.eclipse.lyo.oslc4j.client.OSLCConstants;
-import org.eclipse.lyo.oslc4j.client.OslcClient;
-import org.eclipse.lyo.oslc4j.client.resources.OslcQuery;
-import org.eclipse.lyo.oslc4j.client.resources.OslcQueryParameters;
-import org.eclipse.lyo.oslc4j.client.resources.OslcQueryResult;
-import org.eclipse.lyo.oslc4j.client.resources.Requirement;
-import org.eclipse.lyo.oslc4j.client.resources.RequirementCollection;
-import org.eclipse.lyo.oslc4j.client.resources.RmConstants;
-import org.eclipse.lyo.oslc4j.client.resources.RmUtil;
+import org.eclipse.lyo.client.RootServicesHelper;
+import org.eclipse.lyo.client.exception.RootServicesException;
+import org.eclipse.lyo.client.JEEFormAuthenticator;
+import org.eclipse.lyo.client.OSLCConstants;
+import org.eclipse.lyo.client.OslcClient;
+import org.eclipse.lyo.client.query.OslcQuery;
+import org.eclipse.lyo.client.query.OslcQueryParameters;
+import org.eclipse.lyo.client.query.OslcQueryResult;
+import org.eclipse.lyo.client.oslc.resources.Requirement;
+import org.eclipse.lyo.client.oslc.resources.RequirementCollection;
+import org.eclipse.lyo.client.oslc.resources.RmConstants;
+import org.eclipse.lyo.client.resources.RmUtil;
 import org.eclipse.lyo.oslc4j.core.OSLC4JUtils;
 import org.eclipse.lyo.oslc4j.core.model.Link;
 import org.eclipse.lyo.oslc4j.core.model.OslcMediaType;
@@ -59,8 +61,8 @@ import org.eclipse.lyo.oslc4j.core.model.Property;
 import org.eclipse.lyo.oslc4j.core.model.ResourceShape;
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
-
-
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 
 /**
@@ -189,7 +191,7 @@ public class ERMSample {
 
 				// Decorate the PrimaryText
 				primaryText = "My Primary Text";
-				org.w3c.dom.Element obj = RmUtil.convertStringToHTML(primaryText);
+				org.w3c.dom.Element obj = convertStringToHTML(primaryText);
 				requirement.getExtendedProperties().put(RmConstants.PROPERTY_PRIMARY_TEXT, obj);
 
 				requirement.setDescription("Created By EclipseLyo");
@@ -429,6 +431,17 @@ public class ERMSample {
 
 
 
+	}
+
+	private static Element convertStringToHTML(String primaryText) {
+		try {
+			Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+			Element divElement = document.createElementNS(RmConstants.NAMESPACE_URI_XHTML, "div");
+			divElement.setTextContent(primaryText);
+			return divElement;
+		} catch (ParserConfigurationException e) {
+			throw new IllegalStateException(e);
+		}
 	}
 
 	private static void processPagedQueryResults(OslcQueryResult result, OslcClient client, boolean asJavaObjects) {

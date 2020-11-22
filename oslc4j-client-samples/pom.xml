@@ -10,7 +10,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <lyo.version>4.0.0.M2</lyo.version>
+        <lyo.version>4.0.0-SNAPSHOT</lyo.version>
     </properties>
 
     <dependencies>
@@ -51,7 +51,12 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.lyo.clients</groupId>
-            <artifactId>oslc4j-client</artifactId>
+            <artifactId>oslc-client</artifactId>
+            <version>${lyo.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.lyo.clients</groupId>
+            <artifactId>oslc-java-client-resources</artifactId>
             <version>${lyo.version}</version>
         </dependency>
 		<dependency>
