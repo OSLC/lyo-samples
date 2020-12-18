@@ -14,17 +14,9 @@
     <!-- This jersey version is the one supported by the latest Swagger 1.5 -->
     <version.jersey>2.25.1</version.jersey>
     <version.swagger>1.5.22</version.swagger>
-    <version.lyo>4.0.0.RC</version.lyo>
+    <version.lyo>4.0.0</version.lyo>
   </properties>
   <repositories>
-    <repository>
-      <id>lyo-releases</id>
-      <name>Eclipse Lyo Releases</name>
-      <url>https://repo.eclipse.org/content/repositories/lyo-releases/</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
     <repository>
       <id>lyo-snapshots</id>
       <name>Eclipse Lyo Snapshots</name>
