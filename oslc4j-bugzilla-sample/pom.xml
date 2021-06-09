@@ -17,7 +17,7 @@
     </repositories>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <oslc4j.version>2.2.0</oslc4j.version>
+        <oslc4j.version>4.0.0</oslc4j.version>
     </properties>
     <dependencies>
         <dependency>
