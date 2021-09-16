@@ -58,6 +58,7 @@ import org.eclipse.lyo.oslc4j.core.model.ResourceShape;
 import org.eclipse.lyo.oslc4j.provider.jena.AbstractOslcRdfXmlProvider;
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 
 /**
  * Samples of logging in to IBM Enterprise Workflow Manager and running OSLC operations
@@ -88,6 +89,7 @@ public class EWMSample {
 		options.addOption("user", true, "user ID");
 		options.addOption("password", true, "password");
 		options.addOption("project",true,"project area");
+		options.addOption("b", "basic", false, "Use Basic auth (use if JAS is enabled)");
 
 		CommandLineParser cliParser = new GnuParser();
 
@@ -95,8 +97,9 @@ public class EWMSample {
 		CommandLine cmd = cliParser.parse(options, args);
 
 		if (!validateOptions(cmd)) {
-			logger.severe("Syntax:  java <class_name> -url https://<server>:port/<context>/ -user <user> -password <password> -project \"<project_area>\"");
+			logger.severe("Syntax:  java <class_name> -url https://<server>:port/<context>/ -user <user> -password <password> -project \"<project_area>\" [--basic]");
 			logger.severe("Example: java EWMSample -url https://exmple.com:9443/ccm -user ADMIN -password ADMIN -project \"JKE Banking (Change Management)\"");
+			logger.severe("Example: java EWMSample -url https://jazz.net.example.com/sandbox02-ccm/ -user ADMIN -password ADMIN -project \"JKE Banking (Change Management)\" --basic");
 			return;
 		}
 
@@ -109,6 +112,7 @@ public class EWMSample {
 		String userId = cmd.getOptionValue("user");
 		String password = cmd.getOptionValue("password");
 		String projectArea = cmd.getOptionValue("project");
+		boolean useBasicAuth = cmd.hasOption("basic");
 
 		try {
 			
@@ -117,18 +121,26 @@ public class EWMSample {
 			// Use HttpClient instead of the default HttpUrlConnection
 			ClientConfig clientConfig = new ClientConfig().connectorProvider(new ApacheConnectorProvider());
 			ClientBuilder clientBuilder = ClientBuilder.newBuilder();
-			clientBuilder.withConfig(clientConfig);
-			
-			// Setup SSL support to ignore self-assigned SSL certificates - for testing only!!
-		    SSLContextBuilder sslContextBuilder = new SSLContextBuilder();
-		    sslContextBuilder.loadTrustMaterial(TrustSelfSignedStrategy.INSTANCE);
-		    clientBuilder.sslContext(sslContextBuilder.build());
-		    clientBuilder.hostnameVerifier(NoopHostnameVerifier.INSTANCE);
-		    		    
-		    // IBM jazz-apps use JEE Form based authentication
-		    clientBuilder.register(new JEEFormAuthenticator(webContextUrl, userId, password));
 
-		    //STEP 3: Create a new OslcClient
+			// IBM jazz-apps use JEE Form based authentication
+			// except the Jazz sandbox, it uses Basic/JAS auth. USE ONLY ONE
+			if (useBasicAuth) {
+				clientConfig.register(HttpAuthenticationFeature.basic(userId, password));
+			}
+			clientBuilder.withConfig(clientConfig);
+
+			// Setup SSL support to ignore self-assigned SSL certificates - for testing only!!
+			SSLContextBuilder sslContextBuilder = new SSLContextBuilder();
+			sslContextBuilder.loadTrustMaterial(TrustSelfSignedStrategy.INSTANCE);
+			clientBuilder.sslContext(sslContextBuilder.build());
+			clientBuilder.hostnameVerifier(NoopHostnameVerifier.INSTANCE);
+
+			// do not merge the two if's: order of registration is important
+			if(!useBasicAuth){
+				clientBuilder.register(new JEEFormAuthenticator(webContextUrl, userId, password));
+			}
+
+			//STEP 3: Create a new OslcClient
 			OslcClient client = new OslcClient(clientBuilder);
 
 			//STEP 4: Get the URL of the OSLC ChangeManagement service from the rootservices document
