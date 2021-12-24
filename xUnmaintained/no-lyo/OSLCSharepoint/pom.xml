@@ -1,26 +1,26 @@
 <!--
     Copyright (c) 2012 IBM Corporation.
-   
+
     All rights reserved. This program and the accompanying materials
     are made available under the terms of the Eclipse Public License v1.0
     and Eclipse Distribution License v. 1.0 which accompanies this distribution.
-     
+
     The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
     and the Eclipse Distribution License is available at
     http://www.eclipse.org/org/documents/edl-v10.php.
-   
+
     Contributors:
-   
+
         Keith Wells             - initial API and implementation
         Jim Conallen           - initial API and implementation
-   
+
  -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.eclipse.lyo.samples.sharepoint</groupId>
   <artifactId>OSLCSharepoint</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -29,19 +29,19 @@
     <wink.version>1.4</wink.version>
     <version-jetty>9.4.5.v20170502</version-jetty>
    </properties>
-  
-  
+
+
   <repositories>
-        <repository>
-            <id>aduna</id>
-            <name>Aduna Software's Maven repo</name>
-            <url>https://maven.ontotext.com/content/repositories/aduna/</url>
-        </repository>
-        <repository>
-        	<id>Eclipse</id>
-        	<name>Eclipse Maven repo</name>
-        	<url>http://download.eclipse.org/rt/eclipselink/maven.repo</url>
-        </repository>
+    <repository>
+        <id>aduna</id>
+        <name>Aduna Software's Maven repo</name>
+        <url>https://maven.ontotext.com/content/repositories/aduna/</url>
+    </repository>
+    <repository>
+    	<id>Eclipse</id>
+    	<name>Eclipse Maven repo</name>
+    	<url>https://download.eclipse.org/rt/eclipselink/maven.repo</url>
+    </repository>
 		<repository>
 			<id>lyo-releases</id>
 			<name>lyo-releases repository</name>
@@ -182,7 +182,7 @@
         <directory>test/resources</directory>
       </testResource>
     </testResources>
-    
+
   	<plugins>
   		<plugin>
   			<groupId>org.apache.maven.plugins</groupId>
@@ -195,9 +195,9 @@
   			<version>2.1.1</version>
   			<configuration>
   			    <warSourceDirectory>WebContent</warSourceDirectory>
-    			<webXml>WebContent\WEB-INF\web.xml</webXml>      
+    			<webXml>WebContent\WEB-INF\web.xml</webXml>
   			</configuration>
-  			
+
   		</plugin>
   		<plugin>
   			<groupId>org.apache.maven.plugins</groupId>
@@ -224,7 +224,7 @@
 				<scanTargets>
 					<scanTarget>WebContent</scanTarget>
 				</scanTargets>
-					
+
     			<systemProperties>
 
 					<systemProperty>
@@ -238,7 +238,7 @@
 					</systemProperty>
 
 				</systemProperties>
-					
+
 			</configuration>
 
 		</plugin>
