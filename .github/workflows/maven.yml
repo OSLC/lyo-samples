@@ -32,15 +32,13 @@ jobs:
         run: |
           mvn -B package --file oslc4j-bugzilla-sample/pom.xml
           mvn -B package --file trs4j-bugzilla-sample/pom.xml
-      - name: Build legacy OSLC4J Client samples (unmaintained)
-        run: |
-          mvn -B package --file oslc-java-samples/pom.xml
       - name: Build unmaintained samples
         continue-on-error: true
         run: |
           mvn -B package --file xUnmaintained/lyo-2.3/oauth.sample/pom.xml
           mvn -B package --file xUnmaintained/lyo-2.3/oslc4j-test/pom.xml
           mvn -B package --file xUnmaintained/lyo-2.4/oslc4j-stockquote/pom.xml
+          mvn -B package --file xUnmaintained/lyo-4.1/oslc-java-samples/pom.xml
       # - name: Catchall group for failiing builds (temporary)
       #   run: |
       #     mvn -B package --file org.eclipse.lyo.samples.excel/pom.xml # see https://github.com/OSLC/lyo-samples/issues/41
