@@ -25,7 +25,6 @@ jobs:
         run: |
           mvn -B package --file client-oauth-discovery-dui/pom.xml
           mvn -B package --file oauth-cli-helper/pom.xml
-          mvn -B package --file oauth.sample/pom.xml
       - name: Build Lyo Client samples
         run: |
           mvn -B package --file oslc4j-client-samples/pom.xml
@@ -36,8 +35,10 @@ jobs:
       - name: Build legacy OSLC4J Client samples (unmaintained)
         run: |
           mvn -B package --file oslc-java-samples/pom.xml
-      - name: Build StockQuote & Test samples (unmaintained)
+      - name: Build unmaintained samples
+        continue-on-error: true
         run: |
+          mvn -B package --file xUnmaintained/lyo-2.3/oauth.sample/pom.xml
           mvn -B package --file xUnmaintained/lyo-2.3/oslc4j-test/pom.xml
           mvn -B package --file xUnmaintained/lyo-2.4/oslc4j-stockquote/pom.xml
       # - name: Catchall group for failiing builds (temporary)
