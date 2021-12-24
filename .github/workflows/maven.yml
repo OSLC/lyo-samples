@@ -33,9 +33,6 @@ jobs:
         run: |
           mvn -B package --file oslc4j-bugzilla-sample/pom.xml
           mvn -B package --file trs4j-bugzilla-sample/pom.xml
-      - name: Build non-OSLC tool samples
-        run: |
-          mvn -B package --file OSLCSharepoint/pom.xml
       - name: Build legacy OSLC4J Client samples (unmaintained)
         run: |
           mvn -B package --file oslc-java-samples/pom.xml
