@@ -15,7 +15,10 @@ public class Application extends javax.ws.rs.core.Application {
     {
         RESOURCE_CLASSES.addAll(JenaProvidersRegistry.getProviders());
 
+        RESOURCE_CLASSES.add(OslcCorsFilter.class);
+
         RESOURCE_CLASSES.add(DiscoveryServices.class);
+
     }
 
     public Application()
