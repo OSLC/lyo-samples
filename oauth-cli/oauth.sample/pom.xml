@@ -17,10 +17,16 @@
         <wink.version>1.4</wink.version>
         <version-jetty>9.3.30.v20211001</version-jetty>
     <!-- TODO update to 2.4.0 or  4.0.0 -->
-        <lyo.version>2.3.0</lyo.version>
+        <lyo.version>2.4.0</lyo.version>
   </properties>
 
   <dependencies>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>1.7.32</version>
+    </dependency>
     <dependency>
       <groupId>org.eclipse.lyo.server</groupId>
       <artifactId>oauth-webapp</artifactId>

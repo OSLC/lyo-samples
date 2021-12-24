@@ -65,7 +65,7 @@ public class OAuthClient
 
 	public static void main(final String[] args) {
 		if (args.length == 0) {
-			System.err.println("Usage: java org.eclipse.lyo.client.oauth.sample.OAuthClient <uri>");
+			System.err.println("Usage: java -jar target/oauth-cli-helper.jar <uri>");
 			System.exit(1);
 		}
 
@@ -119,14 +119,14 @@ public class OAuthClient
 
 	private static HttpClient getClient() {
 		final HttpClient client = new DefaultHttpClient();
-		disableCertificateValidatation(client);
+		disableCertificateValidation(client);
 
 		return client;
 	}
 
 	// not recommended for production environments!
 	// needed if the server uses self-signed certificates, however
-	private static void disableCertificateValidatation(HttpClient client) {
+	private static void disableCertificateValidation(HttpClient client) {
 		try {
 			final SSLContext sc = SSLContext.getInstance("SSL");
 			sc.init(null, new TrustManager[] {

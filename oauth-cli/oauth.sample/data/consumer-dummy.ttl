@@ -1,0 +1,9 @@
+@prefix lyo_oauth: <http://eclipse.org/lyo/server/oauth#> .
+
+<urn:lyo:dummyConsumer> a lyo_oauth:Consumer;
+        lyo_oauth:consumerKey "dummyKey";
+        lyo_oauth:consumerSecret "dummySecret";
+        lyo_oauth:consumerName "dummyConsumerName";
+        lyo_oauth:provisional false;
+        lyo_oauth:trusted true .
+
