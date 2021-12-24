@@ -2,10 +2,10 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.eclipse.lyo.oslc4j.samples</groupId>
-    <artifactId>oslc4j-test-sample</artifactId>
+    <artifactId>oslc4j-stockquote-sample</artifactId>
     <version>2.4.0</version>
     <packaging>war</packaging>
-    <name>OSLC4J Test Application</name>
+    <name>OSLC4J Stock Quote Sample</name>
     <scm>
         <url>http://git.eclipse.org/c/lyo/org.eclipse.lyo.core.git</url>
     </scm>
@@ -14,6 +14,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
+    <lyo.version>${project.version}</lyo.version>
     </properties>
     <dependencies>
         <dependency>
@@ -25,28 +26,29 @@
         <dependency>
             <groupId>org.eclipse.lyo.oslc4j.core</groupId>
             <artifactId>oslc4j-core</artifactId>
-            <version>2.3.0</version>
+            <version>${lyo.version}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.lyo.oslc4j.core</groupId>
             <artifactId>oslc4j-wink</artifactId>
-            <version>2.3.0</version>
+            <version>${lyo.version}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.lyo.oslc4j.core</groupId>
             <artifactId>oslc4j-json4j-provider</artifactId>
-            <version>2.3.0</version>
+            <version>${lyo.version}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.lyo.oslc4j.core</groupId>
             <artifactId>oslc4j-jena-provider</artifactId>
-            <version>2.3.0</version>
+            <version>${lyo.version}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.lyo.oslc4j.samples</groupId>
-            <artifactId>oslc4j-test-common</artifactId>
-            <version>2.4.0</version>
+            <artifactId>oslc4j-stockquote-common</artifactId>
+            <version>${lyo.version}</version>
         </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -55,12 +57,12 @@
         </dependency>
     </dependencies>
     <build>
-        <sourceDirectory>${basedir}/src/</sourceDirectory>
+        <!-- <sourceDirectory>${basedir}/src/</sourceDirectory>
         <testResources>
             <testResource>
                 <directory>test/resources</directory>
             </testResource>
-        </testResources>
+        </testResources> -->
 
         <plugins>
             <plugin>
@@ -68,8 +70,6 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.1.1</version>
                 <configuration>
-                    <warSourceDirectory>WebContent</warSourceDirectory>
-                    <webXml>WebContent\WEB-INF\web.xml</webXml>
                     <webResources>
                         <resource>
                             <directory>src</directory>
@@ -78,6 +78,7 @@
                         </resource>
                     </webResources>
                 </configuration>
+
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -90,45 +91,44 @@
             <!-- ********************************************** -->
             <!-- Jetty 7 plugin See also: http://wiki.eclipse.org/Jetty/Feature/Jetty_Maven_Plugin -->
             <plugin>
-                <groupId>org.mortbay.jetty</groupId>
+                <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
-                <version>8.1.16.v20140903</version>
+                <version>9.2.30.v20200428</version>
                 <configuration>
                     <webAppConfig>
-                        <contextPath>/OSLC4JTest</contextPath>
+                        <contextPath>/OSLC4JStockQuote</contextPath>
                     </webAppConfig>
 
                     <!-- Also start OSLC4JRegistry webApp -->
-                    <contextHandlers>
+                    <!-- <contextHandlers>
                         <contextHandler
                             implementation="org.eclipse.jetty.webapp.WebAppContext">
                             <war>${basedir}/../org.eclipse.lyo.oslc4j.registry/target/oslc4j-registry-2.3.0.war</war>
                             <contextPath>/OSLC4JRegistry</contextPath>
                         </contextHandler>
-                    </contextHandlers>
+                    </contextHandlers> -->
 
                     <!-- Jetty config adds logging -->
-                    <jettyConfig>${project.build.directory}/test-classes/jetty.xml</jettyConfig>
+                    <!-- <jettyConfig>${project.build.directory}/test-classes/jetty.xml</jettyConfig> -->
 
                     <!-- enable hot deploy -->
-                    <reload>automatic</reload>
+                    <!-- <reload>automatic</reload>
                     <scanIntervalSeconds>5</scanIntervalSeconds>
                     <scanTargets>
                         <scanTarget>WebContent</scanTarget>
-                    </scanTargets>
+                    </scanTargets> -->
 
                     <systemProperties>
 
-                        <systemProperty>
+                        <!-- <systemProperty>
                             <name>config.dir</name>
                             <value>${basedir}/test/resources</value>
-                        </systemProperty>
+                        </systemProperty> -->
 
-                        <systemProperty>
+                        <!-- <systemProperty>
                             <name>jetty.logs</name>
                             <value>${basedir}/target</value>
-                        </systemProperty>
-
+                        </systemProperty> -->
                         <systemProperty>
                             <name>jetty.port</name>
                             <value>8080</value>
@@ -141,16 +141,18 @@
             </plugin>
         </plugins>
     </build>
+
     <repositories>
 		<repository>
-		<id>lyo-releases</id>
-		<name>lyo-releases repository</name>
-		<url>https://repo.eclipse.org/content/repositories/lyo-releases/</url>
+            <id>lyo-releases</id>
+            <name>lyo-releases repository</name>
+            <url>https://repo.eclipse.org/content/repositories/lyo-releases/</url>
 		</repository>
 		<repository>
-		<id>lyo-snapshots</id>
-		<name>lyo-snapshots repository</name>
-		<url>https://repo.eclipse.org/content/repositories/lyo-snapshots/</url>
+            <id>lyo-snapshots</id>
+            <name>lyo-snapshots repository</name>
+            <url>https://repo.eclipse.org/content/repositories/lyo-snapshots/</url>
 		</repository>
 	</repositories>
+
 </project>
