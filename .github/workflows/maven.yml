@@ -23,14 +23,14 @@ jobs:
           java-version: 1.8
       - name: Build OAuth Discovery application
         run: |
-          mvn -B clean verify --file client-oauth-discovery-dui/pom.xml
+          mvn -B clean verify --file oauth-discovery-dui/pom.xml
       - name: Build OAuth Provider & CLI samples
         run: |
-          mvn -B clean verify --file oauth-cli/oauth.sample/pom.xml
-          mvn -B clean verify --file oauth-cli/oauth-cli-helper/pom.xml
+          mvn -B clean verify --file oauth-twolegged-sample/oauth.sample/pom.xml
+          mvn -B clean verify --file oauth-twolegged-sample/oauth-cli-helper/pom.xml
       - name: Build Lyo Client samples
         run: |
-          mvn -B clean verify --file oslc4j-client-samples/pom.xml
+          mvn -B clean verify --file lyo-client-samples/pom.xml
       - name: Build Bugzilla samples
         run: |
           mvn -B clean verify --file trs4j-bugzilla-sample/pom.xml
