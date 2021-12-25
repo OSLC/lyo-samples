@@ -24,7 +24,7 @@ jobs:
       - name: Build OAuth Discovery application
         run: |
           mvn -B clean verify --file oauth-discovery-dui/pom.xml
-      - name: Build OAuth Provider & CLI samples
+      - name: Build OAuth Two-legged samples
         run: |
           mvn -B clean verify --file oauth-twolegged-sample/oauth.sample/pom.xml
           mvn -B clean verify --file oauth-twolegged-sample/oauth-cli-helper/pom.xml
