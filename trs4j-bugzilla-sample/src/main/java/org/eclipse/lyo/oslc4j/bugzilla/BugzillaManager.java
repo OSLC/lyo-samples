@@ -139,13 +139,11 @@ public class BugzillaManager implements ServletContextListener  {
     }
     private static final String HOST = getHost();
     
-	@Override
 	public void contextDestroyed(ServletContextEvent servletContextEvent) 
 	{
 		//No need to de-register - catalog will go away with the web app		
 	}
 
-    @Override
     public void contextInitialized(final ServletContextEvent servletContextEvent)
     {
     	//Get the servlet base URI and set some paths to the REST services and the catalog

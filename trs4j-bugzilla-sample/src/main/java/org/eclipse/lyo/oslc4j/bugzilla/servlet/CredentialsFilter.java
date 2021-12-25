@@ -56,13 +56,15 @@ import com.j2bugzilla.base.ConnectionException;
 import com.j2bugzilla.rpc.LogIn;
 
 public class CredentialsFilter implements Filter {
+//	public static final String CONNECTOR_ATTRIBUTE = BugzillaAdapterCredentialsFilter.CONNECTOR_ATTRIBUTE;
+//    public static final String CREDENTIALS_ATTRIBUTE = BugzillaAdapterCredentialsFilter.CREDENTIALS_ATTRIBUTE;
+//    private static final String ADMIN_SESSION_ATTRIBUTE = BugzillaAdapterCredentialsFilter.ADMIN_SESSION_ATTRIBUTE;
+//    public static final String JAZZ_INVALID_EXPIRED_TOKEN_OAUTH_PROBLEM = BugzillaAdapterCredentialsFilter.JAZZ_INVALID_EXPIRED_TOKEN_OAUTH_PROBLEM;
+	public static final String CONNECTOR_ATTRIBUTE = "org.eclipse.lyo.server.oauth.core.utils.Connector";
+	public static final String CREDENTIALS_ATTRIBUTE = "org.eclipse.lyo.server.oauth.core.utils.Credentials";
+	protected static final String ADMIN_SESSION_ATTRIBUTE = "org.eclipse.lyo.server.oauth.core.utils.AdminSession";
+	protected static final String JAZZ_INVALID_EXPIRED_TOKEN_OAUTH_PROBLEM = "invalid_expired_token";
 
-
-	
-    public static final String CONNECTOR_ATTRIBUTE = BugzillaAdapterCredentialsFilter.CONNECTOR_ATTRIBUTE;
-    public static final String CREDENTIALS_ATTRIBUTE = BugzillaAdapterCredentialsFilter.CREDENTIALS_ATTRIBUTE;
-    private static final String ADMIN_SESSION_ATTRIBUTE = BugzillaAdapterCredentialsFilter.ADMIN_SESSION_ATTRIBUTE;
-    public static final String JAZZ_INVALID_EXPIRED_TOKEN_OAUTH_PROBLEM = BugzillaAdapterCredentialsFilter.JAZZ_INVALID_EXPIRED_TOKEN_OAUTH_PROBLEM;
     public static final String OAUTH_REALM = "Bugzilla";
 		
 	private static LRUCache<String, BugzillaConnector> keyToConnectorCache = new LRUCache<String, BugzillaConnector>(200);
