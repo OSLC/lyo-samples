@@ -31,12 +31,10 @@ jobs:
       - name: Build Lyo Client samples
         run: |
           mvn -B clean verify --file lyo-client-samples/pom.xml
-      - name: Build Bugzilla samples
-        run: |
-          mvn -B clean verify --file trs4j-bugzilla-sample/pom.xml
       - name: Build unmaintained samples
         continue-on-error: true
         run: |
+          mvn -B clean verify --file xUnmaintained/lyo-2.1/trs4j-bugzilla-sample/pom.xml
           mvn -B clean verify --file xUnmaintained/lyo-2.2/oslc4j-bugzilla-sample/pom.xml
           mvn -B clean verify --file xUnmaintained/lyo-2.3/oslc4j-test/pom.xml
           mvn -B clean verify --file xUnmaintained/lyo-2.4/oslc4j-stockquote/pom.xml
