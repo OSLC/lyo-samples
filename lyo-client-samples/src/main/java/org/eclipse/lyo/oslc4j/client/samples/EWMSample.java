@@ -63,6 +63,7 @@ import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.glassfish.jersey.message.internal.MessageBodyProviderNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -304,9 +305,15 @@ public class EWMSample {
 			System.out.println("Defect created at location " + defectLocation);
 		} catch (RootServicesException re) {
 			logger.error("Unable to access the Jazz rootservices document at: {}/rootservices", webContextUrl, re);
+		} catch (MessageBodyProviderNotFoundException e) {
+			if(e.getMessage().contains("text/html")) {
+				logger.error("Jazz server returned an HTML page instead of RDF. Are you sure you have chosen between Basic and JAS Forms auth correctly?");
+			} else {
+				logger.error("Unknown error", e);
+			}
 		} catch (ProcessingException e) {
 			if(e.getCause() instanceof ConnectionClosedException) {
-				logger.error("Server has closed the connection. Are you sure you have chosen between Basic and JAS auth correctly?");
+				logger.error("Server has closed the connection. Are you sure you have chosen between Basic and JAS Forms auth correctly?");
 			} else {
 				logger.error("Unknown error", e);
 			}
