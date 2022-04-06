@@ -116,6 +116,7 @@ public class ETMSample {
 //					.setProxy(new HttpHost("localhost", 12345))
 					.build());
 			clientConfig.register(MultiPartFeature.class);
+
 			ClientBuilder clientBuilder = ClientBuilder.newBuilder();
 			clientBuilder.withConfig(clientConfig);
 

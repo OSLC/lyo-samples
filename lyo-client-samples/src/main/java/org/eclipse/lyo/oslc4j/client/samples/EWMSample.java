@@ -23,9 +23,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Response;
 import javax.xml.namespace.QName;
@@ -35,8 +34,11 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.http.ConnectionClosedException;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
@@ -56,9 +58,13 @@ import org.eclipse.lyo.oslc4j.core.model.OslcMediaType;
 import org.eclipse.lyo.oslc4j.core.model.Property;
 import org.eclipse.lyo.oslc4j.core.model.ResourceShape;
 import org.eclipse.lyo.oslc4j.provider.jena.AbstractOslcRdfXmlProvider;
+import org.glassfish.jersey.apache.connector.ApacheClientProperties;
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Samples of logging in to IBM Enterprise Workflow Manager and running OSLC operations
@@ -74,7 +80,7 @@ public class EWMSample {
 
 	private static final String RTC_NAMESPACE = "http://jazz.net/xmlns/prod/jazz/rtc/cm/1.0/";
 	private static final String RTC_FILED_AGAINST = "filedAgainst";
-	private static final Logger logger = Logger.getLogger(EWMSample.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(EWMSample.class);
 
 	/**
 	 * Login to the RTC server and perform some OSLC actions
@@ -97,9 +103,9 @@ public class EWMSample {
 		CommandLine cmd = cliParser.parse(options, args);
 
 		if (!validateOptions(cmd)) {
-			logger.severe("Syntax:  java <class_name> -url https://<server>:port/<context>/ -user <user> -password <password> -project \"<project_area>\" [--basic]");
-			logger.severe("Example: java EWMSample -url https://exmple.com:9443/ccm -user ADMIN -password ADMIN -project \"JKE Banking (Change Management)\"");
-			logger.severe("Example: java EWMSample -url https://jazz.net.example.com/sandbox02-ccm/ -user ADMIN -password ADMIN -project \"JKE Banking (Change Management)\" --basic");
+			logger.error("Syntax:  java <class_name> -url https://<server>:port/<context>/ -user <user> -password <password> -project \"<project_area>\" [--basic]");
+			logger.error("Example: java EWMSample -url https://exmple.com:9443/ccm -user ADMIN -password ADMIN -project \"JKE Banking (Change Management)\"");
+			logger.error("Example: java EWMSample -url https://jazz.net.example.com/sandbox02-ccm/ -user ADMIN -password ADMIN -project \"JKE Banking (Change Management)\" --basic");
 			return;
 		}
 
@@ -117,15 +123,23 @@ public class EWMSample {
 		try {
 			
 			// STEP 1: Configure the ClientBuilder as needed for your client application
-			
+			logger.debug("STEP 1: Configure the ClientBuilder as needed for your client application");
 			// Use HttpClient instead of the default HttpUrlConnection
 			ClientConfig clientConfig = new ClientConfig().connectorProvider(new ApacheConnectorProvider());
+			// Fixes Invalid cookie header: ... Invalid 'expires' attribute: Thu, 01 Dec 1994 16:00:00 GMT
+			clientConfig.property(ApacheClientProperties.REQUEST_CONFIG, RequestConfig.custom()
+					.setCookieSpec(CookieSpecs.STANDARD)
+					.build());
+			clientConfig.register(MultiPartFeature.class);
+
 			ClientBuilder clientBuilder = ClientBuilder.newBuilder();
 
 			// IBM jazz-apps use JEE Form based authentication
 			// except the Jazz sandbox, it uses Basic/JAS auth. USE ONLY ONE
+			logger.debug("STEP 2: Set up authentication");
 			if (useBasicAuth) {
 				clientConfig.register(HttpAuthenticationFeature.basic(userId, password));
+				logger.info("Using Basic authentication");
 			}
 			clientBuilder.withConfig(clientConfig);
 
@@ -138,18 +152,23 @@ public class EWMSample {
 			// do not merge the two if's: order of registration is important
 			if(!useBasicAuth){
 				clientBuilder.register(new JEEFormAuthenticator(webContextUrl, userId, password));
+				logger.info("Using JAS (Forms) authentication");
 			}
 
 			//STEP 3: Create a new OslcClient
+			logger.debug("STEP 3: Create a new OslcClient");
 			OslcClient client = new OslcClient(clientBuilder);
 
 			//STEP 4: Get the URL of the OSLC ChangeManagement service from the rootservices document
+			logger.debug("STEP 4: Get the URL of the OSLC ChangeManagement service from the rootservices document");
 			String catalogUrl = new RootServicesHelper(webContextUrl, OSLCConstants.OSLC_CM_V2, client).getCatalogUrl();
 
 			//STEP 5: Find the OSLC Service Provider for the project area we want to work with
+			logger.debug("STEP 5: Find the OSLC Service Provider for the project area we want to work with");
 			String serviceProviderUrl = client.lookupServiceProviderUrl(catalogUrl, projectArea);
 
 			//STEP 6: Get the Query Capabilities URL so that we can run some OSLC queries
+			logger.debug("STEP 6: Get the Query Capabilities URL so that we can run some OSLC queries");
 			String queryCapability = client.lookupQueryCapability(serviceProviderUrl,
 																  OSLCConstants.OSLC_CM_V2,
 																  OSLCConstants.CM_CHANGE_REQUEST_TYPE);
@@ -284,9 +303,15 @@ public class EWMSample {
 			creationResponse.readEntity(String.class);
 			System.out.println("Defect created at location " + defectLocation);
 		} catch (RootServicesException re) {
-			logger.log(Level.SEVERE,"Unable to access the Jazz rootservices document at: " + webContextUrl + "/rootservices", re);
+			logger.error("Unable to access the Jazz rootservices document at: {}/rootservices", webContextUrl, re);
+		} catch (ProcessingException e) {
+			if(e.getCause() instanceof ConnectionClosedException) {
+				logger.error("Server has closed the connection. Are you sure you have chosen between Basic and JAS auth correctly?");
+			} else {
+				logger.error("Unknown error", e);
+			}
 		} catch (Exception e) {
-			logger.log(Level.SEVERE,e.getMessage(),e);
+			logger.error("Unknown error", e);
 		}
 	}
 
