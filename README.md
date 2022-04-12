@@ -18,7 +18,7 @@ The latest samplest target the Lyo release 4.0.0, which supports JAX-RS 2.0, and
 
 Earlier samples targetting Lyo 2.4.0 (and earlier) supports JAX-RS 1.0, and assumes the [Apache Wink implementation](https://svn.apache.org/repos/infra/websites/production/wink/content/index.html).
 
-## [OSLC Client Authentication, Service Discovery & Delegated UIs](https://github.com/OSLC/lyo-samples/tree/master/client-oauth-discovery-dui) - Sample code for Lyo 4.0.0 (JAX-RS 2.0)
+## [OSLC Client Authentication, Service Discovery & Delegated UIs](https://github.com/OSLC/lyo-samples/tree/master/oauth-discovery-dui) - Sample code for Lyo 4.0.0 (JAX-RS 2.0)
 
 This OSLC client application
 
@@ -32,7 +32,7 @@ To run the adaptor as a regular web application, run:
 
 You can then explore the server starting with http://localhost:8081/discovery/services/discovery.
 
-## [oslc4j-client-samples](https://github.com/OSLC/lyo-samples/tree/master/oslc4j-client-samples) - Sample code for Lyo 4.0.0 (JAX-RS 2.0)
+## [oslc4j-client-samples](https://github.com/OSLC/lyo-samples/tree/master/lyo-client-samples) - Sample code for Lyo 4.0.0 (JAX-RS 2.0)
 
 This is a subset of the sample code from Lyo 2.4.0 detailed under [oslc-java-samples](https://github.com/OSLC/lyo-samples#oslc-java-samples).
 
