@@ -13,13 +13,13 @@ mvn exec:java -Dexec.mainClass="org.eclipse.lyo.samples.client.EWMSample" -Dexec
 For form-based auth, use the following command (replace `YourUserName` with your login and replace the URL with the URL of your installation):
 
 ```
-mvn exec:java -Dexec.mainClass="EWMSample" -Dexec.args="-url https://nordic.clm.ibmcloud.com/ccm/ \
+mvn exec:java -Dexec.mainClass="org.eclipse.lyo.samples.client.EWMSample" -Dexec.args="-url https://nordic.clm.ibmcloud.com/ccm/ \
 -user YourUserName \
 -password \"s3cret\" \
 -project \"OSLC Environment (EWM)\""
 ```
 
-See [old docs](../xUnmaintained/lyo-4.1/oslc-java-samples/README.md) for additional information.
+See [old docs](https://github.com/OSLC/lyo-samples-attic/blob/main/lyo-4.1/oslc-java-samples/README.md) for additional information.
 
 ---
 
