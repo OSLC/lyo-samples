@@ -469,6 +469,7 @@ public class ERMSample {
 
 				//Get a single artifact by its URL
 				response = client.getResource(resultsUrl, OSLCConstants.CT_RDF);
+				boolean processed = false;
 
 				if (response != null) {
 					//De-serialize it as a Java object
@@ -479,8 +480,12 @@ public class ERMSample {
 
 						//Just print the raw RDF/XML (or process the XML as desired)
 						processRawResponse(response);
-
+						processed = true;
 					}
+				}
+				if (!processed && response != null) {
+					// discard the result
+					response.readEntity(String.class);
 				}
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, "Unable to process artfiact at url: " + resultsUrl, e);
