@@ -201,7 +201,7 @@ public class RMSample {
 		System.out.println();
 	}
 
-	private static void printRequirementInfo(Requirement cr) {
+	public static void printRequirementInfo(Requirement cr) {
 		//See the OSLC4J Requirement class for a full list of attributes you can access.
 		if (cr != null) {
 			System.out.println("ID: " + cr.getIdentifier() + ", Title: " + cr.getTitle() + ", Description: " + cr.getDescription());

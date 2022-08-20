@@ -1,5 +1,5 @@
-/*******************************************************************************
- * Copyright (c) 2012, 2014 IBM Corporation.
+/*
+ * Copyright (c) 2012-2022 IBM Corporation and contributors.
  *
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
@@ -13,7 +13,7 @@
  *
  *     Michael Fiedler     - initial API and implementation
  *     Gabriel Ruelas      - Fix handling of Rich text, include parsing extended properties
- *******************************************************************************/
+ */
 package org.eclipse.lyo.samples.client;
 
 import java.io.BufferedReader;
@@ -39,6 +39,8 @@ import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.http.HttpHeaders;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
@@ -59,16 +61,19 @@ import org.eclipse.lyo.oslc4j.core.model.Link;
 import org.eclipse.lyo.oslc4j.core.model.OslcMediaType;
 import org.eclipse.lyo.oslc4j.core.model.Property;
 import org.eclipse.lyo.oslc4j.core.model.ResourceShape;
+import org.glassfish.jersey.apache.connector.ApacheClientProperties;
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import static org.eclipse.lyo.samples.client.RMSample.printRequirementInfo;
 
 
 /**
  * Samples of logging in to IBM Enterprise Requirements Manager
  * and running OSLC operations
- *
  *
  * - run an OLSC Requirement query and retrieve OSLC Requirements and de-serialize them as Java objects
  * - TODO:  Add more requirement sample scenarios
@@ -118,6 +123,13 @@ public class ERMSample {
 			
 			// Use HttpClient instead of the default HttpUrlConnection
 			ClientConfig clientConfig = new ClientConfig().connectorProvider(new ApacheConnectorProvider());
+
+			// Fixes Invalid cookie header: ... Invalid 'expires' attribute: Thu, 01 Dec 1994 16:00:00 GMT
+			clientConfig.property(ApacheClientProperties.REQUEST_CONFIG, RequestConfig.custom()
+					.setCookieSpec(CookieSpecs.STANDARD)
+					.build());
+			clientConfig.register(MultiPartFeature.class);
+
 			ClientBuilder clientBuilder = ClientBuilder.newBuilder();
 			clientBuilder.withConfig(clientConfig);
 			
@@ -129,8 +141,9 @@ public class ERMSample {
 		    		    
 		    // IBM jazz-apps use JEE Form based authentication
 		    clientBuilder.register(new JEEFormAuthenticator(webContextUrl, userId, password));
+			logger.info("Using JAS (Forms) authentication");
 
-		    //STEP 3: Create a new OslcClient
+			//STEP 3: Create a new OslcClient
 			OslcClient client = new OslcClient(clientBuilder);
 
 			//STEP 4: Get the URL of the OSLC ChangeManagement service from the rootservices document
@@ -197,12 +210,15 @@ public class ERMSample {
 				requirement.setDescription("Created By EclipseLyo");
 				requirement.addImplementedBy(new Link(new URI("http://google.com"), "Link in REQ01"));
 				//Create the Requirement
-				Response creationResponse = client.createResource(
+				try(Response creationResponse = client.createResource(
 						requirementFactory, requirement,
 						OslcMediaType.APPLICATION_RDF_XML,
-						OslcMediaType.APPLICATION_RDF_XML);
-				req01URL = creationResponse.getStringHeaders().getFirst(HttpHeaders.LOCATION);
-				creationResponse.readEntity(String.class);
+						OslcMediaType.APPLICATION_RDF_XML)) {
+					if(creationResponse.getStatus() == Response.Status.FORBIDDEN.getStatusCode()) {
+						throw new IllegalStateException("Server is refusing the requests on security grounds.");
+					}
+					req01URL = creationResponse.getStringHeaders().getFirst(HttpHeaders.LOCATION);
+				}
 
 				// Create REQ02
 				requirement = new Requirement();
@@ -211,13 +227,15 @@ public class ERMSample {
 				requirement.setDescription("Created By EclipseLyo");
 				requirement.addValidatedBy(new Link(new URI("http://bancomer.com"), "Link in REQ02"));
 				//Create the change request
-				creationResponse = client.createResource(
+				try(Response creationResponse = client.createResource(
 						requirementFactory, requirement,
 						OslcMediaType.APPLICATION_RDF_XML,
-						OslcMediaType.APPLICATION_RDF_XML);
-
-				req02URL = creationResponse.getStringHeaders().getFirst(HttpHeaders.LOCATION);
-				creationResponse.readEntity(String.class);
+						OslcMediaType.APPLICATION_RDF_XML)) {
+					if(creationResponse.getStatus() == Response.Status.FORBIDDEN.getStatusCode()) {
+						throw new IllegalStateException("Server is refusing the requests on security grounds.");
+					}
+					req02URL = creationResponse.getStringHeaders().getFirst(HttpHeaders.LOCATION);
+				}
 
 				// Create REQ03
 				requirement = new Requirement();
@@ -226,12 +244,15 @@ public class ERMSample {
 				requirement.setDescription("Created By EclipseLyo");
 				requirement.addValidatedBy(new Link(new URI("http://outlook.com"), "Link in REQ03"));
 				//Create the change request
-				creationResponse = client.createResource(
+				try(Response creationResponse = client.createResource(
 						requirementFactory, requirement,
 						OslcMediaType.APPLICATION_RDF_XML,
-						OslcMediaType.APPLICATION_RDF_XML);
-				req03URL = creationResponse.getStringHeaders().getFirst(HttpHeaders.LOCATION);
-				creationResponse.readEntity(String.class);
+						OslcMediaType.APPLICATION_RDF_XML)) {
+					if(creationResponse.getStatus() == Response.Status.FORBIDDEN.getStatusCode()) {
+						throw new IllegalStateException("Server is refusing the requests on security grounds.");
+					}
+					req03URL = creationResponse.getStringHeaders().getFirst(HttpHeaders.LOCATION);
+				}
 
 				// Create REQ04
 				requirement = new Requirement();
@@ -240,12 +261,15 @@ public class ERMSample {
 				requirement.setDescription("Created By EclipseLyo");
 
 				//Create the Requirement
-				creationResponse = client.createResource(
+				try(Response creationResponse = client.createResource(
 						requirementFactory, requirement,
 						OslcMediaType.APPLICATION_RDF_XML,
-						OslcMediaType.APPLICATION_RDF_XML);
-				req04URL = creationResponse.getStringHeaders().getFirst(HttpHeaders.LOCATION);
-				creationResponse.readEntity(String.class);
+						OslcMediaType.APPLICATION_RDF_XML)) {
+					if(creationResponse.getStatus() == Response.Status.FORBIDDEN.getStatusCode()) {
+						throw new IllegalStateException("Server is refusing the requests on security grounds.");
+					}
+					req04URL = creationResponse.getStringHeaders().getFirst(HttpHeaders.LOCATION);
+				}
 
 				// Now create a collection
 				// Create REQ04
@@ -258,12 +282,15 @@ public class ERMSample {
 				collection.setTitle("Collection01");
 				collection.setDescription("Created By EclipseLyo");
 				//Create the collection
-				creationResponse = client.createResource(
+				try(Response creationResponse = client.createResource(
 						requirementFactory, collection,
 						OslcMediaType.APPLICATION_RDF_XML,
-						OslcMediaType.APPLICATION_RDF_XML);
-				reqcoll01URL = creationResponse.getStringHeaders().getFirst(HttpHeaders.LOCATION);
-				creationResponse.readEntity(String.class);
+						OslcMediaType.APPLICATION_RDF_XML)) {
+					if(creationResponse.getStatus() == Response.Status.FORBIDDEN.getStatusCode()) {
+						throw new IllegalStateException("Server is refusing the requests on security grounds.");
+					}
+					reqcoll01URL = creationResponse.getStringHeaders().getFirst(HttpHeaders.LOCATION);
+				}
 
 			}
 
@@ -317,6 +344,7 @@ public class ERMSample {
 			queryParams.setWhere("rdf:type=<http://open-services.net/ns/rm#Requirement>");
 			OslcQuery query = new OslcQuery(client, queryCapability, 10, queryParams);
 			OslcQueryResult result = query.submit();
+			result.getRawResponse().bufferEntity();
 			boolean processAsJavaObjects = false;
 			int resultsSize = result.getMembersUrls().length;
 			processPagedQueryResults(result,client, processAsJavaObjects);
@@ -331,6 +359,7 @@ public class ERMSample {
 			query = new OslcQuery(client, queryCapability, 10, queryParams);
 			result = query.submit();
 			processAsJavaObjects = false;
+			result.getRawResponse().bufferEntity();
 			resultsSize = result.getMembersUrls().length;
 			processPagedQueryResults(result,client, processAsJavaObjects);
 			System.out.println("\n------------------------------\n");
@@ -342,6 +371,7 @@ public class ERMSample {
 			queryParams.setWhere("dcterms:title=\"Req04\"");
 			query = new OslcQuery(client, queryCapability, 10, queryParams);
 			result = query.submit();
+			result.getRawResponse().bufferEntity();
 			resultsSize = result.getMembersUrls().length;
 			processAsJavaObjects = false;
 			processPagedQueryResults(result,client, processAsJavaObjects);
@@ -354,6 +384,7 @@ public class ERMSample {
 			queryParams.setWhere("oslc_rm:implementedBy=<http://google.com>");
 			query = new OslcQuery(client, queryCapability, 10, queryParams);
 			result = query.submit();
+			result.getRawResponse().bufferEntity();
 			resultsSize = result.getMembersUrls().length;
 			processAsJavaObjects = false;
 			processPagedQueryResults(result,client, processAsJavaObjects);
@@ -366,6 +397,7 @@ public class ERMSample {
 			queryParams.setWhere("oslc_rm:validatedBy in [<http://bancomer.com>,<http://outlook.com>]");
 			query = new OslcQuery(client, queryCapability, 10, queryParams);
 			result = query.submit();
+			result.getRawResponse().bufferEntity();
 			resultsSize = result.getMembersUrls().length;
 			processAsJavaObjects = false;
 			processPagedQueryResults(result,client, processAsJavaObjects);
@@ -378,6 +410,7 @@ public class ERMSample {
 			queryParams.setWhere("nav:parent=<"+rootFolder+"> and oslc_rm:validatedBy=<http://bancomer.com>");
 			query = new OslcQuery(client, queryCapability, 10, queryParams);
 			result = query.submit();
+			result.getRawResponse().bufferEntity();
 			resultsSize = result.getMembersUrls().length;
 			processAsJavaObjects = false;
 			processPagedQueryResults(result,client, processAsJavaObjects);
@@ -406,6 +439,7 @@ public class ERMSample {
 			queryParams.setWhere("dcterms:title=\"My new Title\"");
 			query = new OslcQuery(client, queryCapability, 10, queryParams);
 			result = query.submit();
+			result.getRawResponse().bufferEntity();
 			resultsSize = result.getMembersUrls().length;
 			processAsJavaObjects = false;
 			processPagedQueryResults(result,client, processAsJavaObjects);
@@ -418,6 +452,7 @@ public class ERMSample {
 			queryParams.setWhere("oslc_rm:implementedBy=<http://google.com>");
 			query = new OslcQuery(client, queryCapability, 10, queryParams);
 			result = query.submit();
+			result.getRawResponse().bufferEntity();
 			resultsSize = result.getMembersUrls().length;
 			processAsJavaObjects = false;
 			processPagedQueryResults(result,client, processAsJavaObjects);
@@ -460,39 +495,27 @@ public class ERMSample {
 	}
 
 	private static void processCurrentPage(OslcQueryResult result, OslcClient client, boolean asJavaObjects) {
-
+		result.getRawResponse().bufferEntity();
 		for (String resultsUrl : result.getMembersUrls()) {
 			System.out.println(resultsUrl);
 
-			Response response = null;
-			try {
-
+			try(Response response = client.getResource(resultsUrl, OSLCConstants.CT_RDF)) {
 				//Get a single artifact by its URL
-				response = client.getResource(resultsUrl, OSLCConstants.CT_RDF);
-				boolean processed = false;
-
 				if (response != null) {
+					response.bufferEntity();
 					//De-serialize it as a Java object
 					if (asJavaObjects) {
-						   //Requirement req = response.readEntity(Requirement.class);
-						   //printRequirementInfo(req);   //print a few attributes
+					   Requirement req = response.readEntity(Requirement.class);
+					   printRequirementInfo(req);   //print a few attributes
 					} else {
-
 						//Just print the raw RDF/XML (or process the XML as desired)
 						processRawResponse(response);
-						processed = true;
 					}
-				}
-				if (!processed && response != null) {
-					// discard the result
-					response.readEntity(String.class);
 				}
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, "Unable to process artfiact at url: " + resultsUrl, e);
 			}
-
 		}
-
 	}
 
 	private static void processRawResponse(Response response) throws IOException {
