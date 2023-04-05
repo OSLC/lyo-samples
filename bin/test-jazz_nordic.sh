@@ -13,9 +13,6 @@ mvn -B clean compile
 mvn -B exec:java -Dexec.mainClass="org.eclipse.lyo.samples.client.EWMSample" -Dexec.args="-url https://nordic.clm.ibmcloud.com/ccm/ \
   -user ${JAZZ_NORDIC_USERNAME} -password \"${JAZZ_NORDIC_PASSWORD}\" \
   -project \"OSLC Open Environment (EWM)\""
-mvn -B exec:java -Dexec.mainClass="org.eclipse.lyo.samples.client.EWMSample" -Dexec.args="-url https://oslc.itm.kth.se:9443/ccm/ \
-    -user ${JAZZ_ITM_USERNAME} -password \"${JAZZ_ITM_PASSWORD}\" \
-    -project \"JKE Banking (Change Management)\""
 
 # ERM
 mvn -B exec:java -Dexec.mainClass="org.eclipse.lyo.samples.client.ERMSample" -Dexec.args="-url https://nordic.clm.ibmcloud.com/rm/ \
