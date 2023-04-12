@@ -3,8 +3,8 @@
 name: Smoke testing
 
 on:
-  push:
-    branches: [master]
+#  push:
+#    branches: [master]
   schedule:
     - cron: "30 4 * * 5" # catch SNAPSHOT breaking changes
   workflow_dispatch:
