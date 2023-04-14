@@ -12,7 +12,8 @@ overlays/
 pom.xml.versionsBackup
 dependency-reduced-pom.xml
 
-bin/
+**/bin/
+!/bin/
 .settings/
 .classpath
 .project
