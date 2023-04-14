@@ -80,16 +80,13 @@
       <scope>provided</scope>
     </dependency>
 	<dependency>
+    <!-- due to Tomcat not proving JSTL OOB  -->
 		<groupId>javax.servlet</groupId>
 		<artifactId>jstl</artifactId>
 		<version>1.2</version>
+    <scope>runtime</scope>
 	 </dependency>
-	 <dependency>
-	    <groupId>taglibs</groupId>
-	    <artifactId>standard</artifactId>
-	    <version>1.1.2</version>
-	</dependency>
-    <dependency>
+   <dependency>
       <groupId>javax.servlet.jsp.jstl</groupId>
       <artifactId>jstl-api</artifactId>
       <version>1.2</version>
@@ -100,12 +97,6 @@
         </exclusion>
       </exclusions>
     </dependency>
-    <!--		<dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
-            <version>1.2</version>
-        </dependency>-->
-
     <dependency>
       <groupId>javax.ws.rs</groupId>
       <artifactId>javax.ws.rs-api</artifactId>
