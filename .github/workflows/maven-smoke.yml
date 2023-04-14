@@ -24,6 +24,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: 11
+          distribution: 'temurin'
       - name: Build Lyo Client samples
         run: |
           mvn -B clean verify --file lyo-client-samples/pom.xml
