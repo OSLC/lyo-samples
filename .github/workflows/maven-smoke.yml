@@ -9,6 +9,10 @@ on:
     - cron: "30 4 * * 5" # catch SNAPSHOT breaking changes
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' && github.ref != 'refs/heads/main' }}
+
 jobs:
   build-jdk11:
     runs-on: ubuntu-latest

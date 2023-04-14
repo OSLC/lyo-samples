@@ -11,6 +11,11 @@ on:
         default: 'master'
       link:
         description: 'PR/issue link (e.g., to Lyo)'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' && github.ref != 'refs/heads/main' }}
+
 jobs:
   build-jdk11:
     runs-on: ubuntu-latest
