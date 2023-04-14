@@ -1,0 +1,57 @@
+# Smoke testing client samples on Jazz sandbox instances
+
+name: Smoke testing (Lyo HEAD)
+
+on:
+  workflow_dispatch:
+    inputs:
+      lyoBranch:
+        description: 'Lyo branch to test on'
+        required: true
+        default: 'master'
+      link:
+        description: 'PR/issue link (e.g., to Lyo)'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' && github.ref != 'refs/heads/main' }}
+
+jobs:
+  build-jdk11:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          repository: eclipse/lyo
+          ref: "${{ github.event.inputs.lyoBranch }}"
+          path: lyo-trunk
+      - uses: actions/checkout@v2
+        with:
+          path: main
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: 11
+          distribution: 'temurin'
+      - name: Build Lyo locally
+        run: mvn -B clean install --file lyo-trunk/pom.xml -DskipTests -Dmaven.javadoc.skip=true
+      - name: Build Lyo Client samples
+        run: |
+          mvn -B clean verify --file ./main/lyo-client-samples/pom.xml
+      - name: E2E client samples tests on ELM @ Jazz.net
+        run: ./main/bin/test-jazz_net.sh
+        env:
+          JAZZ_NET_USERNAME: ${{ secrets.JAZZ_NET_USERNAME }}
+          JAZZ_NET_PASSWORD: ${{ secrets.JAZZ_NET_PASSWORD }}
+      - name: E2E client samples tests on ELM @ IBM Nordic
+        run: ./main/bin/test-jazz_nordic.sh
+        env:
+          JAZZ_NORDIC_USERNAME: ${{ secrets.JAZZ_NORDIC_USERNAME }}
+          JAZZ_NORDIC_PASSWORD: ${{ secrets.JAZZ_NORDIC_PASSWORD }}
+      # - name: E2E client samples tests on ELM @ KTH
+      #   run: ./bin/test-jazz_kth.sh
+      #   env:
+      #     JAZZ_ITM_USERNAME: ${{ secrets.JAZZ_ITM_USERNAME }}
+      #     JAZZ_ITM_PASSWORD: ${{ secrets.JAZZ_ITM_PASSWORD }}
