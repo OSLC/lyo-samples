@@ -38,7 +38,7 @@ jobs:
             distribution: temurin
             experimental: true
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up JDK ${{ matrix.java-version }}
         uses: actions/setup-java@v3
         with:
