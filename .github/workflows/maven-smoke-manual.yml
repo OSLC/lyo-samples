@@ -50,8 +50,8 @@ jobs:
         env:
           JAZZ_NORDIC_USERNAME: ${{ secrets.JAZZ_NORDIC_USERNAME }}
           JAZZ_NORDIC_PASSWORD: ${{ secrets.JAZZ_NORDIC_PASSWORD }}
-      # - name: E2E client samples tests on ELM @ KTH
-      #   run: ./bin/test-jazz_kth.sh
-      #   env:
-      #     JAZZ_ITM_USERNAME: ${{ secrets.JAZZ_ITM_USERNAME }}
-      #     JAZZ_ITM_PASSWORD: ${{ secrets.JAZZ_ITM_PASSWORD }}
+      - name: E2E client samples tests on ELM @ KTH
+        run: ./bin/test-jazz_kth.sh
+        env:
+          JAZZ_ITM_USERNAME: ${{ secrets.JAZZ_ITM_USERNAME }}
+          JAZZ_ITM_PASSWORD: ${{ secrets.JAZZ_ITM_PASSWORD }}
