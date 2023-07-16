@@ -25,16 +25,16 @@ jobs:
         java-version: [11, 17, 20]
         distribution: ['temurin']
         include:
-          - jdk: '21-ea'
+          - java-version: '21-ea'
             distribution: zulu
             experimental: true
-          - jdk: '21-ea'
+          - java-version: '21-ea'
             distribution: temurin
             experimental: true
-          - jdk: '21-ea'
+          - java-version: '21-ea'
             distribution: oracle
             experimental: true
-          - jdk: '21-ea'
+          - java-version: '21-ea'
             distribution: liberica
             experimental: true
     steps:
