@@ -32,10 +32,10 @@ jobs:
             distribution: temurin
             experimental: true
           - java-version: '21-ea'
-            distribution: oracle
+            distribution: corretto
             experimental: true
           - java-version: '21-ea'
-            distribution: liberica
+            distribution: microsoft
             experimental: true
     steps:
       - uses: actions/checkout@v2
