@@ -9,7 +9,7 @@ on:
   pull_request:
     branches: [master]
   schedule:
-    - cron: "30 4 * * 5" # catch SNAPSHOT breaking changes
+    - cron: "01 13 1-7 * 5" # catch SNAPSHOT breaking changes
   workflow_dispatch:
 
 concurrency:
