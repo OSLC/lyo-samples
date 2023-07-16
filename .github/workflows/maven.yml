@@ -22,20 +22,20 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        java-version: [11, 17, 20]
-        distribution: ['temurin']
+        java-version: [17]
+        distribution: ['temurin', 'zulu', 'oracle', 'corretto', 'microsoft', 'liberica']
         include:
+          - java-version: '11'
+            distribution: temurin
+            experimental: true
+          - java-version: '20'
+            distribution: zulu
+            experimental: true
           - java-version: '21-ea'
             distribution: zulu
             experimental: true
           - java-version: '21-ea'
             distribution: temurin
-            experimental: true
-          - java-version: '21-ea'
-            distribution: corretto
-            experimental: true
-          - java-version: '21-ea'
-            distribution: microsoft
             experimental: true
     steps:
       - uses: actions/checkout@v2
