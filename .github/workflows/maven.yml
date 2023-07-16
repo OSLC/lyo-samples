@@ -23,13 +23,26 @@ jobs:
       fail-fast: false
       matrix:
         java-version: [11, 17, 20]
-        os: [ubuntu-latest]
+        distribution: ['temurin']
+        include:
+          - jdk: '21-ea'
+            distribution: zulu
+            experimental: true
+          - jdk: '21-ea'
+            distribution: temurin
+            experimental: true
+          - jdk: '21-ea'
+            distribution: oracle
+            experimental: true
+          - jdk: '21-ea'
+            distribution: liberica
+            experimental: true
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK ${{ matrix.java-version }}
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
+          distribution:  ${{ matrix.distribution }}
           java-version: ${{ matrix.java-version }}
       - name: Build Lyo Client samples
         run: |
