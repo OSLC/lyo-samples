@@ -22,15 +22,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        java-version: [17]
+        java-version: ['17', '21', '22-ea']
         distribution: ['temurin', 'zulu', 'oracle', 'corretto', 'microsoft', 'liberica']
-        include:
-          - java-version: '21'
-            distribution: temurin
-            experimental: false
-          - java-version: '22-ea'
-            distribution: zulu
-            experimental: true
+        # include:
+        #   - java-version: '21'
+        #     distribution: temurin
+        #   - java-version: '22-ea'
+        #     distribution: zulu
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK ${{ matrix.java-version }}
@@ -38,6 +36,7 @@ jobs:
         with:
           distribution:  ${{ matrix.distribution }}
           java-version: ${{ matrix.java-version }}
+          cache: 'maven'
       - name: Build Lyo Client samples
         run: |
           mvn -B clean verify --file lyo-client-samples/pom.xml
@@ -50,7 +49,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu' # EOL in 2030 for Azul JDK 1.8
-          java-version: 8
+          java-version: '8'
       - name: Build OAuth Discovery application
         run: |
           mvn -B clean verify --file client-oauth-discovery-dui/pom.xml
