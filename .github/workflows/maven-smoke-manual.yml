@@ -17,7 +17,7 @@ concurrency:
   cancel-in-progress: ${{ github.ref != 'refs/heads/master' && github.ref != 'refs/heads/main' }}
 
 jobs:
-  build-jdk11:
+  build-jdk17:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -25,17 +25,11 @@ jobs:
         java-version: [17]
         distribution: ['temurin', 'zulu', 'oracle', 'corretto', 'microsoft', 'liberica']
         include:
-          - java-version: '11'
+          - java-version: '21'
             distribution: temurin
-            experimental: true
-          - java-version: '20'
+            experimental: false
+          - java-version: '22-ea'
             distribution: zulu
-            experimental: true
-          - java-version: '21-ea'
-            distribution: zulu
-            experimental: true
-          - java-version: '21-ea'
-            distribution: temurin
             experimental: true
     steps:
       - uses: actions/checkout@v3
