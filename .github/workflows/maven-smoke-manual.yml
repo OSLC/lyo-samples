@@ -26,11 +26,9 @@ jobs:
         distribution: ['temurin', 'zulu', 'oracle', 'corretto', 'microsoft', 'liberica']
         include:
           - java-version: '21'
-            distribution: temurin
-            experimental: false
-          - java-version: '22-ea'
-            distribution: zulu
-            experimental: true
+            distribution: 'zulu'
+          # - java-version: '22-ea'
+          #   distribution: zulu
     steps:
       - uses: actions/checkout@v3
         with:
