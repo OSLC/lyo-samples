@@ -25,17 +25,11 @@ jobs:
         java-version: [17]
         distribution: ['temurin', 'zulu', 'oracle', 'corretto', 'microsoft', 'liberica']
         include:
-          - java-version: '11'
+          - java-version: '21'
             distribution: temurin
-            experimental: true
-          - java-version: '20'
+            experimental: false
+          - java-version: '22-ea'
             distribution: zulu
-            experimental: true
-          - java-version: '21-ea'
-            distribution: zulu
-            experimental: true
-          - java-version: '21-ea'
-            distribution: temurin
             experimental: true
     steps:
       - uses: actions/checkout@v3
