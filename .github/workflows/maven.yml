@@ -23,10 +23,12 @@ jobs:
       fail-fast: false
       matrix:
         java-version: ['17', '21']
-        distribution: ['zulu', 'oracle', 'corretto', 'microsoft', 'liberica']
+        distribution: ['zulu', 'oracle', 'corretto', 'liberica']
         include:
           - java-version: '17'
             distribution: 'temurin'
+          - java-version: '17'
+            distribution: 'microsoft'
         #   - java-version: '22-ea'
         #     distribution: zulu
     steps:
