@@ -6,7 +6,7 @@ set -o pipefail
 [[ -f "$(dirname "$0")/jazz.env" ]] && . "$(dirname "$0")/jazz.env" || echo ".env file not found"
 
 JAZZ_NET_PROJECT_ID="${JAZZ_NET_PROJECT_ID:-sandbox01}"
-JAZZ_NET_PROJECT_NAME="${JAZZ_NET_PROJECT_NAME:-smarx721 Project (Change and Architecture Management)}"
+JAZZ_NET_PROJECT_NAME="${JAZZ_NET_PROJECT_NAME:-'smarx721 Project (Change and Architecture Management)'}"
 
 pushd "$(dirname "$0")/../lyo-client-samples"
 
