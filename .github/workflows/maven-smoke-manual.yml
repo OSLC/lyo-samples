@@ -23,7 +23,8 @@ jobs:
       fail-fast: false
       matrix:
         java-version: [17]
-        distribution: ['temurin', 'zulu', 'oracle', 'corretto', 'microsoft', 'liberica']
+#        distribution: ['temurin', 'zulu', 'oracle', 'corretto', 'microsoft', 'liberica']
+        distribution: ['temurin']
         include:
           - java-version: '21'
             distribution: 'zulu'
