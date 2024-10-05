@@ -27,7 +27,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -612,7 +612,7 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
 		request.getExtendedProperties().remove(PROPERTY_RQM_PROGRESS);
 
 		request.getExtendedProperties().put(PROPERTY_RQM_PROGRESS,
-				new Integer(100));
+				Integer.valueOf(100));
 
 		URI updateUri = appendOslcProperties(request.getAbout(),
 				"oslc_auto:state", "rqm_auto:progress");
@@ -1234,7 +1234,7 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
 		AutomationRequest requestCopy = new AutomationRequest(request.getAbout());
 
 		requestCopy.getExtendedProperties().put(PROPERTY_RQM_PROGRESS,
-				new Integer(i));
+				Integer.valueOf(i));
 
 		URI updateUri = appendOslcProperties(requestCopy.getAbout(),
 				"rqm_auto:progress");
