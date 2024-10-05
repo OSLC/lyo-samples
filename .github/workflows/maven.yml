@@ -30,7 +30,7 @@ jobs:
           - java-version: '21'
             distribution: 'liberica'
           - java-version: '23'
-            distribution: 'zulu'
+            distribution: 'oracle'
           - java-version: '24-ea'
             distribution: 'zulu'
     steps:
