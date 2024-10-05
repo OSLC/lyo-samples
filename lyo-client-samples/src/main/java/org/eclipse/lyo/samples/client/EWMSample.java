@@ -24,9 +24,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.core.Response;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.cli.CommandLine;

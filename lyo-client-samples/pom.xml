@@ -11,8 +11,8 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.release>17</maven.compiler.release>
-        <v.lyo>5.1.1.Final</v.lyo>
-        <v.jersey>2.35</v.jersey>
+        <v.lyo>6.0.0.Final</v.lyo>
+        <v.jersey>3.1.8</v.jersey> <!--same as refimpl-->
     </properties>
 
     <dependencies>

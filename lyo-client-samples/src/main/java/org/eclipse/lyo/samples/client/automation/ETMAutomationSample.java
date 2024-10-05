@@ -25,7 +25,7 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import javax.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.ClientBuilder;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -72,7 +72,6 @@ public class ETMAutomationSample implements IConstants, IAutomationRequestHandle
 	 * Login to the Automation Service Provider and start polling for Automation
 	 * Requests
 	 *
-	 * @param args
 	 * @throws Exception
 	 */
 	private void begin() throws Exception {

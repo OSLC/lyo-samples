@@ -17,20 +17,22 @@ concurrency:
   cancel-in-progress: ${{ github.ref != 'refs/heads/master' && github.ref != 'refs/heads/main' }}
 
 jobs:
-  build:
+  build-client-samples:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        java-version: ['17', '21']
-        distribution: ['zulu', 'oracle', 'corretto', 'liberica']
+#        java-version: ['17', '21']
+#        distribution: ['zulu', 'oracle', 'corretto', 'liberica']
         include:
           - java-version: '17'
             distribution: 'temurin'
-          - java-version: '17'
-            distribution: 'microsoft'
-        #   - java-version: '22-ea'
-        #     distribution: zulu
+          - java-version: '21'
+            distribution: 'liberica'
+          - java-version: '23'
+            distribution: 'oracle'
+          - java-version: '24-ea'
+            distribution: 'zulu'
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK ${{ matrix.java-version }}
@@ -43,7 +45,7 @@ jobs:
         run: |
           mvn -B clean verify --file lyo-client-samples/pom.xml
 
-  build-legacy:
+  build-oauth-legacy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
