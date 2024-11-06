@@ -34,7 +34,11 @@ You can then explore the server starting with http://localhost:8081/discovery/se
 
 ## [oslc4j-client-samples](https://github.com/OSLC/lyo-samples/tree/master/lyo-client-samples) - Sample code for Lyo 6.0.0 (Jakarta REST / JAX-RS 3.1)
 
-This is a subset of the sample code from Lyo 2.4.0 detailed under [oslc-java-samples](https://github.com/OSLC/lyo-samples#oslc-java-samples).
+These are client samples for working with:
+
+- Jazz EWM
+- Jazz DNG
+- Jazz ETM
 
 ## License
 
