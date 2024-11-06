@@ -40,6 +40,8 @@ These are client samples for working with:
 - Jazz DNG
 - Jazz ETM
 
+using both Basic and Jazz Forms (JFS) auth.
+
 ## License
 
 This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 and Eclipse Distribution License v. 1.0 which accompanies this distribution ([LICENSE](LICENSE) and [LICENSE.EPL](LICENSE.EPL)).
