@@ -14,7 +14,7 @@ You are also welcome to contact the development team via [lyo-dev mailing list](
 
 Below is a selected subset of projects in this repository.
 
-The latest samplest target the Lyo release 4.0.0, which supports JAX-RS 2.0, and no longer depend on any particlar implementation of JAX-RS. This gives the developer the chance to adopt any preferred implementation such as [Jersey](https://jersey.github.io/), [RESTEasy](https://resteasy.github.io/), etc.
+The latest samples target the Lyo release 4.0.0+ (JAX-RS 2.0) or 6.0.0+ (Jakarta REST), and no longer depend on any particlar implementation of JAX-RS. This gives the developer the chance to adopt any preferred implementation such as [Jersey](https://jersey.github.io/), [RESTEasy](https://resteasy.github.io/), etc.
 
 Earlier samples targetting Lyo 2.4.0 (and earlier) supports JAX-RS 1.0, and assumes the [Apache Wink implementation](https://svn.apache.org/repos/infra/websites/production/wink/content/index.html).
 
