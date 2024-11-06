@@ -10,7 +10,7 @@ You are also welcome to contact the development team via [lyo-dev mailing list](
 
 > **Please note:** Most of code in this repo is not always up to date. You are welcome to [contribute](https://github.com/eclipse/lyo#contributing) fixes and suggestions.
 
-# Selected Project Descriptions
+## Selected Project Descriptions
 
 Below is a selected subset of projects in this repository.
 
@@ -18,7 +18,17 @@ The latest samples target the Lyo release 4.0.0+ (JAX-RS 2.0) or 6.0.0+ (Jakarta
 
 Earlier samples targetting Lyo 2.4.0 (and earlier) supports JAX-RS 1.0, and assumes the [Apache Wink implementation](https://svn.apache.org/repos/infra/websites/production/wink/content/index.html).
 
-## [OSLC Client Authentication, Service Discovery & Delegated UIs](https://github.com/OSLC/lyo-samples/tree/master/client-oauth-discovery-dui) - Sample code for Lyo 4.0.0 (JAX-RS 2.0)
+### [lyo-client-samples](https://github.com/OSLC/lyo-samples/tree/master/lyo-client-samples) - Sample code for Lyo 6.0.0 (Jakarta REST / JAX-RS 3.1)
+
+These are client samples for working with:
+
+- Jazz EWM
+- Jazz DNG
+- Jazz ETM
+
+using both Basic and Jazz Forms (JFS) auth.
+
+### [OSLC Client Authentication, Service Discovery & Delegated UIs](https://github.com/OSLC/lyo-samples/tree/master/client-oauth-discovery-dui) - Sample code for Lyo 4.0.0 (JAX-RS 2.0)
 
 This OSLC client application
 
@@ -31,16 +41,6 @@ To run the adaptor as a regular web application, run:
     mvn clean jetty:run-exploded
 
 You can then explore the server starting with http://localhost:8081/discovery/services/discovery.
-
-## [oslc4j-client-samples](https://github.com/OSLC/lyo-samples/tree/master/lyo-client-samples) - Sample code for Lyo 6.0.0 (Jakarta REST / JAX-RS 3.1)
-
-These are client samples for working with:
-
-- Jazz EWM
-- Jazz DNG
-- Jazz ETM
-
-using both Basic and Jazz Forms (JFS) auth.
 
 ## License
 
