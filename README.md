@@ -23,7 +23,7 @@ Earlier samples targetting Lyo 2.4.0 (and earlier) supports JAX-RS 1.0, and assu
 These are client samples for working with:
 
 - Jazz EWM
-- Jazz DNG
+- Jazz ERM (aka DNG)
 - Jazz ETM
 
 using both Basic and Jazz Forms (JFS) auth.
