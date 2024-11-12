@@ -130,10 +130,15 @@ public class EWMSample {
 			// Fixes Invalid cookie header: ... Invalid 'expires' attribute: Thu, 01 Dec 1994 16:00:00 GMT
 			clientConfig.property(ApacheClientProperties.REQUEST_CONFIG, RequestConfig.custom()
 					.setCookieSpec(CookieSpecs.STANDARD)
+					// connection lease request timeout used when requesting a connection from the connection manager
+					.setConnectionRequestTimeout(5_000)
 					.build());
 			clientConfig.register(MultiPartFeature.class);
 
 			ClientBuilder clientBuilder = ClientBuilder.newBuilder();
+
+			clientBuilder.connectTimeout(10, TimeUnit.SECONDS);
+			clientBuilder.readTimeout(300, TimeUnit.SECONDS);
 
 			// IBM jazz-apps use JEE Form based authentication
 			// except the Jazz sandbox, it uses Basic/JAS auth. USE ONLY ONE
