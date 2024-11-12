@@ -22,17 +22,16 @@ import org.eclipse.lyo.client.oslc.resources.AutomationRequest;
  */
 public class AutomationRequestCanceledException extends AutomationException {
 
-	private final AutomationRequest request;
+    private final AutomationRequest request;
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public AutomationRequestCanceledException(AutomationRequest request) {
-		super();
-		this.request = request;
-	}
+    public AutomationRequestCanceledException(AutomationRequest request) {
+        super();
+        this.request = request;
+    }
 
-	public AutomationRequest getCanceledRequest() {
-		return request;
-	}
-
+    public AutomationRequest getCanceledRequest() {
+        return request;
+    }
 }

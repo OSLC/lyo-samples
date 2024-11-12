@@ -8,16 +8,20 @@ updates:
   - package-ecosystem: "maven" # See documentation for possible values
     directory: "/client-oauth-discovery-dui/" # Location of package manifests
     schedule:
-      interval: "monthly"
+      interval: "weekly"
+      day: "thursday"
   - package-ecosystem: "maven" # See documentation for possible values
     directory: "/lyo-client-samples/" # Location of package manifests
     schedule:
-      interval: "monthly"
+      interval: "weekly"
+      day: "thursday"
   - package-ecosystem: "maven" # See documentation for possible values
     directory: "/oauth-twolegged-sample/" # Location of package manifests
     schedule:
-      interval: "monthly"
+      interval: "weekly"
+      day: "thursday"
   - package-ecosystem: "github-actions" # See documentation for possible values
     directory: "/" # Location of package manifests
     schedule:
-      interval: "monthly"
+      interval: "weekly"
+      day: "thursday"
