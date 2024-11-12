@@ -21,7 +21,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Properties;
-
 import org.apache.commons.io.FileUtils;
 
 /**
@@ -30,49 +29,46 @@ import org.apache.commons.io.FileUtils;
  */
 public class WriteThroughProperties extends Properties {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private final File adapterPropertiesFile;
+    private final File adapterPropertiesFile;
 
-	/**
-	 * Default constructor.
-	 *
-	 * @param fileUri
-	 *            URI for a local File containing the properties
-	 * @throws IOException
-	 */
-	public WriteThroughProperties(URI fileUri) throws IOException {
+    /**
+     * Default constructor.
+     *
+     * @param fileUri
+     *            URI for a local File containing the properties
+     * @throws IOException
+     */
+    public WriteThroughProperties(URI fileUri) throws IOException {
 
-		this.adapterPropertiesFile = new File(fileUri);
+        this.adapterPropertiesFile = new File(fileUri);
 
-		FileInputStream fis = FileUtils.openInputStream(adapterPropertiesFile);
+        FileInputStream fis = FileUtils.openInputStream(adapterPropertiesFile);
 
-		load(fis);
+        load(fis);
 
-		fis.close();
+        fis.close();
+    }
 
-	}
+    @Override
+    public synchronized Object setProperty(String key, String value) {
 
-	@Override
-	public synchronized Object setProperty(String key, String value) {
+        Object property = super.setProperty(key, value);
 
-		Object property = super.setProperty(key, value);
+        try {
 
-		try {
+            FileOutputStream fos = FileUtils.openOutputStream(adapterPropertiesFile);
 
-			FileOutputStream fos = FileUtils.openOutputStream(adapterPropertiesFile);
+            store(fos, "Write through save for property : " + key);
 
-			store(fos, "Write through save for property : " + key);
+            fos.close();
 
-			fos.close();
+        } catch (IOException e) {
 
-		} catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
-			throw new RuntimeException(e);
-
-		}
-
-		return property;
-	}
-
+        return property;
+    }
 }
