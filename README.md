@@ -1,7 +1,8 @@
 # Eclise Lyo Client - Sample Code
 
 [![](https://img.shields.io/badge/project-Eclipse%20Lyo-blue?color=418eeb)](https://github.com/eclipse/lyo)
-[![CI](https://github.com/OSLC/lyo-samples/actions/workflows/maven.yml/badge.svg)](https://github.com/OSLC/lyo-samples/actions/workflows/maven.yml)
+[![CI (client)](https://github.com/OSLC/lyo-samples/actions/workflows/maven-client.yml/badge.svg)](https://github.com/OSLC/lyo-samples/actions/workflows/maven-client.yml)
+[![CI (legacy)](https://github.com/OSLC/lyo-samples/actions/workflows/maven-legacy.yml/badge.svg)](https://github.com/OSLC/lyo-samples/actions/workflows/maven-legacy.yml)
 ![Discourse users](https://img.shields.io/discourse/users?color=28bd84&server=https%3A%2F%2Fforum.open-services.net%2F)
 
 You can find more resources for developing OSLC applications with Lyo, under the [OSLC Developer Guide](http://oslc.github.io/developing-oslc-applications/eclipse_lyo/eclipse-lyo.html).
@@ -10,15 +11,25 @@ You are also welcome to contact the development team via [lyo-dev mailing list](
 
 > **Please note:** Most of code in this repo is not always up to date. You are welcome to [contribute](https://github.com/eclipse/lyo#contributing) fixes and suggestions.
 
-# Selected Project Descriptions
+## Selected Project Descriptions
 
 Below is a selected subset of projects in this repository.
 
-The latest samplest target the Lyo release 4.0.0, which supports JAX-RS 2.0, and no longer depend on any particlar implementation of JAX-RS. This gives the developer the chance to adopt any preferred implementation such as [Jersey](https://jersey.github.io/), [RESTEasy](https://resteasy.github.io/), etc.
+The latest samples target the Lyo release 4.0.0+ (JAX-RS 2.0) or 6.0.0+ (Jakarta REST), and no longer depend on any particlar implementation of JAX-RS. This gives the developer the chance to adopt any preferred implementation such as [Jersey](https://jersey.github.io/), [RESTEasy](https://resteasy.github.io/), etc.
 
 Earlier samples targetting Lyo 2.4.0 (and earlier) supports JAX-RS 1.0, and assumes the [Apache Wink implementation](https://svn.apache.org/repos/infra/websites/production/wink/content/index.html).
 
-## [OSLC Client Authentication, Service Discovery & Delegated UIs](https://github.com/OSLC/lyo-samples/tree/master/client-oauth-discovery-dui) - Sample code for Lyo 4.0.0 (JAX-RS 2.0)
+### [lyo-client-samples](https://github.com/OSLC/lyo-samples/tree/master/lyo-client-samples) - Sample code for Lyo 6.0.0 (Jakarta REST / JAX-RS 3.1)
+
+These are client samples for working with:
+
+- Jazz EWM
+- Jazz ERM (aka DNG aka DOORS NG)
+- Jazz ETM
+
+using both Basic and Jazz Forms (JFS) auth.
+
+### [OSLC Client Authentication, Service Discovery & Delegated UIs](https://github.com/OSLC/lyo-samples/tree/master/client-oauth-discovery-dui) - Sample code for Lyo 4.0.0 (JAX-RS 2.0)
 
 This OSLC client application
 
@@ -31,10 +42,6 @@ To run the adaptor as a regular web application, run:
     mvn clean jetty:run-exploded
 
 You can then explore the server starting with http://localhost:8081/discovery/services/discovery.
-
-## [oslc4j-client-samples](https://github.com/OSLC/lyo-samples/tree/master/lyo-client-samples) - Sample code for Lyo 4.0.0 (JAX-RS 2.0)
-
-This is a subset of the sample code from Lyo 2.4.0 detailed under [oslc-java-samples](https://github.com/OSLC/lyo-samples#oslc-java-samples).
 
 ## License
 

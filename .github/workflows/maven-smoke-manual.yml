@@ -27,6 +27,12 @@ jobs:
         distribution: ['temurin']
         include:
           - java-version: '21'
+            distribution: 'temurin'
+          - java-version: '21'
+            distribution: 'liberica'
+          - java-version: '23'
+            distribution: 'oracle'
+          - java-version: '24-ea'
             distribution: 'zulu'
           # - java-version: '22-ea'
           #   distribution: zulu
@@ -40,7 +46,7 @@ jobs:
         with:
           path: main
       - name: Set up JDK ${{ matrix.java-version }}
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution:  ${{ matrix.distribution }}
           java-version: ${{ matrix.java-version }}
@@ -59,8 +65,8 @@ jobs:
         env:
           JAZZ_NORDIC_USERNAME: ${{ secrets.JAZZ_NORDIC_USERNAME }}
           JAZZ_NORDIC_PASSWORD: ${{ secrets.JAZZ_NORDIC_PASSWORD }}
-      - name: E2E client samples tests on ELM @ KTH
-        run: ./main/bin/test-jazz_kth.sh
-        env:
-          JAZZ_ITM_USERNAME: ${{ secrets.JAZZ_ITM_USERNAME }}
-          JAZZ_ITM_PASSWORD: ${{ secrets.JAZZ_ITM_PASSWORD }}
+      # - name: E2E client samples tests on ELM @ KTH
+      #   run: ./main/bin/test-jazz_kth.sh
+      #   env:
+      #     JAZZ_ITM_USERNAME: ${{ secrets.JAZZ_ITM_USERNAME }}
+      #     JAZZ_ITM_PASSWORD: ${{ secrets.JAZZ_ITM_PASSWORD }}

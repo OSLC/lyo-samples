@@ -30,49 +30,48 @@ import org.eclipse.lyo.oslc4j.core.model.ValueType;
 @OslcNamespace(IConstants.NAMESPACE_URI_JAZZ_AUTO_RQM)
 public class Message extends AbstractResource implements IConstants {
 
-	private String name;
-	private String value;
+    private String name;
+    private String value;
 
-	/**
-	 * Default Constructor
-	 *
-	 * @param name
-	 * 		Name or ID of the message. Cannot be null.
-	 * @param value
-	 * 		The actual message content.  Cannot be null.
-	 */
-	public Message(String name, String value) {
-		assert name != null;
-		assert value != null;
+    /**
+     * Default Constructor
+     *
+     * @param name
+     * 		Name or ID of the message. Cannot be null.
+     * @param value
+     * 		The actual message content.  Cannot be null.
+     */
+    public Message(String name, String value) {
+        assert name != null;
+        assert value != null;
 
-		this.name = name;
-		this.value = value;
-	}
+        this.name = name;
+        this.value = value;
+    }
 
-	@OslcDescription("The name of the message")
-	@OslcPropertyDefinition(NAMESPACE_URI_JAZZ_AUTO_RQM + "name")
-	@OslcTitle("Name")
+    @OslcDescription("The name of the message")
+    @OslcPropertyDefinition(NAMESPACE_URI_JAZZ_AUTO_RQM + "name")
+    @OslcTitle("Name")
     @OslcOccurs(Occurs.ExactlyOne)
-	@OslcValueType(ValueType.String)
-	public String getName() {
-		return name;
-	}
+    @OslcValueType(ValueType.String)
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	@OslcDescription("The actual message content")
-	@OslcPropertyDefinition(NAMESPACE_URI_JAZZ_AUTO_RQM + "value")
-	@OslcTitle("Value")
+    @OslcDescription("The actual message content")
+    @OslcPropertyDefinition(NAMESPACE_URI_JAZZ_AUTO_RQM + "value")
+    @OslcTitle("Value")
     @OslcOccurs(Occurs.ExactlyOne)
-	@OslcValueType(ValueType.XMLLiteral)
-	public String getValue() {
-		return value;
-	}
+    @OslcValueType(ValueType.XMLLiteral)
+    public String getValue() {
+        return value;
+    }
 
-	public void setValue(String value) {
-		this.value = value;
-	}
-
+    public void setValue(String value) {
+        this.value = value;
+    }
 }
