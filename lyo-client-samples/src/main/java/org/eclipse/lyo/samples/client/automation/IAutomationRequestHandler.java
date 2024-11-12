@@ -20,17 +20,16 @@ import org.eclipse.lyo.client.oslc.resources.AutomationResult;
 
 public interface IAutomationRequestHandler {
 
-	/**
-	 * Handle the Automation Request assigned to an Automation Adapter and
-	 * return an Automation Response.
-	 *
-	 * @param request
-	 * @param adapter
-	 * @return
-	 * 		An Automation Response, or null if there is no response to be returned.
-	 * @throws AutomationException
-	 */
-	AutomationResult handleAutomationRequest(AutomationRequest request,
-			AutomationAdapter adapter) throws AutomationException;
-
+    /**
+     * Handle the Automation Request assigned to an Automation Adapter and
+     * return an Automation Response.
+     *
+     * @param request
+     * @param adapter
+     * @return
+     * 		An Automation Response, or null if there is no response to be returned.
+     * @throws AutomationException
+     */
+    AutomationResult handleAutomationRequest(AutomationRequest request, AutomationAdapter adapter)
+            throws AutomationException;
 }
