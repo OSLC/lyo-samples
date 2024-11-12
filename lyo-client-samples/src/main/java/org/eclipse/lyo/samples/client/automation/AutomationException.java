@@ -17,22 +17,21 @@ package org.eclipse.lyo.samples.client.automation;
 
 public class AutomationException extends Exception {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public AutomationException() {
-		super();
-	}
+    public AutomationException() {
+        super();
+    }
 
-	public AutomationException(String message) {
-		super(message);
-	}
+    public AutomationException(String message) {
+        super(message);
+    }
 
-	public AutomationException(String message, Throwable t) {
-		super(message, t);
-	}
+    public AutomationException(String message, Throwable t) {
+        super(message, t);
+    }
 
-	public AutomationException(Throwable t) {
-		super(t);
-	}
-
+    public AutomationException(Throwable t) {
+        super(t);
+    }
 }
