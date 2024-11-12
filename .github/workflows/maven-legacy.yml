@@ -6,6 +6,7 @@ on:
   pull_request:
     branches: [master]
     paths:
+      - 'client-oauth-discovery-dui/**'
       - 'oauth-twolegged-sample/**'
   schedule:
     - cron: "01 13 1-7 * 5" # catch SNAPSHOT breaking changes
