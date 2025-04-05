@@ -6,7 +6,7 @@ on:
 #  push:
 #    branches: [master]
   schedule:
-    - cron: "01 13 1-7,15-21 * 5" # catch SNAPSHOT breaking changes
+    - cron: "11 04 * * 4" # catch SNAPSHOT breaking changes
   workflow_dispatch:
 
 concurrency:
