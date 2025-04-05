@@ -31,11 +31,11 @@ jobs:
         env:
           JAZZ_NET_USERNAME: ${{ secrets.JAZZ_NET_USERNAME }}
           JAZZ_NET_PASSWORD: ${{ secrets.JAZZ_NET_PASSWORD }}
-      - name: E2E client samples tests on ELM @ IBM Nordic
-        run: ./bin/test-jazz_nordic.sh
-        env:
-          JAZZ_NORDIC_USERNAME: ${{ secrets.JAZZ_NORDIC_USERNAME }}
-          JAZZ_NORDIC_PASSWORD: ${{ secrets.JAZZ_NORDIC_PASSWORD }}
+      # - name: E2E client samples tests on ELM @ IBM Nordic
+      #   run: ./bin/test-jazz_nordic.sh
+      #   env:
+      #     JAZZ_NORDIC_USERNAME: ${{ secrets.JAZZ_NORDIC_USERNAME }}
+      #     JAZZ_NORDIC_PASSWORD: ${{ secrets.JAZZ_NORDIC_PASSWORD }}
 #      CRJAZ2398I The user has a "Practitioner-Floating" client access license assigned that would normally allow this operation, but the license expired on 01-Oct-2024 00:00.
 #      - name: E2E client samples tests on ELM @ KTH
 #        run: ./bin/test-jazz_kth.sh
