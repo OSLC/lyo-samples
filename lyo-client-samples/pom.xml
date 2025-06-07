@@ -22,6 +22,16 @@
                 <groupId>com.diffplug.spotless</groupId>
                 <artifactId>spotless-maven-plugin</artifactId>
                 <version>2.44.5</version>
+                <executions>
+                    <execution>
+                        <id>auto-style</id>
+                        <goals>
+                            <goal>apply</goal>
+                        </goals>
+                        <!-- Using validate phase, so this happens before enforce-style -->
+                        <phase>validate</phase>
+                    </execution>
+                </executions>
                 <configuration>
                     <!-- optional: limit format enforcement to just the files changed by this feature branch -->
                     <!--                    <ratchetFrom>origin/main</ratchetFrom>-->
@@ -46,7 +56,7 @@
                     <java>
                         <!-- apply a specific flavor of google-java-format and reflow long strings -->
                         <googleJavaFormat>
-                            <version>1.19.2</version>
+                            <version>1.27.0</version>
                             <style>AOSP</style>
                             <reflowLongStrings>true</reflowLongStrings>
                             <formatJavadoc>false</formatJavadoc>
