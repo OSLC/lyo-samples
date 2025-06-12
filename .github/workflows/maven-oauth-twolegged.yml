@@ -1,4 +1,4 @@
-name: "CI (legacy)"
+name: "CI (OAuth two-legged sample)"
 
 on:
   push:
@@ -7,7 +7,6 @@ on:
     branches: [master]
     paths:
       - '.github/workflows/**'
-      - 'client-oauth-discovery-dui/**'
       - 'oauth-twolegged-sample/**'
   schedule:
     - cron: "01 13 1-7 * 5" # catch SNAPSHOT breaking changes
@@ -27,9 +26,6 @@ jobs:
         with:
           distribution: 'zulu' # EOL in 2030 for Azul JDK 1.8
           java-version: '8'
-      - name: Build OAuth Discovery application
-        run: |
-          mvn -B clean verify --file client-oauth-discovery-dui/pom.xml
       - name: Build OAuth Two-legged samples
         run: |
           mvn -B clean verify --file oauth-twolegged-sample/oauth.sample/pom.xml
