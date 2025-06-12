@@ -2,9 +2,9 @@ name: "CI (OAuth Discovery UI)"
 
 on:
   push:
-    branches: [master]
+    branches: [main, master]
   pull_request:
-    branches: [master]
+    branches: [main, master]
     paths:
       - '.github/workflows/**'
       - 'client-oauth-discovery-dui/**'
@@ -17,15 +17,16 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'ci:full') }}
 
 jobs:
-  build-oauth-legacy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu' # EOL in 2030 for Azul JDK 1.8
+          distribution: 'temurin'
           java-version: '17'
+          cache: 'maven'
       - name: Build OAuth Discovery application
         run: |
           mvn -B clean verify --file client-oauth-discovery-dui/pom.xml
