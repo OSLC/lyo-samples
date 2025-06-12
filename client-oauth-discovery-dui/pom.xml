@@ -5,16 +5,15 @@
   <artifactId>client-oauth-discovery-dui</artifactId>
   <packaging>war</packaging>
   <version>0.0.1-SNAPSHOT</version>
-  <name>Client Oauth Discovery DUI</name>
-  <properties>
+  <name>Client Oauth Discovery DUI</name>  <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
-    <!-- This jersey version is the one supported by the latest Swagger 1.5 -->
-    <version.jersey>2.25.1</version.jersey>
-    <version.swagger>1.5.22</version.swagger>
-    <version.lyo>4.0.0</version.lyo>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
+    <!-- Jersey version compatible with Jakarta EE -->
+    <version.jersey>3.1.5</version.jersey>
+    <version.swagger>2.2.8</version.swagger>
+    <version.lyo>7.0.0.Alpha3</version.lyo>
   </properties>
   <repositories>
     <repository>
@@ -33,10 +32,9 @@
       <artifactId>slf4j-simple</artifactId>
       <version>1.7.21</version>
       <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.swagger</groupId>
-      <artifactId>swagger-jersey2-jaxrs</artifactId>
+    </dependency>    <dependency>
+      <groupId>io.swagger.core.v3</groupId>
+      <artifactId>swagger-jaxrs2-jakarta</artifactId>
       <version>${version.swagger}</version>
     </dependency>
     <!-- Lyo dependencies -->
@@ -71,53 +69,47 @@
           <artifactId>commons-logging</artifactId>
         </exclusion>
       </exclusions>
-    </dependency>
-    <!-- Servlet-related dependencies -->
+    </dependency>    <!-- Servlet-related dependencies -->
     <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-      <version>3.1.0</version>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
+      <version>6.0.0</version>
       <scope>provided</scope>
     </dependency>
 	<dependency>
     <!-- due to Tomcat not proving JSTL OOB  -->
-		<groupId>javax.servlet</groupId>
-		<artifactId>jstl</artifactId>
-		<version>1.2</version>
+		<groupId>org.glassfish.web</groupId>
+		<artifactId>jakarta.servlet.jsp.jstl</artifactId>
+		<version>3.0.1</version>
     <scope>runtime</scope>
 	 </dependency>
    <dependency>
-      <groupId>javax.servlet.jsp.jstl</groupId>
-      <artifactId>jstl-api</artifactId>
-      <version>1.2</version>
-      <exclusions>
-        <exclusion>
-          <groupId>javax.servlet</groupId>
-          <artifactId>servlet-api</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>javax.ws.rs</groupId>
-      <artifactId>javax.ws.rs-api</artifactId>
-      <version>2.1.1</version>
+      <groupId>jakarta.servlet.jsp.jstl</groupId>
+      <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+      <version>3.0.0</version>
+    </dependency>    <dependency>
+      <groupId>jakarta.ws.rs</groupId>
+      <artifactId>jakarta.ws.rs-api</artifactId>
+      <version>3.1.0</version>
       <!--			<scope>provided</scope>-->
-    </dependency>
-
-    <dependency>
+    </dependency>    <dependency>
       <groupId>org.glassfish.jersey.core</groupId>
       <artifactId>jersey-server</artifactId>
       <version>${version.jersey}</version>
       <exclusions>
         <exclusion>
-          <groupId>javax.ws.rs</groupId>
-          <artifactId>javax.ws.rs-api</artifactId>
+          <groupId>jakarta.ws.rs</groupId>
+          <artifactId>jakarta.ws.rs-api</artifactId>
         </exclusion>
       </exclusions>
-    </dependency>
-    <dependency>
+    </dependency>    <dependency>
       <groupId>org.glassfish.jersey.containers</groupId>
       <artifactId>jersey-container-servlet</artifactId>
+      <version>${version.jersey}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish.jersey.inject</groupId>
+      <artifactId>jersey-hk2</artifactId>
       <version>${version.jersey}</version>
     </dependency>
     <dependency>
@@ -134,25 +126,18 @@
     </dependency>
   </dependencies>
   <build>
-    <plugins>
-      <plugin>
-        <groupId>org.eclipse.jetty</groupId>
-        <artifactId>jetty-maven-plugin</artifactId>
-        <version>9.4.51.v20230217</version>
+    <plugins>      <plugin>
+        <groupId>org.eclipse.jetty.ee10</groupId>
+        <artifactId>jetty-ee10-maven-plugin</artifactId>
+        <version>12.0.7</version>
         <configuration>
-          <webAppConfig>
+          <webApp>
             <contextPath>/discovery</contextPath>
-          </webAppConfig>
-          <reload>automatic</reload>
-          <scanIntervalSeconds>5</scanIntervalSeconds>
-          <systemProperties>
-            <systemProperty>
-              <name>jetty.port</name>
-              <value>8081</value>
-            </systemProperty>
-          </systemProperties>
-          <stopKey/>
-          <stopPort/>
+          </webApp>
+          <scan>5</scan>
+          <httpConnector>
+            <port>8081</port>
+          </httpConnector>
         </configuration>
       </plugin>
 	  <plugin>

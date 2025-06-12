@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app 
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-    xmlns="http://java.sun.com/xml/ns/javaee" 
-    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_4_0.xsd" 
+    xmlns="https://jakarta.ee/xml/ns/jakartaee" 
+    xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd" 
     id="WebApp_ID" 
     metadata-complete="true" 
-    version="4.0">
+    version="6.0">
   <display-name>OSLC Discovery</display-name>
   <servlet>
     <servlet-name>JAX-RS Servlet</servlet-name>
     <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
     <init-param>
-      <param-name>javax.ws.rs.Application</param-name>
+      <param-name>jakarta.ws.rs.Application</param-name>
       <param-value>org.eclipse.lyo.samples.client.Application</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>

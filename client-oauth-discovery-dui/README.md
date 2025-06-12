@@ -12,6 +12,6 @@ Finally, it demonstrates how to integrate Delegated-UI iframes into your own web
 
 Run the adaptor as a regular web application:
 
-    mvn clean jetty:run-exploded
+    mvn clean jetty:run-war
 
-You can then explore the server starting with http://localhost:8081/discovery/services/discovery. 
+You can then explore the server starting with http://localhost:8081/discovery/services/discovery
