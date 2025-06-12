@@ -3,8 +3,8 @@
 [![](https://img.shields.io/badge/project-Eclipse%20Lyo-blue?color=418eeb)](https://github.com/eclipse/lyo)
 [![CI
 (client)](https://github.com/OSLC/lyo-samples/actions/workflows/maven-client.yml/badge.svg)](https://github.com/OSLC/lyo-samples/actions/workflows/maven-client.yml)
-[![CI
-(legacy)](https://github.com/OSLC/lyo-samples/actions/workflows/maven-legacy.yml/badge.svg)](https://github.com/OSLC/lyo-samples/actions/workflows/maven-legacy.yml)
+[![CI](https://github.com/OSLC/lyo-samples/actions/workflows/maven-oauth-dui.yml/badge.svg)](https://github.com/OSLC/lyo-samples/actions/workflows/maven-oauth-dui.yml)
+[![CI](https://github.com/OSLC/lyo-samples/actions/workflows/maven-oauth-twolegged.yml/badge.svg)](https://github.com/OSLC/lyo-samples/actions/workflows/maven-oauth-twolegged.yml)
 ![Discourse
 users](https://img.shields.io/discourse/users?color=28bd84&server=https%3A%2F%2Fforum.open-services.net%2F)
 
