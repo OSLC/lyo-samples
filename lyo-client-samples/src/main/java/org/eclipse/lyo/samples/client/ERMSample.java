@@ -62,6 +62,7 @@ import org.eclipse.lyo.oslc4j.core.model.*;
 import org.glassfish.jersey.apache.connector.ApacheClientProperties;
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -96,6 +97,7 @@ public class ERMSample {
         options.addOption("user", true, "user ID");
         options.addOption("password", true, "password");
         options.addOption("project", true, "project area");
+        options.addOption("b", "basic", false, "Use Basic auth (use if JAS is enabled)");
 
         CommandLineParser cliParser = new GnuParser();
 
@@ -105,10 +107,14 @@ public class ERMSample {
         if (!validateOptions(cmd)) {
             logger.severe(
                     "Syntax:  java <class_name> -url https://<server>:port/<context>/ -user <user>"
-                            + " -password <password> -project \"<project_area>\"");
+                            + " -password <password> -project \"<project_area>\" [--basic]");
             logger.severe(
                     "Example: java ERMSample -url https://exmple.com:9443/rm -user ADMIN -password"
                             + " ADMIN -project \"JKE Banking (Requirements Management)\"");
+            logger.severe(
+                    "Example: java ERMSample -url https://jazz.net.example.com/sandbox02-rm/ -user"
+                            + " ADMIN -password ADMIN -project \"JKE Banking (Requirements"
+                            + " Management)\" --basic");
             return;
         }
 
@@ -116,6 +122,7 @@ public class ERMSample {
         String userId = cmd.getOptionValue("user");
         String password = cmd.getOptionValue("password");
         String projectArea = cmd.getOptionValue("project");
+        boolean useBasicAuth = cmd.hasOption("basic");
 
         try {
 
@@ -133,6 +140,13 @@ public class ERMSample {
             clientConfig.register(MultiPartFeature.class);
 
             ClientBuilder clientBuilder = ClientBuilder.newBuilder();
+
+            // IBM jazz-apps use JEE Form based authentication
+            // except the Jazz sandbox, it uses Basic/JAS auth. USE ONLY ONE
+            if (useBasicAuth) {
+                clientConfig.register(HttpAuthenticationFeature.basic(userId, password));
+                logger.info("Using Basic authentication");
+            }
             clientBuilder.withConfig(clientConfig);
 
             // Setup SSL support to ignore self-assigned SSL certificates - for testing only!!
@@ -141,9 +155,11 @@ public class ERMSample {
             clientBuilder.sslContext(sslContextBuilder.build());
             clientBuilder.hostnameVerifier(NoopHostnameVerifier.INSTANCE);
 
-            // IBM jazz-apps use JEE Form based authentication
-            clientBuilder.register(new JEEFormAuthenticator(webContextUrl, userId, password));
-            logger.info("Using JAS (Forms) authentication");
+            // do not merge the two if's: order of registration is important
+            if (!useBasicAuth) {
+                clientBuilder.register(new JEEFormAuthenticator(webContextUrl, userId, password));
+                logger.info("Using JAS (Forms) authentication");
+            }
 
             // STEP 3: Create a new OslcClient
             OslcClient client = new OslcClient(clientBuilder);

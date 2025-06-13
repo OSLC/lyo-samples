@@ -18,9 +18,8 @@ mvn -B exec:java -Dexec.mainClass="org.eclipse.lyo.samples.client.EWMSample" -De
   -project \"${JAZZ_NET_PROJECT_NAME}\" --basic"
 
 # ERM
-# FIXME: add -basic auth support to ERM sample
-#mvn -B exec:java -Dexec.mainClass="org.eclipse.lyo.samples.client.ERMSample" -Dexec.args="-url https://jazz.net/sandbox02-rm/ \
-#  -user ${JAZZ_NET_USERNAME} -password \"${JAZZ_NET_PASSWORD}\" \
-#  -project \"smarx721 Project (Requirements Management)\" --basic"
+mvn -B exec:java -Dexec.mainClass="org.eclipse.lyo.samples.client.ERMSample" -Dexec.args="-url https://jazz.net/${JAZZ_NET_PROJECT_ID}-rm/ \
+ -user ${JAZZ_NET_USERNAME} -password \"${JAZZ_NET_PASSWORD}\" \
+ -project \"smarx721 Project (Requirements Management)\" --basic"
 
 popd
