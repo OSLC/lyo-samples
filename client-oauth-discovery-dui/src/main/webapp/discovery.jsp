@@ -175,8 +175,34 @@ Alternatively, one can use the <a href="https://github.com/OSLC/oslc-client">OSL
     </div>
   </div>  
 </div>
+<%
+String errorMessage = (String) request.getAttribute("errorMessage");
+String errorDetails = (String) request.getAttribute("errorDetails");
+%>
+
 <h2>Results</h2>
-    <%if (null != fullServiceProviderCatalog) {%>
+<%if (errorMessage != null) {%>
+    <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">Error!</h4>
+        <p><strong><%=errorMessage%></strong></p>
+        <%if (errorDetails != null && !errorDetails.trim().isEmpty()) {%>
+            <hr>
+            <p class="mb-0"><small><strong>Technical details:</strong> <%=errorDetails%></small></p>
+        <%}%>
+        <hr>
+        <p class="mb-0">
+            <small>
+                <strong>Common solutions:</strong>
+                <ul>
+                    <li>Verify the server URL is correct and accessible <strong>(reverse proxy setups may interfere with the signature verification)</strong></li>
+                    <li>Check your consumer key and secret are correct</li>
+                    <li>Ensure the OSLC server is running and responding</li>
+                    <li>Verify SSL certificate settings if using HTTPS</li>
+                </ul>
+            </small>
+        </p>
+    </div>
+<%} else if (null != fullServiceProviderCatalog) {%>
     <b>Service Provider Catalog:</b> rdf:about=<a href="<%=fullServiceProviderCatalog.getAbout()%>" target="_blank"><%=fullServiceProviderCatalog.getAbout()%></a><br>
     <%
     for (ServiceProvider serviceProvider : fullServiceProviderCatalog.getServiceProviders()) {
@@ -236,6 +262,11 @@ Alternatively, one can use the <a href="https://github.com/OSLC/oslc-client">OSL
         }
     }
     %>
+    <%} else {%>
+    <div class="alert alert-info" role="alert">
+        <h4 class="alert-heading">No Results Yet</h4>
+        <p>Please fill out one of the forms above and submit to discover OSLC services.</p>
+    </div>
     <%}%>
   </div>
   <footer class="footer">
