@@ -156,15 +156,6 @@
             </systemProperty>
           </systemProperties>
         </configuration>
-        <executions>
-          <execution>
-            <id>start-jetty</id>
-            <phase>pre-integration-test</phase>
-            <goals>
-              <goal>run-war</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <groupId>com.diffplug.spotless</groupId>
