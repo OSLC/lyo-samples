@@ -12,6 +12,7 @@ public class Application extends jakarta.ws.rs.core.Application {
 
     static {
         RESOURCE_CLASSES.addAll(JenaProvidersRegistry.getProviders());
+        // RESOURCE_CLASSES.add(OslcCorsFilter.class);
 
         RESOURCE_CLASSES.add(DiscoveryServices.class);
     }

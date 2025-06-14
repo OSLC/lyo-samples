@@ -1,15 +1,18 @@
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.eclipse.lyo.sample</groupId>
   <artifactId>client-oauth-discovery-dui</artifactId>
   <packaging>war</packaging>
   <version>0.0.1-SNAPSHOT</version>
-  <name>Client Oauth Discovery DUI</name>  <properties>
+  <name>Client Oauth Discovery DUI</name>
+  <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <maven.compiler.source>11</maven.compiler.source>
-    <maven.compiler.target>11</maven.compiler.target>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.release>17</maven.compiler.release>
+    <maven.compiler.target>17</maven.compiler.target>
     <!-- Jersey version compatible with Jakarta EE -->
     <version.jersey>3.1.5</version.jersey>
     <version.swagger>2.2.8</version.swagger>
@@ -32,7 +35,8 @@
       <artifactId>slf4j-simple</artifactId>
       <version>2.0.0</version>
       <scope>runtime</scope>
-    </dependency>    <dependency>
+    </dependency>
+    <dependency>
       <groupId>io.swagger.core.v3</groupId>
       <artifactId>swagger-jaxrs2-jakarta</artifactId>
       <version>${version.swagger}</version>
@@ -44,8 +48,8 @@
       <version>${version.lyo}</version>
       <exclusions>
         <exclusion>
-          <groupId>commons-logging</groupId>
-          <artifactId>commons-logging</artifactId>
+          <groupId>jakarta.servlet</groupId>
+          <artifactId>jakarta.servlet-api</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -53,11 +57,12 @@
       <groupId>org.eclipse.lyo.oslc4j.core</groupId>
       <artifactId>oslc4j-jena-provider</artifactId>
       <version>${version.lyo}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.lyo.oslc4j.core</groupId>
-      <artifactId>oslc4j-json4j-provider</artifactId>
-      <version>${version.lyo}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>jakarta.servlet</groupId>
+          <artifactId>jakarta.servlet-api</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.eclipse.lyo.clients</groupId>
@@ -65,34 +70,24 @@
       <version>${version.lyo}</version>
       <exclusions>
         <exclusion>
-          <groupId>commons-logging</groupId>
-          <artifactId>commons-logging</artifactId>
+          <groupId>jakarta.servlet</groupId>
+          <artifactId>jakarta.servlet-api</artifactId>
         </exclusion>
       </exclusions>
-    </dependency>    <!-- Servlet-related dependencies -->
-    <dependency>
-      <groupId>jakarta.servlet</groupId>
-      <artifactId>jakarta.servlet-api</artifactId>
-      <version>6.0.0</version>
-      <scope>provided</scope>
     </dependency>
-	<dependency>
-    <!-- due to Tomcat not proving JSTL OOB  -->
-		<groupId>org.glassfish.web</groupId>
-		<artifactId>jakarta.servlet.jsp.jstl</artifactId>
-		<version>3.0.1</version>
-    <scope>runtime</scope>
-	 </dependency>
-   <dependency>
+    <dependency>
       <groupId>jakarta.servlet.jsp.jstl</groupId>
       <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
-      <version>3.0.0</version>
-    </dependency>    <dependency>
+      <version>3.0.1</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>jakarta.ws.rs</groupId>
       <artifactId>jakarta.ws.rs-api</artifactId>
       <version>3.1.0</version>
-      <!--			<scope>provided</scope>-->
-    </dependency>    <dependency>
+      <!-- <scope>provided</scope> -->
+    </dependency>
+    <dependency>
       <groupId>org.glassfish.jersey.core</groupId>
       <artifactId>jersey-server</artifactId>
       <version>${version.jersey}</version>
@@ -102,7 +97,8 @@
           <artifactId>jakarta.ws.rs-api</artifactId>
         </exclusion>
       </exclusions>
-    </dependency>    <dependency>
+    </dependency>
+    <dependency>
       <groupId>org.glassfish.jersey.containers</groupId>
       <artifactId>jersey-container-servlet</artifactId>
       <version>${version.jersey}</version>
@@ -124,9 +120,43 @@
       <version>4.13.2</version>
       <scope>test</scope>
     </dependency>
-  </dependencies> 
-   <build>
+  </dependencies>
+
+  <build>
     <plugins>
+      <plugin>
+        <groupId>org.eclipse.jetty.ee10</groupId>
+        <artifactId>jetty-ee10-maven-plugin</artifactId>
+        <version>12.0.7</version>
+        <configuration>
+          <webApp>
+            <contextPath>/</contextPath>
+          </webApp>
+          <scan>5</scan>
+          <httpConnector>
+            <port>8081</port>
+          </httpConnector>
+          <jvmArgs>-Djavax.xml.accessExternalDTD= -Djavax.xml.accessExternalSchema= -Djavax.xml.accessExternalStylesheet= -Dxml.catalog.prefer=system</jvmArgs>
+          <systemProperties>
+            <systemProperty>
+              <name>org.apache.jasper.compiler.disablejsr199</name>
+              <value>true</value>
+            </systemProperty>
+            <systemProperty>
+              <name>javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING</name>
+              <value>true</value>
+            </systemProperty>
+            <systemProperty>
+              <name>org.xml.sax.features.external-general-entities</name>
+              <value>false</value>
+            </systemProperty>
+            <systemProperty>
+              <name>org.xml.sax.features.external-parameter-entities</name>
+              <value>false</value>
+            </systemProperty>
+          </systemProperties>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>com.diffplug.spotless</groupId>
         <artifactId>spotless-maven-plugin</artifactId>
@@ -153,8 +183,8 @@
                 <include>.gitignore</include>
               </includes>
               <!-- define the steps to apply to those files -->
-              <trimTrailingWhitespace/>
-              <endWithNewline/>
+              <trimTrailingWhitespace />
+              <endWithNewline />
               <indent>
                 <tabs>true</tabs>
                 <spacesPerTab>4</spacesPerTab>
@@ -172,30 +202,42 @@
             </googleJavaFormat>
           </java>
         </configuration>
-      </plugin><plugin>
-        <groupId>org.eclipse.jetty.ee10</groupId>
-        <artifactId>jetty-ee10-maven-plugin</artifactId>
-        <version>12.0.7</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>3.4.0</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.11.0</version>
         <configuration>
-          <webApp>
-            <contextPath>/discovery</contextPath>
-          </webApp>
-          <scan>5</scan>
-          <httpConnector>
-            <port>8081</port>
-          </httpConnector>
+          <source>17</source>
+          <target>17</target>
+          <release>17</release>
         </configuration>
       </plugin>
-	  <plugin>
-		 <groupId>org.apache.maven.plugins</groupId>
-		 <artifactId>maven-war-plugin</artifactId>
-		 <version>3.4.0</version>
-	  </plugin>
-	  <plugin>
-		 <groupId>org.apache.maven.plugins</groupId>
-		 <artifactId>maven-compiler-plugin</artifactId>
-		 <version>3.8.1</version>
-	  </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>3.3.0</version>
+        <executions>
+          <execution>
+            <id>enforce-java</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireJavaVersion>
+                  <version>[17,)</version>
+                </requireJavaVersion>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 </project>

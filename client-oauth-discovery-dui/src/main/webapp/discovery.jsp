@@ -61,10 +61,6 @@ Alternatively, one can use the <a href="https://github.com/OSLC/oslc-client">OSL
 <li>DUI integration: The code is available as javascript, and hence visible through your web browser.</li>
 </ul>
 
-<b>NOTE:</b> 
-<ul>
-<li>Errors: We don't do much error checking in this application.  See resulting exceptions to work out what goes wrong!</li>
-</ul>
 
 <div class="accordion" id="alternatives">
   <div class="card">
@@ -175,8 +171,110 @@ Alternatively, one can use the <a href="https://github.com/OSLC/oslc-client">OSL
     </div>
   </div>  
 </div>
+<%
+String errorMessage = (String) request.getAttribute("errorMessage");
+Object errorDetailsObj = request.getAttribute("errorDetails");
+org.eclipse.lyo.samples.client.ErrorDetails errorDetails = null;
+if (errorDetailsObj instanceof org.eclipse.lyo.samples.client.ErrorDetails) {
+    errorDetails = (org.eclipse.lyo.samples.client.ErrorDetails) errorDetailsObj;
+}
+%>
+
 <h2>Results</h2>
-    <%if (null != fullServiceProviderCatalog) {%>
+<%if (errorMessage != null) {%>
+    <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">Error!</h4>
+        <p><strong><%=errorMessage.replace("\n", "<br>")%></strong></p>
+        <%if (errorDetails != null) {%>
+            <hr>
+            <div class="mb-0">
+                <small><strong>Technical details:</strong></small>
+                <ul class="small mb-0 mt-1">
+                    <%
+                    // Display HTTP status if available
+                    if (errorDetails.httpStatus() != null) {
+                        %>
+                        <li>HTTP Status: <%=errorDetails.httpStatus()%>
+                        <%if (errorDetails.httpStatusDescription() != null) {%>
+                            (<%=errorDetails.httpStatusDescription()%>)
+                        <%}%>
+                        </li>
+                        <%
+                    }
+                    
+                    // Display OAuth problem if available
+                    if (errorDetails.oauthProblem() != null && !errorDetails.oauthProblem().equals("unknown_error")) {
+                        %>
+                        <li>OAuth Problem: <%=errorDetails.oauthProblem()%></li>
+                        <%
+                    }
+                    
+                    // Display OAuth signature base string if available
+                    if (errorDetails.oauthSignatureBaseString() != null && !errorDetails.oauthSignatureBaseString().trim().isEmpty()) {
+                        String baseString = errorDetails.oauthSignatureBaseString();
+                        // Truncate very long base strings for readability - increased limit for better debugging
+                        if (baseString.length() > 500) {
+                            baseString = baseString.substring(0, 500) + "...";
+                        }
+                        %>
+                        <li>OAuth Signature Base String: <%=baseString%></li>
+                        <%
+                    }
+                    
+                    // Display OAuth signature if available
+                    if (errorDetails.oauthSignature() != null && !errorDetails.oauthSignature().trim().isEmpty()) {
+                        %>
+                        <li>OAuth Signature: <%=errorDetails.oauthSignature()%></li>
+                        <%
+                    }
+                    
+                    // Display OAuth signature method if available
+                    if (errorDetails.oauthSignatureMethod() != null && !errorDetails.oauthSignatureMethod().trim().isEmpty()) {
+                        %>
+                        <li>OAuth Signature Method: <%=errorDetails.oauthSignatureMethod()%></li>
+                        <%
+                    }
+                    
+                    // Show general error message only if no specific OAuth or HTTP details were shown
+                    boolean hasSpecificDetails = (errorDetails.httpStatus() != null) ||
+                        (errorDetails.oauthProblem() != null && !errorDetails.oauthProblem().equals("unknown_error")) ||
+                        (errorDetails.oauthSignatureBaseString() != null && !errorDetails.oauthSignatureBaseString().trim().isEmpty()) ||
+                        (errorDetails.oauthSignature() != null && !errorDetails.oauthSignature().trim().isEmpty()) ||
+                        (errorDetails.oauthSignatureMethod() != null && !errorDetails.oauthSignatureMethod().trim().isEmpty());
+                        
+                    if (!hasSpecificDetails && errorDetails.generalErrorMessage() != null) {
+                        %>
+                        <li>Error: <%=errorDetails.generalErrorMessage()%></li>
+                        <%
+                    }
+                    %>
+                </ul>
+            </div>
+        <%}%>
+        <hr>
+        <p class="mb-0">
+            <small>
+                <strong>Common solutions:</strong>
+                <ul>
+                    <li>Verify the server URL is correct and accessible <strong>(reverse proxy setups may interfere with the signature verification)</strong></li>
+                    <li>Check your consumer key and secret are correct</li>
+                    <li>Ensure the OSLC server is running and responding</li>
+                    <li>Verify SSL certificate settings if using HTTPS <strong>(reverse proxy setups may interfere with the URI protocol used for signature verification)</strong></li>
+                    <%if (errorMessage.contains("401") || errorMessage.contains("Unauthorized")) {%>
+                    <li><strong>401 Unauthorized:</strong> Double-check your OAuth consumer key and secret. The server rejected your authentication credentials.</li>
+                    <%}%>
+                    <%if (errorMessage.contains("signature_invalid")) {%>
+                    <li><strong>OAuth Signature Invalid:</strong> If the consumer secret is correct, recheck the URI setup on the server, esp. if using a reverse proxy.</li>
+                    <%}%>
+                </ul>
+            </small>
+        </p>
+    </div>
+                </ul>
+            </small>
+        </p>
+    </div>
+<%} else if (null != fullServiceProviderCatalog) {%>
     <b>Service Provider Catalog:</b> rdf:about=<a href="<%=fullServiceProviderCatalog.getAbout()%>" target="_blank"><%=fullServiceProviderCatalog.getAbout()%></a><br>
     <%
     for (ServiceProvider serviceProvider : fullServiceProviderCatalog.getServiceProviders()) {
@@ -236,6 +334,11 @@ Alternatively, one can use the <a href="https://github.com/OSLC/oslc-client">OSL
         }
     }
     %>
+    <%} else {%>
+    <div class="alert alert-info" role="alert">
+        <h4 class="alert-heading">No Results Yet</h4>
+        <p>Please fill out one of the forms above and submit to discover OSLC services.</p>
+    </div>
     <%}%>
   </div>
   <footer class="footer">

@@ -12,9 +12,15 @@ Finally, it demonstrates how to integrate Delegated-UI iframes into your own web
 
 Run the adaptor as a regular web application:
 
-    mvn clean jetty:run-war
+```bash
+mvn clean jetty:run-war
+```
 
-You can then explore the server starting with http://localhost:8081/discovery/services/discovery
+> **Note:** Do NOT use `mvn jetty:run` as it will fail with Jetty 12 due to classpath scanning issues.
+
+The application will start on http://localhost:8081/
+
+You can then explore the server starting with http://localhost:8081/services/discovery
 
 If you do not have an OSLC server at hand:
 
