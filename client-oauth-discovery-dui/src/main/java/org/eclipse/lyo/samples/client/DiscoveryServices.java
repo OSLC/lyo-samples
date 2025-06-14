@@ -262,10 +262,11 @@ public class DiscoveryServices {
                 }
             } catch (Exception e) {
                 String errorMessage = handleOAuthError(e, rootServicesUrl);
+                ErrorDetails errorDetails = ErrorDetails.fromOAuthException(e);
                 logger.error(
                         "OAuth negotiation failed for {}: {}", rootServicesUrl, errorMessage, e);
                 httpServletRequest.setAttribute("errorMessage", errorMessage);
-                httpServletRequest.setAttribute("errorDetails", e.getMessage());
+                httpServletRequest.setAttribute("errorDetails", errorDetails);
                 RequestDispatcher rd = httpServletRequest.getRequestDispatcher("/discovery.jsp");
                 rd.forward(httpServletRequest, httpServletResponse);
                 return;
@@ -296,13 +297,14 @@ public class DiscoveryServices {
                     }
                 } catch (Exception retryException) {
                     String errorMessage = handleOAuthError(retryException, rootServicesUrl);
+                    ErrorDetails errorDetails = ErrorDetails.fromOAuthException(retryException);
                     logger.error(
                             "OAuth re-negotiation failed for {}: {}",
                             rootServicesUrl,
                             errorMessage,
                             retryException);
                     httpServletRequest.setAttribute("errorMessage", errorMessage);
-                    httpServletRequest.setAttribute("errorDetails", retryException.getMessage());
+                    httpServletRequest.setAttribute("errorDetails", errorDetails);
                     RequestDispatcher rd =
                             httpServletRequest.getRequestDispatcher("/discovery.jsp");
                     rd.forward(httpServletRequest, httpServletResponse);
@@ -310,13 +312,15 @@ public class DiscoveryServices {
                 }
             } catch (Exception e) {
                 String errorMessage = handleServiceCatalogError(e, serviceProviderCatalogUrl);
+                ErrorDetails errorDetails =
+                        handleServiceCatalogErrorDetails(e, serviceProviderCatalogUrl);
                 logger.error(
                         "Failed to retrieve service catalog from {}: {}",
                         serviceProviderCatalogUrl,
                         errorMessage,
                         e);
                 httpServletRequest.setAttribute("errorMessage", errorMessage);
-                httpServletRequest.setAttribute("errorDetails", e.getMessage());
+                httpServletRequest.setAttribute("errorDetails", errorDetails);
                 RequestDispatcher rd = httpServletRequest.getRequestDispatcher("/discovery.jsp");
                 rd.forward(httpServletRequest, httpServletResponse);
                 return;
@@ -348,10 +352,7 @@ public class DiscoveryServices {
                         responseBody);
                 httpServletRequest.setAttribute("errorMessage", errorMessage);
                 httpServletRequest.setAttribute(
-                        "errorDetails",
-                        String.format(
-                                "HTTP %d from %s",
-                                response.getStatus(), serviceProviderCatalogUrl));
+                        "errorDetails", ErrorDetails.fromHttpResponse(response));
                 RequestDispatcher rd = httpServletRequest.getRequestDispatcher("/discovery.jsp");
                 rd.forward(httpServletRequest, httpServletResponse);
                 return;
@@ -443,13 +444,15 @@ public class DiscoveryServices {
                 response = client.getResource(serviceProviderCatalogUrl);
             } catch (Exception e) {
                 String errorMessage = handleServiceCatalogError(e, serviceProviderCatalogUrl);
+                ErrorDetails errorDetails =
+                        handleServiceCatalogErrorDetails(e, serviceProviderCatalogUrl);
                 logger.error(
                         "Failed to retrieve service catalog from {}: {}",
                         serviceProviderCatalogUrl,
                         errorMessage,
                         e);
                 httpServletRequest.setAttribute("errorMessage", errorMessage);
-                httpServletRequest.setAttribute("errorDetails", e.getMessage());
+                httpServletRequest.setAttribute("errorDetails", errorDetails);
                 RequestDispatcher rd = httpServletRequest.getRequestDispatcher("/discovery.jsp");
                 rd.forward(httpServletRequest, httpServletResponse);
                 return;
@@ -543,13 +546,15 @@ public class DiscoveryServices {
                 response = client.getResource(serviceProviderCatalogUrl);
             } catch (Exception e) {
                 String errorMessage = handleServiceCatalogError(e, serviceProviderCatalogUrl);
+                ErrorDetails errorDetails =
+                        handleServiceCatalogErrorDetails(e, serviceProviderCatalogUrl);
                 logger.error(
                         "Failed to retrieve service catalog from {}: {}",
                         serviceProviderCatalogUrl,
                         errorMessage,
                         e);
                 httpServletRequest.setAttribute("errorMessage", errorMessage);
-                httpServletRequest.setAttribute("errorDetails", e.getMessage());
+                httpServletRequest.setAttribute("errorDetails", errorDetails);
                 RequestDispatcher rd = httpServletRequest.getRequestDispatcher("/discovery.jsp");
                 rd.forward(httpServletRequest, httpServletResponse);
                 return;
@@ -659,29 +664,53 @@ public class DiscoveryServices {
     private String handleOAuthError(Exception e, String rootServicesUrl) {
         String baseMessage = "OAuth authentication failed for " + rootServicesUrl;
 
+        // Check if this is an HTTP response error with OAuth details
+        if (e.getMessage() != null && e.getMessage().contains("401")) {
+            String httpDetails = extractHttpErrorDetails(e.getMessage());
+            if (httpDetails != null) {
+                return baseMessage + ": HTTP 401 Unauthorized - " + httpDetails;
+            }
+        }
+
         if (e.getCause() != null
                 && e.getCause().getClass().getSimpleName().equals("OAuthProblemException")) {
             String problemType = extractOAuthProblem(e.getCause().getMessage());
+            String detailedMessage = extractOAuthDetails(e.getCause().getMessage());
+
+            String userFriendlyMessage;
             switch (problemType) {
                 case "signature_invalid":
-                    return baseMessage
-                            + ": Invalid OAuth signature. Please check your consumer key and"
-                            + " secret.";
+                    userFriendlyMessage =
+                            "Invalid OAuth signature. Please check your consumer key and secret.";
+                    break;
                 case "consumer_key_unknown":
-                    return baseMessage
-                            + ": Unknown consumer key. Please verify your consumer key is correct"
-                            + " and registered with the server.";
+                    userFriendlyMessage =
+                            "Unknown consumer key. Please verify your consumer key is correct and"
+                                    + " registered with the server.";
+                    break;
                 case "timestamp_refused":
-                    return baseMessage
-                            + ": OAuth timestamp was refused. Please check your system clock is"
-                            + " synchronized.";
+                    userFriendlyMessage =
+                            "OAuth timestamp was refused. Please check your system clock is"
+                                    + " synchronized.";
+                    break;
                 case "nonce_used":
-                    return baseMessage
-                            + ": OAuth nonce was already used. Please retry the request.";
+                    userFriendlyMessage = "OAuth nonce was already used. Please retry the request.";
+                    break;
                 case "token_expired":
-                    return baseMessage + ": OAuth token has expired. Please re-authenticate.";
+                    userFriendlyMessage = "OAuth token has expired. Please re-authenticate.";
+                    break;
                 default:
-                    return baseMessage + ": " + problemType.replace("_", " ");
+                    userFriendlyMessage = problemType.replace("_", " ");
+            }
+
+            if (detailedMessage != null && !detailedMessage.isEmpty()) {
+                return baseMessage
+                        + ": "
+                        + userFriendlyMessage
+                        + "\nServer details: "
+                        + detailedMessage;
+            } else {
+                return baseMessage + ": " + userFriendlyMessage;
             }
         } else if (e.getClass().getSimpleName().equals("ProcessingException")) {
             return baseMessage
@@ -713,6 +742,32 @@ public class DiscoveryServices {
                     + ": "
                     + (e.getMessage() != null ? e.getMessage() : "Unknown error occurred");
         }
+    }
+
+    /**
+     * Handle service catalog retrieval errors and return structured ErrorDetails
+     */
+    private ErrorDetails handleServiceCatalogErrorDetails(Exception e, String catalogUrl) {
+        // Check if this is an OAuth-related error
+        if (e.getMessage() != null
+                && (e.getMessage().contains("oauth") || e.getMessage().contains("signature"))) {
+            return ErrorDetails.fromOAuthException(e);
+        }
+
+        // Check if this is an HTTP-related error
+        if (e.getMessage() != null && e.getMessage().contains("HTTP")) {
+            // Try to extract HTTP status code
+            String message = e.getMessage();
+            java.util.regex.Pattern pattern = java.util.regex.Pattern.compile("HTTP (\\d+)");
+            java.util.regex.Matcher matcher = pattern.matcher(message);
+            if (matcher.find()) {
+                int status = Integer.parseInt(matcher.group(1));
+                return ErrorDetails.fromHttpResponse(status, getHttpStatusDescription(status));
+            }
+        }
+
+        // Default to general exception handling
+        return ErrorDetails.fromException(e);
     }
 
     /**
@@ -776,5 +831,92 @@ public class DiscoveryServices {
                         ? "Client Error"
                         : statusCode >= 500 ? "Server Error" : "Unknown Status";
         }
+    }
+
+    /**
+     * Extract HTTP error details from exception message
+     */
+    private String extractHttpErrorDetails(String message) {
+        if (message == null) return null;
+
+        // Look for common HTTP error patterns
+        if (message.contains("401") && message.contains("Unauthorized")) {
+            return "401 Unauthorized - Authentication failed. Please check your credentials.";
+        } else if (message.contains("403") && message.contains("Forbidden")) {
+            return "403 Forbidden - Access denied to the requested resource.";
+        } else if (message.contains("404") && message.contains("Not Found")) {
+            return "404 Not Found - The requested resource could not be found.";
+        } else if (message.contains("500") && message.contains("Internal Server Error")) {
+            return "500 Internal Server Error - The server encountered an error.";
+        }
+
+        return null;
+    }
+
+    /**
+     * Extract detailed OAuth error information from exception message
+     */
+    private String extractOAuthDetails(String message) {
+        if (message == null) return null;
+
+        StringBuilder details = new StringBuilder();
+
+        // Extract oauth_signature if present
+        String signature = extractParameter(message, "oauth_signature");
+        if (signature != null) {
+            details.append("OAuth Signature: ").append(signature).append("; ");
+        }
+
+        // Extract oauth_signature_base_string if present
+        String baseString = extractParameter(message, "oauth_signature_base_string");
+        if (baseString != null) {
+            details.append("Base String: ").append(baseString).append("; ");
+        }
+
+        // Extract oauth_signature_method if present
+        String method = extractParameter(message, "oauth_signature_method");
+        if (method != null) {
+            details.append("Signature Method: ").append(method).append("; ");
+        }
+
+        return details.length() > 0 ? details.toString().trim() : null;
+    }
+
+    /**
+     * Extract a specific parameter value from an OAuth error message
+     */
+    private String extractParameter(String message, String paramName) {
+        if (message == null || paramName == null) return null;
+
+        String searchPattern = paramName + "=";
+        int startIndex = message.indexOf(searchPattern);
+        if (startIndex < 0) return null;
+
+        startIndex += searchPattern.length();
+
+        // Handle quoted values
+        if (startIndex < message.length() && message.charAt(startIndex) == '"') {
+            startIndex++; // Skip opening quote
+            int endIndex = message.indexOf('"', startIndex);
+            if (endIndex > startIndex) {
+                return message.substring(startIndex, endIndex);
+            }
+        }
+
+        // Handle unquoted values (ending with comma, semicolon, or end of string)
+        int endIndex = startIndex;
+        while (endIndex < message.length()) {
+            char c = message.charAt(endIndex);
+            if (c == ',' || c == ';' || c == '&' || c == '\n' || c == '\r') {
+                break;
+            }
+            endIndex++;
+        }
+
+        if (endIndex > startIndex) {
+            return message.substring(startIndex, endIndex).trim();
+        }
+
+        return null;
     }
 }
