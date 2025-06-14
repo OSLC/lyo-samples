@@ -130,12 +130,31 @@
         <version>12.0.7</version>
         <configuration>
           <webApp>
-            <contextPath>/discovery</contextPath>
+            <contextPath>/</contextPath>
           </webApp>
           <scan>5</scan>
           <httpConnector>
             <port>8081</port>
           </httpConnector>
+          <jvmArgs>-Djavax.xml.accessExternalDTD= -Djavax.xml.accessExternalSchema= -Djavax.xml.accessExternalStylesheet= -Dxml.catalog.prefer=system</jvmArgs>
+          <systemProperties>
+            <systemProperty>
+              <name>org.apache.jasper.compiler.disablejsr199</name>
+              <value>true</value>
+            </systemProperty>
+            <systemProperty>
+              <name>javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING</name>
+              <value>true</value>
+            </systemProperty>
+            <systemProperty>
+              <name>org.xml.sax.features.external-general-entities</name>
+              <value>false</value>
+            </systemProperty>
+            <systemProperty>
+              <name>org.xml.sax.features.external-parameter-entities</name>
+              <value>false</value>
+            </systemProperty>
+          </systemProperties>
         </configuration>
         <executions>
           <execution>
