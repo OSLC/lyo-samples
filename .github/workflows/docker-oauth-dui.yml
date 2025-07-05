@@ -53,7 +53,7 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             # For pushes to master/main branch or scheduled builds, tag as "latest"
-            type=raw,value=latest,enable=${{ is_default_branch || github.event_name == 'schedule' }}
+            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', github.event.repository.default_branch) || github.event_name == 'schedule' }}
             # For releases, create semantic version tags
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
