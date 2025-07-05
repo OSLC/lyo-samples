@@ -8,6 +8,10 @@ on:
       - '.github/workflows/docker-oauth-dui.yml'
   release:
     types: [published]
+   schedule:
+    # Weekly rebuild every Thursday at 3:00 AM UTC to get latest base image updates
+    - cron: '0 3 * * 4'
+
   workflow_dispatch:
 
 env:
@@ -25,6 +29,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Check build trigger
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            echo "🔄 This is a scheduled weekly rebuild to update base images"
+          elif [ "${{ github.event_name }}" = "release" ]; then
+            echo "🚀 This is a release build"
+          else
+            echo "📦 This is a regular build triggered by push"
+          fi
+
       - name: Log in to Container Registry
         uses: docker/login-action@v3
         with:
@@ -40,6 +54,8 @@ jobs:
           tags: |
             # For pushes to master/main branch, tag as "latest"
             type=raw,value=latest,enable={{is_default_branch}}
+            # For scheduled builds (weekly), also tag as "latest"
+            type=raw,value=latest,enable=${{ github.event_name == 'schedule' }}
             # For releases, create semantic version tags
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
@@ -62,6 +78,9 @@ jobs:
           platforms: linux/amd64,linux/arm64
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          # For scheduled builds, don't use cache to ensure fresh base images
+          no-cache: ${{ github.event_name == 'schedule' }}
+          pull: true
 
       - name: Output image details
         run: |
