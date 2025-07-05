@@ -45,7 +45,7 @@ Pre-built Docker images are available from GitHub Container Registry:
 docker run -p 8080:8080 ghcr.io/oslc/lyo-samples/client-oauth-discovery-dui:latest
 
 # Run a specific version
-docker run -p 8080:8080 ghcr.io/oslc/lyo-samples/client-oauth-discovery-dui:1.2.3
+docker run -p 8080:8080 ghcr.io/oslc/lyo-samples/client-oauth-discovery-dui:0.1.0
 ```
 
 ## Exploring the Application
