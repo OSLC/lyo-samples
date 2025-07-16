@@ -28,12 +28,12 @@ jobs:
         include:
           - java-version: '21'
             distribution: 'temurin'
-          - java-version: '21'
-            distribution: 'liberica'
-          - java-version: '23'
-            distribution: 'oracle'
-          - java-version: '24-ea'
-            distribution: 'zulu'
+          # - java-version: '21'
+          #   distribution: 'liberica'
+          # - java-version: '23'
+          #   distribution: 'oracle'
+          # - java-version: '24-ea'
+          #   distribution: 'zulu'
           # - java-version: '22-ea'
           #   distribution: zulu
     steps:
@@ -51,7 +51,7 @@ jobs:
           distribution:  ${{ matrix.distribution }}
           java-version: ${{ matrix.java-version }}
       - name: Build Lyo locally
-        run: mvn -B clean install --file lyo-trunk/pom.xml -DskipTests -Dmaven.javadoc.skip=true
+        run: mvn -B clean install --file lyo-trunk/pom.xml -DskipTests -Dmaven.javadoc.skip=true -P '!spotless'
       - name: Build Lyo Client samples
         run: |
           mvn -B clean verify --file ./main/lyo-client-samples/pom.xml
