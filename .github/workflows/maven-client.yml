@@ -10,6 +10,7 @@ on:
       - 'lyo-client-samples/**'
   schedule:
     - cron: "01 13 1-7 * 5" # catch SNAPSHOT breaking changes
+  merge_group:
   workflow_dispatch:
 
 concurrency:
