@@ -79,6 +79,44 @@
       </plugin>
 
       <plugin>
+        <groupId>org.openrewrite.maven</groupId>
+        <artifactId>rewrite-maven-plugin</artifactId>
+        <version>6.15.0</version>
+        <!-- <configuration>
+            <skipMavenParsing>true</skipMavenParsing>
+            <activeRecipes>
+              <recipe>org.eclipse.lyo.testsuite.JenaUpgrade</recipe>
+            </activeRecipes>
+            <configLocation>
+              ${session.executionRootDirectory}/org.eclipse.lyo.testsuite.server/rewrite.yml</configLocation>
+          </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>org.openrewrite</groupId>
+              <artifactId>rewrite-java</artifactId>
+              <version>8.59.1</version>
+            </dependency>
+            <dependency>
+              <groupId>org.eclipse.lyo.testsuite</groupId>
+              <artifactId>org.eclipse.lyo.testsuite.recipes</artifactId>
+              <version>5.0.1-SNAPSHOT</version>
+            </dependency>
+          </dependencies> -->
+        <configuration>
+          <activeRecipes>
+            <recipe>org.openrewrite.java.migrate.UpgradeToJava17</recipe>
+          </activeRecipes>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.openrewrite.recipe</groupId>
+            <artifactId>rewrite-migrate-java</artifactId>
+            <version>3.14.1</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+
+      <plugin>
         <groupId>com.diffplug.spotless</groupId>
         <artifactId>spotless-maven-plugin</artifactId>
         <version>2.46.1</version>

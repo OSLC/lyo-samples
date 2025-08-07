@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.Serial;
 import java.net.URI;
 import java.util.Properties;
 import org.apache.commons.io.FileUtils;
@@ -29,6 +30,7 @@ import org.apache.commons.io.FileUtils;
  */
 public class WriteThroughProperties extends Properties {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private final File adapterPropertiesFile;
