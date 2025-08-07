@@ -15,6 +15,7 @@
  */
 package org.eclipse.lyo.samples.client.automation;
 
+import lombok.Setter;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcDescription;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcNamespace;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcOccurs;
@@ -30,16 +31,17 @@ import org.eclipse.lyo.oslc4j.core.model.ValueType;
 @OslcNamespace(IConstants.NAMESPACE_URI_JAZZ_AUTO_RQM)
 public class Message extends AbstractResource implements IConstants {
 
+    @Setter
     private String name;
+
+    @Setter
     private String value;
 
     /**
      * Default Constructor
      *
-     * @param name
-     * 		Name or ID of the message. Cannot be null.
-     * @param value
-     * 		The actual message content.  Cannot be null.
+     * @param name Name or ID of the message. Cannot be null.
+     * @param value The actual message content. Cannot be null.
      */
     public Message(String name, String value) {
         assert name != null;
@@ -58,10 +60,6 @@ public class Message extends AbstractResource implements IConstants {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     @OslcDescription("The actual message content")
     @OslcPropertyDefinition(NAMESPACE_URI_JAZZ_AUTO_RQM + "value")
     @OslcTitle("Value")
@@ -69,9 +67,5 @@ public class Message extends AbstractResource implements IConstants {
     @OslcValueType(ValueType.XMLLiteral)
     public String getValue() {
         return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
     }
 }

@@ -75,6 +75,20 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>1.18.38</version>
+            </path>
+          </annotationProcessorPaths>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
       </plugin>
 
@@ -104,7 +118,12 @@
           </dependencies> -->
         <configuration>
           <activeRecipes>
+            <recipe>org.openrewrite.java.migrate.UpgradeToJava17</recipe>
             <recipe>org.openrewrite.java.migrate.UpgradeToJava21</recipe>
+            <recipe>org.openrewrite.java.testing.junit5.JUnit5BestPractices</recipe>
+            <recipe>org.openrewrite.java.logging.slf4j.ParameterizedLogging</recipe>
+            <!-- <recipe>org.openrewrite.java.logging.slf4j.Log4jToSlf4j</recipe> -->
+            <recipe>org.openrewrite.java.migrate.lombok.LombokBestPractices</recipe>
           </activeRecipes>
         </configuration>
         <dependencies>
@@ -112,6 +131,16 @@
             <groupId>org.openrewrite.recipe</groupId>
             <artifactId>rewrite-migrate-java</artifactId>
             <version>3.14.1</version>
+          </dependency>
+          <dependency>
+            <groupId>org.openrewrite.recipe</groupId>
+            <artifactId>rewrite-testing-frameworks</artifactId>
+            <version>3.14.1</version>
+          </dependency>
+          <dependency>
+            <groupId>org.openrewrite.recipe</groupId>
+            <artifactId>rewrite-logging-frameworks</artifactId>
+            <version>3.12.1</version>
           </dependency>
         </dependencies>
       </plugin>
@@ -151,15 +180,17 @@
               </indent>
             </format>
           </formats>
-          <!-- define a language-specific format -->
           <java>
-            <!-- apply a specific flavor of google-java-format and reflow long strings -->
-            <googleJavaFormat>
-              <version>1.27.0</version>
-              <style>AOSP</style>
-              <reflowLongStrings>true</reflowLongStrings>
-              <formatJavadoc>false</formatJavadoc>
-            </googleJavaFormat>
+            <palantirJavaFormat>
+              <!-- <version>2.73.0</version> -->
+              <style>PALANTIR</style>  <!-- or AOSP/GOOGLE (optional) -->
+              <formatJavadoc>true</formatJavadoc> 
+            </palantirJavaFormat>
+            <removeUnusedImports>
+              <engine>google-java-format</engine>    <!-- optional. Defaults to `google-java-format`.
+              Can be switched to `cleanthat-javaparser-unnecessaryimport` (e.g. to process JDK17
+              source files with a JDK8+ Runtime) -->
+            </removeUnusedImports>
           </java>
         </configuration>
       </plugin>
@@ -251,6 +282,17 @@
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-reload4j</artifactId>
       <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.38</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok-mapstruct-binding</artifactId>
+      <version>0.2.0</version>
     </dependency>
     <dependency>
       <groupId>commons-io</groupId>

@@ -24,10 +24,10 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Date;
 import java.util.Properties;
-import java.util.logging.Logger;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import lombok.extern.java.Log;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
@@ -45,13 +45,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- * Sample of registering an external agent (adapter) with an Automation Service
- * Provider and executing Automation Requests like an ETM test execution adapter.
+ * Sample of registering an external agent (adapter) with an Automation Service Provider and executing Automation
+ * Requests like an ETM test execution adapter.
  */
-public class ETMAutomationSample
-        implements IConstants, IAutomationRequestHandler, UncaughtExceptionHandler {
-
-    private static final Logger logger = Logger.getLogger(ETMAutomationSample.class.getName());
+@Log
+public class ETMAutomationSample implements IConstants, IAutomationRequestHandler, UncaughtExceptionHandler {
 
     private AutomationAdapter adapter;
 
@@ -67,8 +65,7 @@ public class ETMAutomationSample
     }
 
     /**
-     * Login to the Automation Service Provider and start polling for Automation
-     * Requests
+     * Login to the Automation Service Provider and start polling for Automation Requests
      *
      * @throws Exception
      */
@@ -78,15 +75,14 @@ public class ETMAutomationSample
 
         try {
 
-            logger.info("Starting heart beat thread for adapter at " + adapter.getAbout());
+            log.info("Starting heart beat thread for adapter at " + adapter.getAbout());
 
             // create a heartbeat thread and start it
-            Thread heartbeatThread =
-                    new Thread(adapter.new HeartbeatRunnable(), "Adapter Heartbeat Thread");
+            Thread heartbeatThread = new Thread(adapter.new HeartbeatRunnable(), "Adapter Heartbeat Thread");
             heartbeatThread.setUncaughtExceptionHandler(this);
             heartbeatThread.start();
 
-            logger.info("Starting adapter polling at " + adapter.getAssignedWorkUrl());
+            log.info("Starting adapter polling at " + adapter.getAssignedWorkUrl());
 
             // start polling the service provider for Automation Requests.
             // this call will block until adapter.stop() is called in
@@ -102,8 +98,7 @@ public class ETMAutomationSample
     }
 
     /**
-     * Configure the adapter by reading its properties from a Properties file
-     * and logging into the Service Provider.
+     * Configure the adapter by reading its properties from a Properties file and logging into the Service Provider.
      *
      * @throws Exception
      */
@@ -113,19 +108,19 @@ public class ETMAutomationSample
         // properties from a file in the class loader. A real world adapter
         // would load the adapter properties from a stable location in the
         // filesystem or from a database.
-        URI propertiesFileUri = ETMAutomationSample.class.getResource("adapter.properties").toURI();
+        URI propertiesFileUri =
+                ETMAutomationSample.class.getResource("adapter.properties").toURI();
 
-        logger.info("Loading cached adapter properties from " + propertiesFileUri.toString());
+        log.info("Loading cached adapter properties from " + propertiesFileUri.toString());
 
         Properties properties = new WriteThroughProperties(propertiesFileUri);
 
         adapter = new AutomationAdapter(properties);
 
-        logger.info("Logging into service provider at " + adapter.getServerUrl());
+        log.info("Logging into service provider at " + adapter.getServerUrl());
 
         // Have to use HttpUrlConnection if using multipart requests when usin Jersey
-        ClientConfig clientConfig =
-                new ClientConfig().connectorProvider(new HttpUrlConnectorProvider());
+        ClientConfig clientConfig = new ClientConfig().connectorProvider(new HttpUrlConnectorProvider());
         // HttpUrlConnection follows redirects by default, need to turn this off for JEE Forms
         // authentication to work
         clientConfig.property(ClientProperties.FOLLOW_REDIRECTS, false);
@@ -140,19 +135,19 @@ public class ETMAutomationSample
 
         // IBM jazz-apps use JEE Form based authentication
         clientBuilder.register(
-                new JEEFormAuthenticator(
-                        adapter.getServerUrl(), adapter.getUsername(), adapter.getPassword()));
+                new JEEFormAuthenticator(adapter.getServerUrl(), adapter.getUsername(), adapter.getPassword()));
         clientBuilder.register(MultiPartFeature.class);
 
         adapter.setClient(new OslcClient(clientBuilder));
 
-        logger.info("Registering with service provider");
+        log.info("Registering with service provider");
 
         // this call will establish the adapter's "about" property
         // as the URL for the adapter.
         adapter.register();
 
-        properties.setProperty(AutomationAdapter.PROPERTY_ABOUT, adapter.getAbout().toString());
+        properties.setProperty(
+                AutomationAdapter.PROPERTY_ABOUT, adapter.getAbout().toString());
     }
 
     /**
@@ -160,10 +155,10 @@ public class ETMAutomationSample
      *
      * @see IAutomationRequestHandler#handleAutomationRequest(AutomationRequest, AutomationAdapter)
      */
-    public AutomationResult handleAutomationRequest(
-            AutomationRequest request, AutomationAdapter adapter) throws AutomationException {
+    public AutomationResult handleAutomationRequest(AutomationRequest request, AutomationAdapter adapter)
+            throws AutomationException {
 
-        logger.info("Adapter has been assigned an Automation Request at " + request.getAbout());
+        log.info("Adapter has been assigned an Automation Request at " + request.getAbout());
 
         AutomationResult result = null;
 
@@ -173,19 +168,16 @@ public class ETMAutomationSample
             result = new AutomationResult();
 
             // Save the start time in the result
-            result.getExtendedProperties()
-                    .put(PROPERTY_RQM_START_TIME, new Date(System.currentTimeMillis()));
+            result.getExtendedProperties().put(PROPERTY_RQM_START_TIME, new Date(System.currentTimeMillis()));
 
             // An example of how to get the script for the AutomationRequest.
             // The script might contain references to resources needed to
             // execute the test.
-            adapter.sendMessageForRequest(
-                    new Message("LYO_1", "Downloading script document"), request);
+            adapter.sendMessageForRequest(new Message("LYO_1", "Downloading script document"), request);
 
             Document script = adapter.getScriptDocument(request);
 
-            adapter.sendMessageForRequest(
-                    new Message("LYO_2", "Script document successfully downloaded"), request);
+            adapter.sendMessageForRequest(new Message("LYO_2", "Script document successfully downloaded"), request);
 
             // update progress indication
             adapter.sendProgressForRequest(50, request);
@@ -202,28 +194,23 @@ public class ETMAutomationSample
 
             // Add some rich text to the result
             Element xhtmlTableElement = createXhtmlTable();
-            QName contributionQname =
-                    new QName(AutomationConstants.AUTOMATION_DOMAIN, "contribution");
+            QName contributionQname = new QName(AutomationConstants.AUTOMATION_DOMAIN, "contribution");
             result.getExtendedProperties().put(contributionQname, xhtmlTableElement);
 
             // Set the verdict for the result
             result.addVerdict(new URI(AutomationConstants.VERDICT_PASSED));
 
             // Save the end time in the result
-            result.getExtendedProperties()
-                    .put(PROPERTY_RQM_END_TIME, new Date(System.currentTimeMillis()));
+            result.getExtendedProperties().put(PROPERTY_RQM_END_TIME, new Date(System.currentTimeMillis()));
 
             // update progress indication
             adapter.sendProgressForRequest(99, request);
 
-            logger.info("Returning a result with verdict " + result.getVerdicts()[0]);
+            log.info("Returning a result with verdict " + result.getVerdicts()[0]);
 
         } catch (AutomationRequestCanceledException e) {
 
-            logger.info(
-                    "Automation Request \""
-                            + e.getCanceledRequest().getTitle()
-                            + "\" was canceled.");
+            log.info("Automation Request \"" + e.getCanceledRequest().getTitle() + "\" was canceled.");
 
             // clean up any resources created for test execution here
 
@@ -251,24 +238,20 @@ public class ETMAutomationSample
      * @throws IOException
      */
     private void executeScript(
-            Document script,
-            ParameterInstance[] inputParameters,
-            AutomationAdapter adapter,
-            AutomationRequest request)
+            Document script, ParameterInstance[] inputParameters, AutomationAdapter adapter, AutomationRequest request)
             throws InterruptedException, AutomationException, IOException, URISyntaxException {
 
-        String scriptTitle =
-                script.getDocumentElement()
-                        .getElementsByTagNameNS(NAMESPACE_URI_DC_ELEMENTS, "title")
-                        .item(0)
-                        .getTextContent();
+        String scriptTitle = script.getDocumentElement()
+                .getElementsByTagNameNS(NAMESPACE_URI_DC_ELEMENTS, "title")
+                .item(0)
+                .getTextContent();
 
-        logger.info("Running script named '" + scriptTitle + "'");
+        log.info("Running script named '" + scriptTitle + "'");
 
-        logger.info("Input parameters:");
+        log.info("Input parameters:");
         for (ParameterInstance parameter : inputParameters) {
             String paramStr = "\t" + parameter.getName() + ": " + parameter.getValue();
-            logger.info(paramStr);
+            log.info(paramStr);
         }
 
         /*
@@ -278,9 +261,7 @@ public class ETMAutomationSample
 
         // Update the request status
         StatusResponse statusResponse =
-                new StatusResponse(
-                        StatusResponse.STATUS_OK,
-                        "Script '" + scriptTitle + "' was executed successfully.");
+                new StatusResponse(StatusResponse.STATUS_OK, "Script '" + scriptTitle + "' was executed successfully.");
 
         adapter.sendStatusForRequest(statusResponse, request);
     }
@@ -293,7 +274,8 @@ public class ETMAutomationSample
      */
     private Element createXhtmlTable() throws ParserConfigurationException {
 
-        Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+        Document document =
+                DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 
         Element divElement = document.createElementNS(NAMESPACE_URI_XHTML, "div");
 
@@ -350,10 +332,7 @@ public class ETMAutomationSample
      */
     public void uncaughtException(Thread thread, Throwable throwable) {
 
-        logger.severe(
-                "Adapter heartbeat running in Thread "
-                        + thread.getName()
-                        + " threw an uncaught exception.");
+        log.severe("Adapter heartbeat running in Thread " + thread.getName() + " threw an uncaught exception.");
 
         throwable.printStackTrace(System.err);
 

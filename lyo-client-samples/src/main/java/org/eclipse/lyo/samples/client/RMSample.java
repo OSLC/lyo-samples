@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import lombok.extern.java.Log;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.GnuParser;
@@ -38,22 +38,18 @@ import org.eclipse.lyo.client.query.OslcQueryResult;
 /**
  * Samples of accessing a generic Requirements Management provider and running OSLC operations.
  *
- * This will not run against any RM server that doesn't require authentication. Use with the
- * eclipse/Lyo sample RM servers.
+ * <p>This will not run against any RM server that doesn't require authentication. Use with the eclipse/Lyo sample RM
+ * servers.
  *
- *
- * - run an OLSC Requirement query and retrieve OSLC Requirements and de-serialize them as Java objects
- * - retrieve an OSLC Requirement and print it as XML
- * - create a new Requirement
- * - update an existing Requirement
- *
+ * <p>- run an OLSC Requirement query and retrieve OSLC Requirements and de-serialize them as Java objects - retrieve an
+ * OSLC Requirement and print it as XML - create a new Requirement - update an existing Requirement
  */
+@Log
 public class RMSample {
-
-    private static final Logger logger = Logger.getLogger(RMSample.class.getName());
 
     /**
      * Access a RM service provider and perform some OSLC actions
+     *
      * @param args
      * @throws ParseException
      */
@@ -70,14 +66,12 @@ public class RMSample {
         CommandLine cmd = cliParser.parse(options, args);
 
         if (!validateOptions(cmd)) {
-            logger.severe(
-                    "Syntax:  java <class_name> -url"
-                            + " https://<server>:port/<context>/<catalog_location> -providerTitle"
-                            + " \"<provider title>\"");
-            logger.severe(
-                    "Example: java GenericCMSample -url"
-                        + " https://localhost:8080/OSLC4JRegistry/catalog/singleton -providerTitle"
-                        + " \"OSLC Lyo Requirements Management Service Provider\"");
+            log.severe("Syntax:  java <class_name> -url"
+                    + " https://<server>:port/<context>/<catalog_location> -providerTitle"
+                    + " \"<provider title>\"");
+            log.severe("Example: java GenericCMSample -url"
+                    + " https://localhost:8080/OSLC4JRegistry/catalog/singleton -providerTitle"
+                    + " \"OSLC Lyo Requirements Management Service Provider\"");
             return;
         }
 
@@ -94,17 +88,11 @@ public class RMSample {
 
             // STEP 3: Get the Query Capabilities and Creation Factory URLs so that we can run some
             // OSLC queries
-            String queryCapability =
-                    client.lookupQueryCapability(
-                            serviceProviderUrl,
-                            OSLCConstants.OSLC_RM_V2,
-                            OSLCConstants.RM_REQUIREMENT_TYPE);
+            String queryCapability = client.lookupQueryCapability(
+                    serviceProviderUrl, OSLCConstants.OSLC_RM_V2, OSLCConstants.RM_REQUIREMENT_TYPE);
 
-            String creationFactory =
-                    client.lookupCreationFactory(
-                            serviceProviderUrl,
-                            OSLCConstants.OSLC_RM_V2,
-                            OSLCConstants.RM_REQUIREMENT_TYPE);
+            String creationFactory = client.lookupCreationFactory(
+                    serviceProviderUrl, OSLCConstants.OSLC_RM_V2, OSLCConstants.RM_REQUIREMENT_TYPE);
 
             // SCENARIO A: Run a query for all Requirements
 
@@ -121,10 +109,8 @@ public class RMSample {
             // SCENARIO B:  Run a query for a specific Requirement and then print it as raw XML.
             // Change the URL below to match a real Requirement
 
-            Response rawResponse =
-                    client.getResource(
-                            "http://localhost:8086/adaptor-rm/services/requirements/3513",
-                            OSLCConstants.CT_XML);
+            Response rawResponse = client.getResource(
+                    "http://localhost:8086/adaptor-rm/services/requirements/3513", OSLCConstants.CT_XML);
             processRawResponse(rawResponse);
             rawResponse.readEntity(String.class);
 
@@ -133,8 +119,7 @@ public class RMSample {
             newRequirement.setTitle("Database schema needs new attributes");
             newRequirement.setTitle("The data model needs to support new attributes");
 
-            rawResponse =
-                    client.createResource(creationFactory, newRequirement, OSLCConstants.CT_RDF);
+            rawResponse = client.createResource(creationFactory, newRequirement, OSLCConstants.CT_RDF);
             int statusCode = rawResponse.getStatus();
             rawResponse.readEntity(String.class);
             System.out.println("Status code for POST of new artifact: " + statusCode);
@@ -144,17 +129,15 @@ public class RMSample {
                 newRequirement.setTitle("The schema needs to support new attributes");
                 rawResponse = client.updateResource(location, newRequirement, OSLCConstants.CT_RDF);
                 rawResponse.readEntity(String.class);
-                System.out.println(
-                        "Status code for PUT of updated artifact: " + rawResponse.getStatus());
+                System.out.println("Status code for PUT of updated artifact: " + rawResponse.getStatus());
             }
 
         } catch (Exception e) {
-            logger.log(Level.SEVERE, e.getMessage(), e);
+            log.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 
-    private static void processPagedQueryResults(
-            OslcQueryResult result, OslcClient client, boolean asJavaObjects) {
+    private static void processPagedQueryResults(OslcQueryResult result, OslcClient client, boolean asJavaObjects) {
         int page = 1;
         do {
             System.out.println("\nPage " + page + ":\n");
@@ -168,8 +151,7 @@ public class RMSample {
         } while (true);
     }
 
-    private static void processCurrentPage(
-            OslcQueryResult result, OslcClient client, boolean asJavaObjects) {
+    private static void processCurrentPage(OslcQueryResult result, OslcClient client, boolean asJavaObjects) {
 
         for (String resultsUrl : result.getMembersUrls()) {
             System.out.println(resultsUrl);
@@ -192,7 +174,7 @@ public class RMSample {
                     }
                 }
             } catch (Exception e) {
-                logger.log(Level.SEVERE, "Unable to process artfiact at url: " + resultsUrl, e);
+                log.log(Level.SEVERE, "Unable to process artfiact at url: " + resultsUrl, e);
             }
         }
     }
@@ -211,13 +193,12 @@ public class RMSample {
     public static void printRequirementInfo(Requirement cr) {
         // See the OSLC4J Requirement class for a full list of attributes you can access.
         if (cr != null) {
-            System.out.println(
-                    "ID: "
-                            + cr.getIdentifier()
-                            + ", Title: "
-                            + cr.getTitle()
-                            + ", Description: "
-                            + cr.getDescription());
+            System.out.println("ID: "
+                    + cr.getIdentifier()
+                    + ", Title: "
+                    + cr.getTitle()
+                    + ", Description: "
+                    + cr.getDescription());
         }
     }
 

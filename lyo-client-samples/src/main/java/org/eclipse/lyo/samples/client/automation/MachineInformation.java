@@ -120,13 +120,11 @@ public class MachineInformation {
     }
 
     /**
-     * Get IP addresses for one interface or for all interfaces if name is null.
-     * We exclude loopback addresses. Any IP addrs found are stored in HashMaps
-     * named addrsIPv4 and addrIPv6.
+     * Get IP addresses for one interface or for all interfaces if name is null. We exclude loopback addresses. Any IP
+     * addrs found are stored in HashMaps named addrsIPv4 and addrIPv6.
      *
-     * @param name
-     *            of the NetworkInterface to search for IP addresses (ie. eth0,
-     *            le0, etc) or null to search all configured interfaces.
+     * @param name of the NetworkInterface to search for IP addresses (ie. eth0, le0, etc) or null to search all
+     *     configured interfaces.
      * @return true if any non-loopback IP addresses are configured
      * @throws SocketException
      */
@@ -145,9 +143,7 @@ public class MachineInformation {
                 while (ips.hasMoreElements()) {
                     InetAddress ip = ips.nextElement();
                     // If the address is a Loopback, link-local, or site-local address, skip it
-                    if (ip.isLoopbackAddress()
-                            || ip.isLinkLocalAddress()
-                            || ip.isSiteLocalAddress()) continue;
+                    if (ip.isLoopbackAddress() || ip.isLinkLocalAddress() || ip.isSiteLocalAddress()) continue;
                     // If IPv6 address, check to see if we want it
                     if (ip instanceof Inet6Address) addrsIPv6.put(ip, ni);
                     else addrsIPv4.put(ip, ni);

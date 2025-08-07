@@ -24,21 +24,18 @@ import java.net.URI;
 import java.util.Properties;
 import org.apache.commons.io.FileUtils;
 
-/**
- * Subclass of Properties class that writes through to a backing file when a
- * property is set.
- */
+/** Subclass of Properties class that writes through to a backing file when a property is set. */
 public class WriteThroughProperties extends Properties {
 
-    @Serial private static final long serialVersionUID = 1L;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     private final File adapterPropertiesFile;
 
     /**
      * Default constructor.
      *
-     * @param fileUri
-     *            URI for a local File containing the properties
+     * @param fileUri URI for a local File containing the properties
      * @throws IOException
      */
     public WriteThroughProperties(URI fileUri) throws IOException {
