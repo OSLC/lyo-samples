@@ -30,8 +30,7 @@ import org.apache.commons.io.FileUtils;
  */
 public class WriteThroughProperties extends Properties {
 
-    @Serial
-    private static final long serialVersionUID = 1L;
+    @Serial private static final long serialVersionUID = 1L;
 
     private final File adapterPropertiesFile;
 

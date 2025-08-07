@@ -19,8 +19,7 @@ import java.io.Serial;
 
 public class AutomationException extends Exception {
 
-    @Serial
-    private static final long serialVersionUID = 1L;
+    @Serial private static final long serialVersionUID = 1L;
 
     public AutomationException() {
         super();

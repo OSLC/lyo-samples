@@ -731,7 +731,7 @@ public class ERMSample {
             throw new IllegalArgumentException(
                     "There is more than one 'requiredInstanceShape' shape");
         } else {
-            return shapes.get(0);
+            return shapes.getFirst();
         }
     }
 }
