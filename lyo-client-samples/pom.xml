@@ -9,9 +9,9 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <maven.compiler.source>17</maven.compiler.source>
-    <maven.compiler.target>17</maven.compiler.target>
-    <maven.compiler.release>17</maven.compiler.release>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
+    <maven.compiler.release>21</maven.compiler.release>
     <v.lyo>7.0.0-SNAPSHOT</v.lyo>
     <v.jena>4.10.0</v.jena>
     <v.jersey>3.1.10</v.jersey> <!--same
@@ -37,7 +37,7 @@
                     <version>3.8.1</version>
                   </requireMavenVersion>
                   <requireJavaVersion>
-                    <version>17</version>
+                    <version>21</version>
                   </requireJavaVersion>
                   <bannedDependencies>
                     <excludes>
@@ -104,7 +104,7 @@
           </dependencies> -->
         <configuration>
           <activeRecipes>
-            <recipe>org.openrewrite.java.migrate.UpgradeToJava17</recipe>
+            <recipe>org.openrewrite.java.migrate.UpgradeToJava21</recipe>
           </activeRecipes>
         </configuration>
         <dependencies>
