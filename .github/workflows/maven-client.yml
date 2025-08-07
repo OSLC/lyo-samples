@@ -30,8 +30,8 @@ jobs:
             distribution: 'temurin'
           - java-version: '24'
             distribution: 'oracle'
-          - java-version: '25-ea'
-            distribution: 'zulu'
+          # - java-version: '25-ea'
+          #   distribution: 'zulu'
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK ${{ matrix.java-version }}
