@@ -158,8 +158,6 @@
     <dependency>
       <groupId>org.glassfish.jersey.connectors</groupId>
       <artifactId>jersey-apache-connector</artifactId>
-      <!-- FIXME -->
-      <!-- <version>${v.jersey}</version> -->
     </dependency>
     <dependency>
       <groupId>org.glassfish.jersey.media</groupId>
@@ -168,14 +166,10 @@
     <dependency>
       <groupId>org.eclipse.lyo.oslc4j.core</groupId>
       <artifactId>lyo-core-model</artifactId>
-      <!-- FIXME -->
-      <!-- <version>${v.lyo}</version> -->
     </dependency>
     <dependency>
       <groupId>org.eclipse.lyo.oslc4j.core</groupId>
       <artifactId>lyo-core-settings</artifactId>
-      <!-- FIXME -->
-      <!-- <version>${v.lyo}</version> -->
     </dependency>
     <dependency>
       <groupId>org.eclipse.lyo.oslc4j.core</groupId>
@@ -220,8 +214,6 @@
             addresses security problems in log4j1-->
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-reload4j</artifactId>
-      <!-- FIXME -->
-      <version>2.0.17</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
