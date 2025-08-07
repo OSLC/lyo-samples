@@ -21,8 +21,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.logging.Level;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.GnuParser;
@@ -50,7 +49,7 @@ import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
  * <p>- run an OLSC ChangeRequest query and retrieve OSLC ChangeRequests and de-serialize them as Java objects -
  * retrieve an OSLC ChangeRequest and print it as XML - create a new ChangeRequest - update an existing ChangeRequest
  */
-@Log
+@Slf4j
 public class CMSample {
 
     /**
@@ -74,10 +73,10 @@ public class CMSample {
         CommandLine cmd = cliParser.parse(options, args);
 
         if (!validateOptions(cmd)) {
-            log.severe("Syntax:  java <class_name> -catalogURL"
+            log.error("Syntax:  java <class_name> -catalogURL"
                     + " https://<server>:port/<context>/<catalog_location> -providerTitle"
                     + " \"<provider title>\" -user userID -password password");
-            log.severe("Example: java GenericCMSample -catalogURL"
+            log.error("Example: java GenericCMSample -catalogURL"
                     + " https://exmple.com:8080/OSLC4JRegistry/catalog/1 -providerTitle \"OSLC"
                     + " Lyo Change Management Service Provider\" -user fred -password pasw0rd");
             return;
@@ -166,7 +165,7 @@ public class CMSample {
             }
 
         } catch (Exception e) {
-            log.log(Level.SEVERE, e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -207,7 +206,7 @@ public class CMSample {
                     }
                 }
             } catch (Exception e) {
-                log.log(Level.SEVERE, "Unable to process artfiact at url: " + resultsUrl, e);
+                log.error("Unable to process artfiact at url: {}", resultsUrl, e);
             }
         }
     }

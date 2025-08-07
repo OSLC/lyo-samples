@@ -27,7 +27,7 @@ import java.util.Properties;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
@@ -48,7 +48,7 @@ import org.w3c.dom.Element;
  * Sample of registering an external agent (adapter) with an Automation Service Provider and executing Automation
  * Requests like an ETM test execution adapter.
  */
-@Log
+@Slf4j
 public class ETMAutomationSample implements IConstants, IAutomationRequestHandler, UncaughtExceptionHandler {
 
     private AutomationAdapter adapter;
@@ -75,14 +75,14 @@ public class ETMAutomationSample implements IConstants, IAutomationRequestHandle
 
         try {
 
-            log.info("Starting heart beat thread for adapter at " + adapter.getAbout());
+            log.info("Starting heart beat thread for adapter at {}", adapter.getAbout());
 
             // create a heartbeat thread and start it
             Thread heartbeatThread = new Thread(adapter.new HeartbeatRunnable(), "Adapter Heartbeat Thread");
             heartbeatThread.setUncaughtExceptionHandler(this);
             heartbeatThread.start();
 
-            log.info("Starting adapter polling at " + adapter.getAssignedWorkUrl());
+            log.info("Starting adapter polling at {}", adapter.getAssignedWorkUrl());
 
             // start polling the service provider for Automation Requests.
             // this call will block until adapter.stop() is called in
@@ -111,13 +111,13 @@ public class ETMAutomationSample implements IConstants, IAutomationRequestHandle
         URI propertiesFileUri =
                 ETMAutomationSample.class.getResource("adapter.properties").toURI();
 
-        log.info("Loading cached adapter properties from " + propertiesFileUri.toString());
+        log.info("Loading cached adapter properties from {}", propertiesFileUri.toString());
 
         Properties properties = new WriteThroughProperties(propertiesFileUri);
 
         adapter = new AutomationAdapter(properties);
 
-        log.info("Logging into service provider at " + adapter.getServerUrl());
+        log.info("Logging into service provider at {}", adapter.getServerUrl());
 
         // Have to use HttpUrlConnection if using multipart requests when usin Jersey
         ClientConfig clientConfig = new ClientConfig().connectorProvider(new HttpUrlConnectorProvider());
@@ -158,7 +158,7 @@ public class ETMAutomationSample implements IConstants, IAutomationRequestHandle
     public AutomationResult handleAutomationRequest(AutomationRequest request, AutomationAdapter adapter)
             throws AutomationException {
 
-        log.info("Adapter has been assigned an Automation Request at " + request.getAbout());
+        log.info("Adapter has been assigned an Automation Request at {}", request.getAbout());
 
         AutomationResult result = null;
 
@@ -206,11 +206,13 @@ public class ETMAutomationSample implements IConstants, IAutomationRequestHandle
             // update progress indication
             adapter.sendProgressForRequest(99, request);
 
-            log.info("Returning a result with verdict " + result.getVerdicts()[0]);
+            log.info("Returning a result with verdict {}", result.getVerdicts()[0]);
 
         } catch (AutomationRequestCanceledException e) {
 
-            log.info("Automation Request \"" + e.getCanceledRequest().getTitle() + "\" was canceled.");
+            log.info(
+                    "Automation Request \"{}\" was canceled.",
+                    e.getCanceledRequest().getTitle());
 
             // clean up any resources created for test execution here
 
@@ -246,7 +248,7 @@ public class ETMAutomationSample implements IConstants, IAutomationRequestHandle
                 .item(0)
                 .getTextContent();
 
-        log.info("Running script named '" + scriptTitle + "'");
+        log.info("Running script named '{}'", scriptTitle);
 
         log.info("Input parameters:");
         for (ParameterInstance parameter : inputParameters) {
@@ -332,7 +334,7 @@ public class ETMAutomationSample implements IConstants, IAutomationRequestHandle
      */
     public void uncaughtException(Thread thread, Throwable throwable) {
 
-        log.severe("Adapter heartbeat running in Thread " + thread.getName() + " threw an uncaught exception.");
+        log.error("Adapter heartbeat running in Thread {} threw an uncaught exception.", thread.getName());
 
         throwable.printStackTrace(System.err);
 

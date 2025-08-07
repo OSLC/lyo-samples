@@ -16,7 +16,7 @@
 package org.eclipse.lyo.samples.client.automation;
 
 import lombok.Setter;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcDescription;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcNamespace;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcOccurs;
@@ -28,7 +28,7 @@ import org.eclipse.lyo.oslc4j.core.model.AbstractResource;
 import org.eclipse.lyo.oslc4j.core.model.Occurs;
 import org.eclipse.lyo.oslc4j.core.model.ValueType;
 
-@Log
+@Slf4j
 @OslcResourceShape(title = "Status Response Resource Shape", describes = IConstants.TYPE_STATUS_RESPONSE)
 @OslcNamespace(IConstants.NAMESPACE_URI_JAZZ_AUTO_RQM)
 public class StatusResponse extends AbstractResource implements IConstants {
@@ -89,7 +89,7 @@ public class StatusResponse extends AbstractResource implements IConstants {
 
         if (statusCode < 100 || statusCode > 599) {
 
-            log.warning("status code not in expected range: " + statusCode);
+            log.warn("status code not in expected range: {}", statusCode);
         }
     }
 

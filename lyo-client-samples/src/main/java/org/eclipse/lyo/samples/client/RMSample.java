@@ -20,8 +20,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.logging.Level;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.GnuParser;
@@ -44,7 +43,7 @@ import org.eclipse.lyo.client.query.OslcQueryResult;
  * <p>- run an OLSC Requirement query and retrieve OSLC Requirements and de-serialize them as Java objects - retrieve an
  * OSLC Requirement and print it as XML - create a new Requirement - update an existing Requirement
  */
-@Log
+@Slf4j
 public class RMSample {
 
     /**
@@ -66,10 +65,9 @@ public class RMSample {
         CommandLine cmd = cliParser.parse(options, args);
 
         if (!validateOptions(cmd)) {
-            log.severe("Syntax:  java <class_name> -url"
-                    + " https://<server>:port/<context>/<catalog_location> -providerTitle"
-                    + " \"<provider title>\"");
-            log.severe("Example: java GenericCMSample -url"
+            log.error("Syntax:  java <class_name> -url"
+                    + " https://<server>:port/<context>/<catalog_location> -providerTitle" + " \"<provider title>\"");
+            log.error("Example: java GenericCMSample -url"
                     + " https://localhost:8080/OSLC4JRegistry/catalog/singleton -providerTitle"
                     + " \"OSLC Lyo Requirements Management Service Provider\"");
             return;
@@ -133,7 +131,7 @@ public class RMSample {
             }
 
         } catch (Exception e) {
-            log.log(Level.SEVERE, e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -174,7 +172,7 @@ public class RMSample {
                     }
                 }
             } catch (Exception e) {
-                log.log(Level.SEVERE, "Unable to process artfiact at url: " + resultsUrl, e);
+                log.error("Unable to process artfiact at url: {}", resultsUrl, e);
             }
         }
     }

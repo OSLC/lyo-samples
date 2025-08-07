@@ -27,11 +27,10 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
-import java.util.logging.Level;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import net.oauth.OAuthException;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -73,7 +72,7 @@ import org.w3c.dom.Element;
  * <p>- run an OLSC Requirement query and retrieve OSLC Requirements and de-serialize them as Java objects - TODO: Add
  * more requirement sample scenarios
  */
-@Log
+@Slf4j
 public class ERMSample {
 
     // Following is a workaround for primaryText issue in DNG ( it is PrimaryText instead of
@@ -103,13 +102,12 @@ public class ERMSample {
         CommandLine cmd = cliParser.parse(options, args);
 
         if (!validateOptions(cmd)) {
-            log.severe("Syntax:  java <class_name> -url https://<server>:port/<context>/ -user <user>"
+            log.error("Syntax:  java <class_name> -url https://<server>:port/<context>/ -user <user>"
                     + " -password <password> -project \"<project_area>\" [--basic]");
-            log.severe("Example: java ERMSample -url https://exmple.com:9443/rm -user ADMIN -password"
+            log.error("Example: java ERMSample -url https://exmple.com:9443/rm -user ADMIN -password"
                     + " ADMIN -project \"JKE Banking (Requirements Management)\"");
-            log.severe("Example: java ERMSample -url https://jazz.net.example.com/sandbox02-rm/ -user"
-                    + " ADMIN -password ADMIN -project \"JKE Banking (Requirements"
-                    + " Management)\" --basic");
+            log.error("Example: java ERMSample -url https://jazz.net.example.com/sandbox02-rm/ -user"
+                    + " ADMIN -password ADMIN -project \"JKE Banking (Requirements" + " Management)\" --basic");
             return;
         }
 
@@ -219,9 +217,9 @@ public class ERMSample {
                 throw new RuntimeException(e);
             } catch (ResourceNotFoundException e) {
                 //				throw new RuntimeException(e);
-                log.warning("OSLC Server does not provide Collection and Feature (or User Requirement)"
+                log.warn("OSLC Server does not provide Collection and Feature (or User Requirement)"
                         + " instance shapes");
-                log.log(Level.FINE, "Exception", e);
+                log.debug("Exception", e);
             }
 
             Requirement requirement = null;
@@ -237,7 +235,7 @@ public class ERMSample {
             String primaryText = null;
             if (requirementFactory != null) {
                 if (featureInstanceShape == null) {
-                    log.warning("Cannot create resources without access to shapes, skipping");
+                    log.warn("Cannot create resources without access to shapes, skipping");
                 } else {
                     // Create REQ01
                     requirement = new Requirement();
@@ -387,7 +385,7 @@ public class ERMSample {
             }
 
             if ((primarytextString != null) && (!primarytextString.contains(primaryText))) {
-                log.log(Level.SEVERE, "Error getting primary Text");
+                log.error("Error getting primary Text");
             }
 
             // QUERIES
@@ -513,13 +511,10 @@ public class ERMSample {
             System.out.println("\n------------------------------\n");
             System.out.println("Number of Results for SCENARIO 08 = " + resultsSize + "\n");
         } catch (RootServicesException re) {
-            log.log(
-                    Level.SEVERE,
-                    "Unable to access the Jazz rootservices document at: " + webContextUrl + "/rootservices",
-                    re);
+            log.error("Unable to access the Jazz rootservices document at: {}/rootservices", webContextUrl, re);
             System.exit(1);
         } catch (Exception e) {
-            log.log(Level.SEVERE, e.getMessage(), e);
+            log.error(e.getMessage(), e);
             System.exit(1);
         }
     }
@@ -570,7 +565,7 @@ public class ERMSample {
                     }
                 }
             } catch (Exception e) {
-                log.log(Level.SEVERE, "Unable to process artfiact at url: " + resultsUrl, e);
+                log.error("Unable to process artfiact at url: {}", resultsUrl, e);
             }
         }
     }

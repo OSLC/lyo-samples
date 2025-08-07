@@ -104,8 +104,7 @@ public class EWMSample {
             log.error("Example: java EWMSample -url https://exmple.com:9443/ccm -user ADMIN -password"
                     + " ADMIN -project \"JKE Banking (Change Management)\"");
             log.error("Example: java EWMSample -url https://jazz.net.example.com/sandbox02-ccm/ -user"
-                    + " ADMIN -password ADMIN -project \"JKE Banking (Change Management)\""
-                    + " --basic");
+                    + " ADMIN -password ADMIN -project \"JKE Banking (Change Management)\"" + " --basic");
             return;
         }
 
