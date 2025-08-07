@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import lombok.extern.java.Log;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.GnuParser;
@@ -45,22 +45,17 @@ import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 /**
  * Samples of accessing a generic ChangeManagement provider and running OSLC operations.
  *
- * This will not run against any CM server that requires authentication. Use with the
- * eclipse/Lyo sample CM servers.
+ * <p>This will not run against any CM server that requires authentication. Use with the eclipse/Lyo sample CM servers.
  *
- *
- * - run an OLSC ChangeRequest query and retrieve OSLC ChangeRequests and de-serialize them as Java objects
- * - retrieve an OSLC ChangeRequest and print it as XML
- * - create a new ChangeRequest
- * - update an existing ChangeRequest
- *
+ * <p>- run an OLSC ChangeRequest query and retrieve OSLC ChangeRequests and de-serialize them as Java objects -
+ * retrieve an OSLC ChangeRequest and print it as XML - create a new ChangeRequest - update an existing ChangeRequest
  */
+@Log
 public class CMSample {
-
-    private static final Logger logger = Logger.getLogger(CMSample.class.getName());
 
     /**
      * Access a CM server and perform some OSLC actions.
+     *
      * @param args
      * @throws ParseException
      */
@@ -69,8 +64,7 @@ public class CMSample {
         Options options = new Options();
 
         options.addOption("catalogURL", true, "OSLC ServiceProviderCatalog URL");
-        options.addOption(
-                "providerTitle", true, "Service Provider title in the ServiceProviderCatalog");
+        options.addOption("providerTitle", true, "Service Provider title in the ServiceProviderCatalog");
         options.addOption("user", true, "User ID");
         options.addOption("password", true, "User's password");
 
@@ -80,14 +74,12 @@ public class CMSample {
         CommandLine cmd = cliParser.parse(options, args);
 
         if (!validateOptions(cmd)) {
-            logger.severe(
-                    "Syntax:  java <class_name> -catalogURL"
-                            + " https://<server>:port/<context>/<catalog_location> -providerTitle"
-                            + " \"<provider title>\" -user userID -password password");
-            logger.severe(
-                    "Example: java GenericCMSample -catalogURL"
-                        + " https://exmple.com:8080/OSLC4JRegistry/catalog/1 -providerTitle \"OSLC"
-                        + " Lyo Change Management Service Provider\" -user fred -password pasw0rd");
+            log.severe("Syntax:  java <class_name> -catalogURL"
+                    + " https://<server>:port/<context>/<catalog_location> -providerTitle"
+                    + " \"<provider title>\" -user userID -password password");
+            log.severe("Example: java GenericCMSample -catalogURL"
+                    + " https://exmple.com:8080/OSLC4JRegistry/catalog/1 -providerTitle \"OSLC"
+                    + " Lyo Change Management Service Provider\" -user fred -password pasw0rd");
             return;
         }
 
@@ -103,8 +95,7 @@ public class CMSample {
             // STEP 0: Configure the ClientBuilder as needed for your client application
 
             // Use HttpClient instead of the default HttpUrlConnection
-            ClientConfig clientConfig =
-                    new ClientConfig().connectorProvider(new ApacheConnectorProvider());
+            ClientConfig clientConfig = new ClientConfig().connectorProvider(new ApacheConnectorProvider());
             ClientBuilder clientBuilder = ClientBuilder.newBuilder();
             clientBuilder.withConfig(clientConfig);
 
@@ -115,8 +106,7 @@ public class CMSample {
             clientBuilder.hostnameVerifier(NoopHostnameVerifier.INSTANCE);
 
             // Use preemptive Basic authentication
-            HttpAuthenticationFeature authFeature =
-                    HttpAuthenticationFeature.basic(userId, password);
+            HttpAuthenticationFeature authFeature = HttpAuthenticationFeature.basic(userId, password);
             clientBuilder.register(authFeature);
 
             // STEP 1: Create a new OslcClient
@@ -128,18 +118,12 @@ public class CMSample {
 
             // STEP 3: Get the Query Capabilities and Creation Factory URLs so that we can run some
             // OSLC queries
-            String queryCapability =
-                    client.lookupQueryCapability(
-                            serviceProviderUrl,
-                            OSLCConstants.OSLC_CM_V2,
-                            OSLCConstants.CM_CHANGE_REQUEST_TYPE);
+            String queryCapability = client.lookupQueryCapability(
+                    serviceProviderUrl, OSLCConstants.OSLC_CM_V2, OSLCConstants.CM_CHANGE_REQUEST_TYPE);
             System.out.println("queryCapability: " + queryCapability);
 
-            String creationFactory =
-                    client.lookupCreationFactory(
-                            serviceProviderUrl,
-                            OSLCConstants.OSLC_CM_V2,
-                            OSLCConstants.CM_CHANGE_REQUEST_TYPE);
+            String creationFactory = client.lookupCreationFactory(
+                    serviceProviderUrl, OSLCConstants.OSLC_CM_V2, OSLCConstants.CM_CHANGE_REQUEST_TYPE);
             System.out.println("creationFactory: " + creationFactory);
 
             // SCENARIO A: Run a query for all ChangeRequests
@@ -157,21 +141,17 @@ public class CMSample {
             // SCENARIO B:  Run a query for a specific ChangeRequest and then print it as raw XML.
             // Change the URL below to match a real ChangeRequest
 
-            Response rawResponse =
-                    client.getResource(
-                            "http://localhost:8080/OSLC4JChangeManagement/services/changeRequests/2",
-                            OSLCConstants.CT_XML);
+            Response rawResponse = client.getResource(
+                    "http://localhost:8080/OSLC4JChangeManagement/services/changeRequests/2", OSLCConstants.CT_XML);
             processRawResponse(rawResponse);
             rawResponse.readEntity(String.class);
 
             // SCENARIO C:  ChangeRequest creation and update
             ChangeRequest newChangeRequest = new ChangeRequest();
             newChangeRequest.setTitle("Update database schema");
-            newChangeRequest.setTitle(
-                    "Need to update the database schema to reflect the data model changes");
+            newChangeRequest.setTitle("Need to update the database schema to reflect the data model changes");
 
-            rawResponse =
-                    client.createResource(creationFactory, newChangeRequest, OSLCConstants.CT_RDF);
+            rawResponse = client.createResource(creationFactory, newChangeRequest, OSLCConstants.CT_RDF);
             int statusCode = rawResponse.getStatus();
             rawResponse.readEntity(String.class);
             System.out.println("Status code for POST of new artifact: " + statusCode);
@@ -180,20 +160,17 @@ public class CMSample {
                 String location = rawResponse.getStringHeaders().getFirst("Location");
                 newChangeRequest.setClosed(false);
                 newChangeRequest.setInProgress(true);
-                rawResponse =
-                        client.updateResource(location, newChangeRequest, OSLCConstants.CT_RDF);
+                rawResponse = client.updateResource(location, newChangeRequest, OSLCConstants.CT_RDF);
                 rawResponse.readEntity(String.class);
-                System.out.println(
-                        "Status code for PUT of updated artifact: " + rawResponse.getStatus());
+                System.out.println("Status code for PUT of updated artifact: " + rawResponse.getStatus());
             }
 
         } catch (Exception e) {
-            logger.log(Level.SEVERE, e.getMessage(), e);
+            log.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 
-    private static void processPagedQueryResults(
-            OslcQueryResult result, OslcClient client, boolean asJavaObjects) {
+    private static void processPagedQueryResults(OslcQueryResult result, OslcClient client, boolean asJavaObjects) {
         int page = 1;
         do {
             System.out.println("\nPage " + page + ":\n");
@@ -207,8 +184,7 @@ public class CMSample {
         } while (true);
     }
 
-    private static void processCurrentPage(
-            OslcQueryResult result, OslcClient client, boolean asJavaObjects) {
+    private static void processCurrentPage(OslcQueryResult result, OslcClient client, boolean asJavaObjects) {
 
         for (String resultsUrl : result.getMembersUrls()) {
             System.out.println(resultsUrl);
@@ -231,7 +207,7 @@ public class CMSample {
                     }
                 }
             } catch (Exception e) {
-                logger.log(Level.SEVERE, "Unable to process artfiact at url: " + resultsUrl, e);
+                log.log(Level.SEVERE, "Unable to process artfiact at url: " + resultsUrl, e);
             }
         }
     }
@@ -251,12 +227,7 @@ public class CMSample {
         // See the OSLC4J ChangeRequest class for a full list of attributes you can access.
         if (cr != null) {
             System.out.println(
-                    "ID: "
-                            + cr.getIdentifier()
-                            + ", Title: "
-                            + cr.getTitle()
-                            + ", Status: "
-                            + cr.getStatus());
+                    "ID: " + cr.getIdentifier() + ", Title: " + cr.getTitle() + ", Status: " + cr.getStatus());
         }
     }
 

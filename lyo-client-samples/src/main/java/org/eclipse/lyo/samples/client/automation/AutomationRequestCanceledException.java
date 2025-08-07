@@ -18,14 +18,13 @@ package org.eclipse.lyo.samples.client.automation;
 import java.io.Serial;
 import org.eclipse.lyo.client.oslc.resources.AutomationRequest;
 
-/**
- * An exception thrown when an AutomationRequest has been canceled
- */
+/** An exception thrown when an AutomationRequest has been canceled */
 public class AutomationRequestCanceledException extends AutomationException {
 
     private final AutomationRequest request;
 
-    @Serial private static final long serialVersionUID = 1L;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     public AutomationRequestCanceledException(AutomationRequest request) {
         super();

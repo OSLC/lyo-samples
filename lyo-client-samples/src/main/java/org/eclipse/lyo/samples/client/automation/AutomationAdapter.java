@@ -31,6 +31,9 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.apache.jena.rdf.model.Model;
@@ -67,9 +70,7 @@ import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-@OslcResourceShape(
-        title = "Automation Adapter Resource Shape",
-        describes = IConstants.TYPE_AUTOMATION_ADAPTER)
+@OslcResourceShape(title = "Automation Adapter Resource Shape", describes = IConstants.TYPE_AUTOMATION_ADAPTER)
 @OslcNamespace(IConstants.NAMESPACE_URI_JAZZ_AUTO_RQM)
 public class AutomationAdapter extends AbstractResource implements IConstants {
 
@@ -91,36 +92,83 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
     public static final String PROPERTY_ABOUT = "about";
 
     // connection properties
+    @Getter
+    @Setter
     private String serverUrl;
+
+    @Getter
+    @Setter
     private String username;
+
+    @Getter
+    @Setter
     private String password;
+
+    @Getter
+    @Setter
     private String projectArea;
 
     // properties provided to the server
+    @Setter
     private String title;
+
+    @Setter
     private String description;
+
+    @Setter
     private String type;
+
+    @Setter
     private String hostname;
+
+    @Setter
     private String ipAddress;
+
+    @Setter
     private Integer pollingInterval;
+
+    @Setter
     private String macAddress;
+
+    @Setter
     private String fullyQualifiedDomainName;
 
     // properties provided by the server
+    @Setter
     private URI relation;
+
+    @Setter
     private URI workAvailableUrl;
+
+    @Setter
     private Boolean workAvailable;
+
+    @Setter
     private String identifier;
+
+    @Setter
     private Date modified;
+
+    @Setter
     private URI creator;
+
+    @Setter
     private URI instanceShape;
+
+    @Setter
     private URI runsOnMachine;
+
+    @Setter
     private URI serviceProvider;
+
+    @Setter
     private URI assignedWorkUrl;
 
     // state of the adapter
     private boolean isStopped = false;
 
+    @Getter
+    @Setter
     private OslcClient client = null;
 
     private DocumentBuilder documentBuilder;
@@ -171,49 +219,8 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
         fullyQualifiedDomainName = machine.getFQDN();
     }
 
-    public String getServerUrl() {
-        return serverUrl;
-    }
-
-    public void setServerUrl(String serverUrl) {
-        this.serverUrl = serverUrl;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getProjectArea() {
-        return projectArea;
-    }
-
-    public void setProjectArea(String projectArea) {
-        this.projectArea = projectArea;
-    }
-
-    public OslcClient getClient() {
-        return client;
-    }
-
-    public void setClient(OslcClient client) {
-        this.client = client;
-    }
-
     @OslcDescription(
-            "Descriptive text (reference: Dublin Core) about resource represented as rich text in"
-                    + " XHTML content.")
+            "Descriptive text (reference: Dublin Core) about resource represented as rich text in" + " XHTML content.")
     @OslcPropertyDefinition(OslcConstants.DCTERMS_NAMESPACE + "description")
     @OslcTitle("Description")
     @OslcValueType(ValueType.XMLLiteral)
@@ -221,23 +228,14 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    @OslcDescription(
-            "Title (reference: Dublin Core) or often a single line summary of the resource"
-                    + " represented as rich text in XHTML content.")
+    @OslcDescription("Title (reference: Dublin Core) or often a single line summary of the resource"
+            + " represented as rich text in XHTML content.")
     @OslcOccurs(Occurs.ExactlyOne)
     @OslcPropertyDefinition(OslcConstants.DCTERMS_NAMESPACE + "title")
     @OslcTitle("Title")
     @OslcValueType(ValueType.XMLLiteral)
     public String getTitle() {
         return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     @OslcDescription("Type (reference: Dublin Core) of adapter.")
@@ -248,19 +246,11 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
         return type;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
     @OslcPropertyDefinition(NAMESPACE_URI_JAZZ_AUTO_RQM + "hostname")
     @OslcTitle("Hostname")
     @OslcValueType(ValueType.String)
     public String getHostname() {
         return hostname;
-    }
-
-    public void setHostname(String hostname) {
-        this.hostname = hostname;
     }
 
     @OslcPropertyDefinition(NAMESPACE_URI_JAZZ_AUTO_RQM + "ipAddress")
@@ -270,19 +260,11 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
         return ipAddress;
     }
 
-    public void setIpAddress(String ipAddress) {
-        this.ipAddress = ipAddress;
-    }
-
     @OslcPropertyDefinition(NAMESPACE_URI_JAZZ_AUTO_RQM + "pollingInterval")
     @OslcTitle("Polling Interval")
     @OslcValueType(ValueType.Integer)
     public Integer getPollingInterval() {
         return pollingInterval;
-    }
-
-    public void setPollingInterval(Integer pollingInterval) {
-        this.pollingInterval = pollingInterval;
     }
 
     @OslcPropertyDefinition(NAMESPACE_URI_JAZZ_AUTO_RQM + "macAddress")
@@ -292,19 +274,11 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
         return macAddress;
     }
 
-    public void setMacAddress(String macAddress) {
-        this.macAddress = macAddress;
-    }
-
     @OslcPropertyDefinition(NAMESPACE_URI_JAZZ_AUTO_RQM + "fullyQualifiedDomainName")
     @OslcTitle("Fully Qualified Domain Name")
     @OslcValueType(ValueType.String)
     public String getFullyQualifiedDomainName() {
         return fullyQualifiedDomainName;
-    }
-
-    public void setFullyQualifiedDomainName(String fullyQualifiedDomainName) {
-        this.fullyQualifiedDomainName = fullyQualifiedDomainName;
     }
 
     @OslcDescription("Capability of the adapter like Execute, Record, Import.")
@@ -336,20 +310,12 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
         return relation;
     }
 
-    public void setRelation(URI relation) {
-        this.relation = relation;
-    }
-
     @OslcDescription("URL to poll for work assigned to the adapter.")
     @OslcPropertyDefinition(NAMESPACE_URI_JAZZ_AUTO_RQM + "workAvailableUrl")
     @OslcTitle("Work Available URL")
     @OslcValueType(ValueType.Resource)
     public URI getWorkAvailableUrl() {
         return workAvailableUrl;
-    }
-
-    public void setWorkAvailableUrl(URI workAvailableUrl) {
-        this.workAvailableUrl = workAvailableUrl;
     }
 
     @OslcDescription("Boolean indicating whether work is available for the adapter.")
@@ -360,20 +326,12 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
         return workAvailable;
     }
 
-    public void setWorkAvailable(Boolean workAvailable) {
-        this.workAvailable = workAvailable;
-    }
-
     @OslcDescription("Identifier (reference: Dublin Core) for the adapter.")
     @OslcPropertyDefinition(OslcConstants.DCTERMS_NAMESPACE + "identifier")
     @OslcTitle("Identifier")
     @OslcValueType(ValueType.String)
     public String getIdentifier() {
         return identifier;
-    }
-
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
     }
 
     @OslcDescription("Last modification date (reference: Dublin Core) of the adapter.")
@@ -384,10 +342,6 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
         return modified;
     }
 
-    public void setModified(Date modified) {
-        this.modified = modified;
-    }
-
     @OslcDescription("Creator (reference: Dublin Core) of the adapter.")
     @OslcPropertyDefinition(OslcConstants.DCTERMS_NAMESPACE + "creator")
     @OslcTitle("Creator")
@@ -396,22 +350,12 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
         return creator;
     }
 
-    public void setCreator(URI creator) {
-        this.creator = creator;
-    }
-
-    @OslcDescription(
-            "Resource Shape that provides hints as to resource property value-types and allowed"
-                    + " values. ")
+    @OslcDescription("Resource Shape that provides hints as to resource property value-types and allowed" + " values. ")
     @OslcPropertyDefinition(OslcConstants.OSLC_CORE_NAMESPACE + "instanceShape")
     @OslcRange(OslcConstants.TYPE_RESOURCE_SHAPE)
     @OslcTitle("Instance Shape")
     public URI getInstanceShape() {
         return instanceShape;
-    }
-
-    public void setInstanceShape(URI instanceShape) {
-        this.instanceShape = instanceShape;
     }
 
     @OslcDescription("URL for the machine that the adapter is running on.")
@@ -422,20 +366,12 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
         return runsOnMachine;
     }
 
-    public void setRunsOnMachine(URI runsOnMachine) {
-        this.runsOnMachine = runsOnMachine;
-    }
-
     @OslcDescription("The scope of a resource is a URI for the resource's OSLC Service Provider.")
     @OslcPropertyDefinition(OslcConstants.OSLC_CORE_NAMESPACE + "serviceProvider")
     @OslcRange(OslcConstants.TYPE_SERVICE_PROVIDER)
     @OslcTitle("Service Provider")
     public URI getServiceProvider() {
         return serviceProvider;
-    }
-
-    public void setServiceProvider(URI serviceProvider) {
-        this.serviceProvider = serviceProvider;
     }
 
     @OslcDescription("URL for the work assigned to the adapter.")
@@ -446,22 +382,15 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
         return assignedWorkUrl;
     }
 
-    public void setAssignedWorkUrl(URI assignedWorkUrl) {
-        this.assignedWorkUrl = assignedWorkUrl;
-    }
-
     /**
-     * Start this adapter. It will begin polling the server for assigned
-     * Automation Requests based on the polling interval. When the server has an
-     * Automation Request for the adapter then control will be passed back to
-     * the caller of this method via the
-     * {@link IAutomationRequestHandler#handleAutomationRequest(AutomationRequest, AutomationAdapter)}
-     * interface. The AutomationResult returned by the IAutomationRequestHandler
-     * will be sent back to the Automation Service Provider, and polling will
-     * resume.
+     * Start this adapter. It will begin polling the server for assigned Automation Requests based on the polling
+     * interval. When the server has an Automation Request for the adapter then control will be passed back to the
+     * caller of this method via the {@link IAutomationRequestHandler#handleAutomationRequest(AutomationRequest,
+     * AutomationAdapter)} interface. The AutomationResult returned by the IAutomationRequestHandler will be sent back
+     * to the Automation Service Provider, and polling will resume.
      *
-     * Before calling this method the adapter needs to be logged in and
-     * registered with the Automation Service Provider.
+     * <p>Before calling this method the adapter needs to be logged in and registered with the Automation Service
+     * Provider.
      *
      * @param requestHandler
      * @throws AutomationException
@@ -472,22 +401,17 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
      * @see {@link IAutomationRequestHandler}
      */
     public void start(IAutomationRequestHandler requestHandler)
-            throws AutomationException,
-                    InterruptedException,
-                    IOException,
-                    URISyntaxException,
+            throws AutomationException, InterruptedException, IOException, URISyntaxException,
                     ResourceNotFoundException {
 
         if (client == null) {
 
-            throw new AutomationException(
-                    "Adapter is not logged into the Automation Service Provider.");
+            throw new AutomationException("Adapter is not logged into the Automation Service Provider.");
         }
 
         if (getAbout() == null) {
 
-            throw new AutomationException(
-                    "Adapter is not registered with the Automation Service Provider.");
+            throw new AutomationException("Adapter is not registered with the Automation Service Provider.");
         }
 
         isStopped = false;
@@ -524,9 +448,8 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
     }
 
     /**
-     * Stop the adapter. Calling this method will cause the adapter to stop
-     * polling the Automation Service Provider and eventually return control of
-     * the execution thread back to the caller of this adapter's
+     * Stop the adapter. Calling this method will cause the adapter to stop polling the Automation Service Provider and
+     * eventually return control of the execution thread back to the caller of this adapter's
      * {@link #start(IAutomationRequestHandler)} method.
      */
     public void stop() {
@@ -550,8 +473,7 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
         String resultCreationFactoryUrl;
 
         synchronized (client) {
-            Object resultLink =
-                    request.getExtendedProperties().get(PROPERTY_QM_PRODUCES_TEST_RESULT);
+            Object resultLink = request.getExtendedProperties().get(PROPERTY_QM_PRODUCES_TEST_RESULT);
             if (resultLink != null) {
                 URI resultUri = (URI) resultLink;
                 resultCreationFactoryUrl = resultUri.toString();
@@ -562,43 +484,37 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
                 String serviceProviderUrl = null;
                 try {
                     String catalogUrl =
-                            new RootServicesHelper(getServerUrl(), OSLCConstants.OSLC_AUTO, client)
-                                    .getCatalogUrl();
+                            new RootServicesHelper(getServerUrl(), OSLCConstants.OSLC_AUTO, client).getCatalogUrl();
                     serviceProviderUrl = client.lookupServiceProviderUrl(catalogUrl, projectArea);
                 } catch (RootServicesException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
 
-                resultCreationFactoryUrl =
-                        client.lookupCreationFactory(
-                                serviceProviderUrl,
-                                AutomationConstants.AUTOMATION_DOMAIN,
-                                AutomationConstants.TYPE_AUTOMATION_RESULT);
+                resultCreationFactoryUrl = client.lookupCreationFactory(
+                        serviceProviderUrl,
+                        AutomationConstants.AUTOMATION_DOMAIN,
+                        AutomationConstants.TYPE_AUTOMATION_RESULT);
             }
 
-            response =
-                    client.createResource(
-                            resultCreationFactoryUrl, result, OslcMediaType.APPLICATION_RDF_XML);
+            response = client.createResource(resultCreationFactoryUrl, result, OslcMediaType.APPLICATION_RDF_XML);
 
             response.close();
         }
 
         if (response.getStatus() != HttpStatus.SC_CREATED) {
 
-            throw new AutomationException(
-                    "Failed to create an AutomationResult at "
-                            + resultCreationFactoryUrl
-                            + ". "
-                            + response.getStatus()
-                            + ": "
-                            + response.getStatusInfo().getReasonPhrase());
+            throw new AutomationException("Failed to create an AutomationResult at "
+                    + resultCreationFactoryUrl
+                    + ". "
+                    + response.getStatus()
+                    + ": "
+                    + response.getStatusInfo().getReasonPhrase());
         }
     }
 
     /**
-     * Set the Automation Request's properties as complete and update the
-     * Automation Service Provider
+     * Set the Automation Request's properties as complete and update the Automation Service Provider
      *
      * @param request
      * @throws URISyntaxException
@@ -616,56 +532,48 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
 
         request.getExtendedProperties().put(PROPERTY_RQM_PROGRESS, Integer.valueOf(100));
 
-        URI updateUri =
-                appendOslcProperties(request.getAbout(), "oslc_auto:state", "rqm_auto:progress");
+        URI updateUri = appendOslcProperties(request.getAbout(), "oslc_auto:state", "rqm_auto:progress");
 
         Response response;
 
         synchronized (client) {
-            response =
-                    client.updateResource(
-                            updateUri.toString(), request, OslcMediaType.APPLICATION_RDF_XML);
+            response = client.updateResource(updateUri.toString(), request, OslcMediaType.APPLICATION_RDF_XML);
 
             response.close();
         }
 
         if (response.getStatus() != HttpStatus.SC_OK) {
 
-            throw new AutomationException(
-                    "Failed to update AutomationResult at "
-                            + updateUri.toString()
-                            + ". "
-                            + response.getStatus()
-                            + ": "
-                            + response.getStatusInfo().getReasonPhrase());
+            throw new AutomationException("Failed to update AutomationResult at "
+                    + updateUri.toString()
+                    + ". "
+                    + response.getStatus()
+                    + ": "
+                    + response.getStatusInfo().getReasonPhrase());
         }
     }
 
     /**
-     * Check for any queued Automation Requests at the Automation Service
-     * Provider. If an AutomationRequest is queued then return its URL.
+     * Check for any queued Automation Requests at the Automation Service Provider. If an AutomationRequest is queued
+     * then return its URL.
      *
      * @return
      * @throws AutomationException
      * @throws IOException
      * @throws URISyntaxException
      */
-    private String getNextAssignmentUrl()
-            throws AutomationException, IOException, URISyntaxException {
+    private String getNextAssignmentUrl() throws AutomationException, IOException, URISyntaxException {
 
         if (assignedWorkUrl == null) {
 
             throw new AutomationException(
-                    "The assignedWorkUrl property must be set in order to poll the automation"
-                            + " provider.");
+                    "The assignedWorkUrl property must be set in order to poll the automation" + " provider.");
         }
 
         Model model;
 
         synchronized (client) {
-            Response response =
-                    client.getResource(
-                            assignedWorkUrl.toString(), OslcMediaType.APPLICATION_RDF_XML);
+            Response response = client.getResource(assignedWorkUrl.toString(), OslcMediaType.APPLICATION_RDF_XML);
 
             InputStream is = response.readEntity(InputStream.class);
 
@@ -675,10 +583,7 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
         }
 
         StmtIterator stmtIter =
-                model.listStatements(
-                        null,
-                        RDF.type,
-                        model.createResource(AutomationConstants.TYPE_AUTOMATION_REQUEST));
+                model.listStatements(null, RDF.type, model.createResource(AutomationConstants.TYPE_AUTOMATION_REQUEST));
 
         if (stmtIter.hasNext()) {
             return stmtIter.next().getSubject().getURI();
@@ -688,8 +593,7 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
     }
 
     /**
-     * Notify the Automation Service Provider that the request has been taken by
-     * this adapter.
+     * Notify the Automation Service Provider that the request has been taken by this adapter.
      *
      * @param requestUrl
      * @return
@@ -705,60 +609,50 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
         Response response;
 
         synchronized (client) {
-            request =
-                    client.getResource(requestUrl, OslcMediaType.APPLICATION_RDF_XML)
-                            .readEntity(AutomationRequest.class);
+            request = client.getResource(requestUrl, OslcMediaType.APPLICATION_RDF_XML)
+                    .readEntity(AutomationRequest.class);
 
             request.getExtendedProperties().put(PROPERTY_RQM_TAKEN, Boolean.TRUE);
 
             request.setStates(new URI[] {URI.create(AutomationConstants.STATE_IN_PROGRESS)});
 
-            updateUri =
-                    appendOslcProperties(
-                            URI.create(requestUrl), "oslc_auto:state", "rqm_auto:taken");
+            updateUri = appendOslcProperties(URI.create(requestUrl), "oslc_auto:state", "rqm_auto:taken");
 
-            response =
-                    client.updateResource(
-                            updateUri.toString(), request, OslcMediaType.APPLICATION_RDF_XML);
+            response = client.updateResource(updateUri.toString(), request, OslcMediaType.APPLICATION_RDF_XML);
 
             response.close();
         }
 
         if (response.getStatus() != HttpStatus.SC_OK) {
 
-            throw new AutomationException(
-                    "Failed to update AutomationRequest at "
-                            + updateUri.toString()
-                            + ". "
-                            + response.getStatus()
-                            + ": "
-                            + response.getStatusInfo().getReasonPhrase());
+            throw new AutomationException("Failed to update AutomationRequest at "
+                    + updateUri.toString()
+                    + ". "
+                    + response.getStatus()
+                    + ": "
+                    + response.getStatusInfo().getReasonPhrase());
         }
 
         return request;
     }
 
     /**
-     * Register with the Automation Service Provider if necessary. Before
-     * calling this method the adapter needs to be logged in to the Automation
-     * Service Provider.
+     * Register with the Automation Service Provider if necessary. Before calling this method the adapter needs to be
+     * logged in to the Automation Service Provider.
      *
-     * If the adapter's <code>about</code> property is not null then it is
-     * assumed that the adapter is already created and its properties will be
-     * refreshed from the service provider instead of recreating it again.
+     * <p>If the adapter's <code>about</code> property is not null then it is assumed that the adapter is already
+     * created and its properties will be refreshed from the service provider instead of recreating it again.
      *
      * @throws AutomationException
      * @throws IOException
      * @throws URISyntaxException
      * @throws ResourceNotFoundException
      */
-    public void register()
-            throws AutomationException, IOException, URISyntaxException, ResourceNotFoundException {
+    public void register() throws AutomationException, IOException, URISyntaxException, ResourceNotFoundException {
 
         if (client == null) {
 
-            throw new AutomationException(
-                    "Adapter is not logged into the Automation Service Provider.");
+            throw new AutomationException("Adapter is not logged into the Automation Service Provider.");
         }
 
         if (getAbout() == null) {
@@ -773,36 +667,29 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
                 String serviceProviderUrl = null;
                 try {
                     String catalogUrl =
-                            new RootServicesHelper(getServerUrl(), OSLCConstants.OSLC_AUTO, client)
-                                    .getCatalogUrl();
+                            new RootServicesHelper(getServerUrl(), OSLCConstants.OSLC_AUTO, client).getCatalogUrl();
                     serviceProviderUrl = client.lookupServiceProviderUrl(catalogUrl, projectArea);
                 } catch (RootServicesException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
 
-                adapterCreationFactoryUrl =
-                        client.lookupCreationFactory(
-                                serviceProviderUrl,
-                                AutomationConstants.AUTOMATION_DOMAIN,
-                                TYPE_AUTOMATION_ADAPTER);
+                adapterCreationFactoryUrl = client.lookupCreationFactory(
+                        serviceProviderUrl, AutomationConstants.AUTOMATION_DOMAIN, TYPE_AUTOMATION_ADAPTER);
 
-                response =
-                        client.createResource(
-                                adapterCreationFactoryUrl, this, OslcMediaType.APPLICATION_RDF_XML);
+                response = client.createResource(adapterCreationFactoryUrl, this, OslcMediaType.APPLICATION_RDF_XML);
 
                 response.close();
             }
 
             if (response.getStatus() != HttpStatus.SC_CREATED) {
 
-                throw new AutomationException(
-                        "Failed to register the adapter at "
-                                + adapterCreationFactoryUrl
-                                + ". "
-                                + response.getStatus()
-                                + ": "
-                                + response.getStatusInfo().getReasonPhrase());
+                throw new AutomationException("Failed to register the adapter at "
+                        + adapterCreationFactoryUrl
+                        + ". "
+                        + response.getStatus()
+                        + ": "
+                        + response.getStatusInfo().getReasonPhrase());
             }
 
             String adapterUrl = response.getStringHeaders().getFirst(HttpHeaders.LOCATION);
@@ -814,43 +701,37 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
     }
 
     /**
-     * Reload the adapter's properties from the service Provider. This ensures
-     * that the adapter has the properties it needs such as the URL to poll for
-     * assigned work. Before calling this method the adapter needs to be logged
-     * in and registered with the Automation Service Provider.
+     * Reload the adapter's properties from the service Provider. This ensures that the adapter has the properties it
+     * needs such as the URL to poll for assigned work. Before calling this method the adapter needs to be logged in and
+     * registered with the Automation Service Provider.
      *
      * @throws IOException
      * @throws URISyntaxException
      * @throws AutomationException
      */
-    public void reloadPropertiesFromServiceProvider()
-            throws IOException, URISyntaxException, AutomationException {
+    public void reloadPropertiesFromServiceProvider() throws IOException, URISyntaxException, AutomationException {
 
         if (client == null) {
 
-            throw new AutomationException(
-                    "Adapter is not logged into the Automation Service Provider.");
+            throw new AutomationException("Adapter is not logged into the Automation Service Provider.");
         }
 
         if (getAbout() == null) {
 
-            throw new AutomationException(
-                    "Adapter is not registered with the Automation Service Provider.");
+            throw new AutomationException("Adapter is not registered with the Automation Service Provider.");
         }
 
         AutomationAdapter registeredAdapter;
 
         synchronized (client) {
-            Response response =
-                    client.getResource(getAbout().toString(), OslcMediaType.APPLICATION_RDF_XML);
+            Response response = client.getResource(getAbout().toString(), OslcMediaType.APPLICATION_RDF_XML);
 
             if (response.getStatus() != HttpStatus.SC_OK) {
 
                 response.close();
 
-                throw new AutomationException(
-                        "The Adapter has an 'about' property that it is not acknowledged by the"
-                            + " Automation Service Provider. The Adapter may have been deleted.");
+                throw new AutomationException("The Adapter has an 'about' property that it is not acknowledged by the"
+                        + " Automation Service Provider. The Adapter may have been deleted.");
             }
 
             registeredAdapter = response.readEntity(AutomationAdapter.class);
@@ -861,9 +742,8 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
     }
 
     /**
-     * Unregister with the Automation Service Provider. Before calling this
-     * method the adapter needs to be logged in and registered with the
-     * Service Provider.
+     * Unregister with the Automation Service Provider. Before calling this method the adapter needs to be logged in and
+     * registered with the Service Provider.
      *
      * @throws AutomationException
      * @throws IOException
@@ -873,14 +753,12 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
 
         if (client == null) {
 
-            throw new AutomationException(
-                    "Adapter is not logged into the Automation Service Provider.");
+            throw new AutomationException("Adapter is not logged into the Automation Service Provider.");
         }
 
         if (getAbout() == null) {
 
-            throw new AutomationException(
-                    "Adapter is not registered with the Automation Service Provider.");
+            throw new AutomationException("Adapter is not registered with the Automation Service Provider.");
         }
 
         Response response;
@@ -895,21 +773,19 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
 
         if ((statusCode != HttpStatus.SC_OK) && (statusCode != HttpStatus.SC_NOT_FOUND)) {
 
-            throw new AutomationException(
-                    "Failed to unregister the adapter at "
-                            + getAbout().toString()
-                            + ". "
-                            + response.getStatus()
-                            + ": "
-                            + response.getStatusInfo().getReasonPhrase());
+            throw new AutomationException("Failed to unregister the adapter at "
+                    + getAbout().toString()
+                    + ". "
+                    + response.getStatus()
+                    + ": "
+                    + response.getStatusInfo().getReasonPhrase());
         }
 
         setAbout(null);
     }
 
     /**
-     * Copy the server-side properties from a registered adapter into this
-     * adapter
+     * Copy the server-side properties from a registered adapter into this adapter
      *
      * @param registeredAdapter
      */
@@ -928,10 +804,9 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
     }
 
     /**
-     * Get the Test Script document associated with the Automation Request's
-     * oslc_qm:executesTestScript property.
+     * Get the Test Script document associated with the Automation Request's oslc_qm:executesTestScript property.
      *
-     * Before calling this method the adapter must be logged into the server.
+     * <p>Before calling this method the adapter must be logged into the server.
      *
      * @param request
      * @return
@@ -954,9 +829,8 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
 
         if (scriptURI == null) {
 
-            throw new AutomationException(
-                    "The AutomationRequest does not have a value for the property : "
-                            + PROPERTY_QM_EXECUTES_TEST_SCRIPT);
+            throw new AutomationException("The AutomationRequest does not have a value for the property : "
+                    + PROPERTY_QM_EXECUTES_TEST_SCRIPT);
         }
 
         scriptURI = appendOslcProperties(scriptURI, "dcterms:relation");
@@ -964,15 +838,13 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
         InputStream is;
 
         synchronized (client) {
-            TestScript script =
-                    client.getResource(scriptURI.toString(), OslcMediaType.APPLICATION_RDF_XML)
-                            .readEntity(TestScript.class);
+            TestScript script = client.getResource(scriptURI.toString(), OslcMediaType.APPLICATION_RDF_XML)
+                    .readEntity(TestScript.class);
 
             URI scriptUri = (URI) script.getExtendedProperties().get(PROPERTY_DC_RELATION);
 
-            is =
-                    client.getResource(scriptUri.toString(), OslcMediaType.APPLICATION_XML)
-                            .readEntity(InputStream.class);
+            is = client.getResource(scriptUri.toString(), OslcMediaType.APPLICATION_XML)
+                    .readEntity(InputStream.class);
         }
 
         Document document = documentBuilder.parse(is);
@@ -1034,8 +906,7 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
         Map<QName, Object> resultExtProperties = result.getExtendedProperties();
 
         resultExtProperties.put(
-                PROPERTY_QM_EXECUTES_TEST_SCRIPT,
-                requestExtProperties.get(PROPERTY_QM_EXECUTES_TEST_SCRIPT));
+                PROPERTY_QM_EXECUTES_TEST_SCRIPT, requestExtProperties.get(PROPERTY_QM_EXECUTES_TEST_SCRIPT));
 
         if (automationPlan != null && automationPlan.getValue() != null) {
 
@@ -1044,11 +915,8 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
             AutomationPlan plan;
 
             synchronized (client) {
-                plan =
-                        client.getResource(
-                                        automationPlan.getValue().toString(),
-                                        OslcMediaType.APPLICATION_RDF_XML)
-                                .readEntity(AutomationPlan.class);
+                plan = client.getResource(automationPlan.getValue().toString(), OslcMediaType.APPLICATION_RDF_XML)
+                        .readEntity(AutomationPlan.class);
             }
 
             URI testcase = (URI) plan.getExtendedProperties().get(PROPERTY_QM_RUNS_TEST_CASE);
@@ -1058,8 +926,7 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
     }
 
     /**
-     * Send a heartbeat to the AutomationProvider to let it know that the
-     * adapter is still available for work.
+     * Send a heartbeat to the AutomationProvider to let it know that the adapter is still available for work.
      *
      * @throws URISyntaxException
      * @throws AutomationException
@@ -1068,14 +935,12 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
 
         if (client == null) {
 
-            throw new AutomationException(
-                    "Adapter is not logged into the Automation Service Provider.");
+            throw new AutomationException("Adapter is not logged into the Automation Service Provider.");
         }
 
         if (getAbout() == null) {
 
-            throw new AutomationException(
-                    "Adapter is not registered with the Automation Service Provider");
+            throw new AutomationException("Adapter is not registered with the Automation Service Provider");
         }
 
         URI updateUrl = appendOslcProperties(getAbout(), "rqm_auto:pollingInterval");
@@ -1083,31 +948,27 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
         Response response;
 
         synchronized (client) {
-            response =
-                    client.updateResource(
-                            updateUrl.toString(), this, OslcMediaType.APPLICATION_RDF_XML);
+            response = client.updateResource(updateUrl.toString(), this, OslcMediaType.APPLICATION_RDF_XML);
 
             response.close();
         }
 
         if (response.getStatus() != HttpStatus.SC_OK) {
 
-            throw new AutomationException(
-                    "Failed to update adapter heartbeat at "
-                            + updateUrl.toString()
-                            + ". "
-                            + response.getStatus()
-                            + ": "
-                            + response.getStatusInfo().getReasonPhrase());
+            throw new AutomationException("Failed to update adapter heartbeat at "
+                    + updateUrl.toString()
+                    + ". "
+                    + response.getStatus()
+                    + ": "
+                    + response.getStatusInfo().getReasonPhrase());
         }
     }
 
     /**
-     * Upload a File to the Automation Service Provider using the
-     * rqm_auto:uploadAttachmentUrl property in the Automation Request.
+     * Upload a File to the Automation Service Provider using the rqm_auto:uploadAttachmentUrl property in the
+     * Automation Request.
      *
-     * Before calling this method the adapter needs to be logged into the
-     * Automation Service Provider.
+     * <p>Before calling this method the adapter needs to be logged into the Automation Service Provider.
      *
      * @param file
      * @param request
@@ -1126,8 +987,7 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
 
         assertNotCanceled(request);
 
-        URI attachmentUploadUrl =
-                (URI) request.getExtendedProperties().get(PROPERTY_RQM_UPLOAD_ATTACHMENT_URL);
+        URI attachmentUploadUrl = (URI) request.getExtendedProperties().get(PROPERTY_RQM_UPLOAD_ATTACHMENT_URL);
 
         FormDataMultiPart formDataMultiPart = new FormDataMultiPart();
         formDataMultiPart.bodyPart(new FileDataBodyPart("filename", file));
@@ -1136,11 +996,10 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
         Response response;
 
         synchronized (client) {
-            response =
-                    client.createResource(
-                            attachmentUploadUrl.toString(),
-                            formDataMultiPart,
-                            formDataMultiPart.getMediaType().toString());
+            response = client.createResource(
+                    attachmentUploadUrl.toString(),
+                    formDataMultiPart,
+                    formDataMultiPart.getMediaType().toString());
 
             response.close();
             formDataMultiPart.close();
@@ -1148,13 +1007,12 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
 
         if (response.getStatus() != HttpStatus.SC_CREATED) {
 
-            throw new AutomationException(
-                    "Failed to upload attachment at "
-                            + attachmentUploadUrl.toString()
-                            + ". "
-                            + response.getStatus()
-                            + ": "
-                            + response.getStatusInfo().getReasonPhrase());
+            throw new AutomationException("Failed to upload attachment at "
+                    + attachmentUploadUrl.toString()
+                    + ". "
+                    + response.getStatus()
+                    + ": "
+                    + response.getStatusInfo().getReasonPhrase());
         }
 
         String location = response.getStringHeaders().getFirst(HttpHeaders.LOCATION);
@@ -1163,17 +1021,14 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
     }
 
     /**
-     * Send the current progress (percentage) of the Automation Request. If the
-     * provided value is greater than 99 then it is adjusted down to 99 since
-     * the progress should not reach 100 until the
-     * {@link IAutomationRequestHandler} has finished processing the request and
-     * returned control back to this Adapter.
+     * Send the current progress (percentage) of the Automation Request. If the provided value is greater than 99 then
+     * it is adjusted down to 99 since the progress should not reach 100 until the {@link IAutomationRequestHandler} has
+     * finished processing the request and returned control back to this Adapter.
      *
-     * Before calling this method the adapter needs to be logged in and
-     * registered with the automation service provider.
+     * <p>Before calling this method the adapter needs to be logged in and registered with the automation service
+     * provider.
      *
-     * @param i
-     *            An integer less than 100
+     * @param i An integer less than 100
      * @param request
      * @throws URISyntaxException
      * @throws AutomationException
@@ -1184,14 +1039,12 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
 
         if (client == null) {
 
-            throw new AutomationException(
-                    "Adapter is not logged into the Automation Service Provider.");
+            throw new AutomationException("Adapter is not logged into the Automation Service Provider.");
         }
 
         if (getAbout() == null) {
 
-            throw new AutomationException(
-                    "Adapter is not registered with the Automation Service Provider");
+            throw new AutomationException("Adapter is not registered with the Automation Service Provider");
         }
 
         assertNotCanceled(request);
@@ -1210,29 +1063,25 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
         Response response;
 
         synchronized (client) {
-            response =
-                    client.updateResource(
-                            updateUri.toString(), requestCopy, OslcMediaType.APPLICATION_RDF_XML);
+            response = client.updateResource(updateUri.toString(), requestCopy, OslcMediaType.APPLICATION_RDF_XML);
 
             response.close();
         }
 
         if (response.getStatus() != HttpStatus.SC_OK) {
 
-            throw new AutomationException(
-                    "Failed to update AutomationResult at "
-                            + updateUri.toString()
-                            + ". "
-                            + response.getStatus()
-                            + ": "
-                            + response.getStatusInfo().getReasonPhrase());
+            throw new AutomationException("Failed to update AutomationResult at "
+                    + updateUri.toString()
+                    + ". "
+                    + response.getStatus()
+                    + ": "
+                    + response.getStatusInfo().getReasonPhrase());
         }
     }
 
     /**
-     * Send a status for the Automation Request. Before calling this method the
-     * adapter needs to be logged in and registered with the automation service
-     * provider.
+     * Send a status for the Automation Request. Before calling this method the adapter needs to be logged in and
+     * registered with the automation service provider.
      *
      * @param statusResponse
      * @param request
@@ -1245,14 +1094,12 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
 
         if (client == null) {
 
-            throw new AutomationException(
-                    "Adapter is not logged into the Automation Service Provider.");
+            throw new AutomationException("Adapter is not logged into the Automation Service Provider.");
         }
 
         if (getAbout() == null) {
 
-            throw new AutomationException(
-                    "Adapter is not registered with the Automation Service Provider");
+            throw new AutomationException("Adapter is not registered with the Automation Service Provider");
         }
 
         assertNotCanceled(request);
@@ -1266,29 +1113,25 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
         Response response;
 
         synchronized (client) {
-            response =
-                    client.updateResource(
-                            updateUri.toString(), requestCopy, OslcMediaType.APPLICATION_RDF_XML);
+            response = client.updateResource(updateUri.toString(), requestCopy, OslcMediaType.APPLICATION_RDF_XML);
 
             response.close();
         }
 
         if (response.getStatus() != HttpStatus.SC_OK) {
 
-            throw new AutomationException(
-                    "Failed to update AutomationResult at "
-                            + updateUri.toString()
-                            + ". "
-                            + response.getStatus()
-                            + ": "
-                            + response.getStatusInfo().getReasonPhrase());
+            throw new AutomationException("Failed to update AutomationResult at "
+                    + updateUri.toString()
+                    + ". "
+                    + response.getStatus()
+                    + ": "
+                    + response.getStatusInfo().getReasonPhrase());
         }
     }
 
     /**
-     * Send a message update to the Automation Request. Before calling this
-     * method the adapter needs to be logged in and registered with the
-     * automation service provider.
+     * Send a message update to the Automation Request. Before calling this method the adapter needs to be logged in and
+     * registered with the automation service provider.
      *
      * @param message
      * @param request
@@ -1301,14 +1144,12 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
 
         if (client == null) {
 
-            throw new AutomationException(
-                    "Adapter is not logged into the Automation Service Provider.");
+            throw new AutomationException("Adapter is not logged into the Automation Service Provider.");
         }
 
         if (getAbout() == null) {
 
-            throw new AutomationException(
-                    "Adapter is not registered with the Automation Service Provider");
+            throw new AutomationException("Adapter is not registered with the Automation Service Provider");
         }
 
         assertNotCanceled(request);
@@ -1322,31 +1163,26 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
         Response response;
 
         synchronized (client) {
-            response =
-                    client.updateResource(
-                            updateUri.toString(), requestCopy, OslcMediaType.APPLICATION_RDF_XML);
+            response = client.updateResource(updateUri.toString(), requestCopy, OslcMediaType.APPLICATION_RDF_XML);
 
             response.close();
         }
 
         if (response.getStatus() != HttpStatus.SC_OK) {
 
-            throw new AutomationException(
-                    "Failed to update AutomationResult at "
-                            + updateUri.toString()
-                            + ". "
-                            + response.getStatus()
-                            + ": "
-                            + response.getStatusInfo().getReasonPhrase());
+            throw new AutomationException("Failed to update AutomationResult at "
+                    + updateUri.toString()
+                    + ". "
+                    + response.getStatus()
+                    + ": "
+                    + response.getStatusInfo().getReasonPhrase());
         }
     }
 
     /**
-     * Cancel an Automation Request by updating its desiredState property to
-     * Canceled.
+     * Cancel an Automation Request by updating its desiredState property to Canceled.
      *
-     * Before calling this method the adapter needs to be logged into the
-     * Automation Service Provider.
+     * <p>Before calling this method the adapter needs to be logged into the Automation Service Provider.
      *
      * @param request
      * @throws AutomationException
@@ -1368,32 +1204,28 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
         Response response;
 
         synchronized (client) {
-            response =
-                    client.updateResource(
-                            updateUri.toString(), request, OslcMediaType.APPLICATION_RDF_XML);
+            response = client.updateResource(updateUri.toString(), request, OslcMediaType.APPLICATION_RDF_XML);
 
             response.close();
         }
 
         if (response.getStatus() != HttpStatus.SC_OK) {
 
-            throw new AutomationException(
-                    "Failed to update AutomationResult at "
-                            + updateUri.toString()
-                            + ". "
-                            + response.getStatus()
-                            + ": "
-                            + response.getStatusInfo().getReasonPhrase());
+            throw new AutomationException("Failed to update AutomationResult at "
+                    + updateUri.toString()
+                    + ". "
+                    + response.getStatus()
+                    + ": "
+                    + response.getStatusInfo().getReasonPhrase());
         }
     }
 
     /**
-     * Checks to see if the AutomationRequest's current state at the Service
-     * Provider indicates that the request has been canceled.
+     * Checks to see if the AutomationRequest's current state at the Service Provider indicates that the request has
+     * been canceled.
      *
      * @param request
-     * @throws AutomationRequestCanceledException
-     *   if the Request has been canceled.
+     * @throws AutomationRequestCanceledException if the Request has been canceled.
      * @throws IOException
      * @throws URISyntaxException
      */
@@ -1405,9 +1237,8 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
         AutomationRequest requestAtServiceProvider;
 
         synchronized (client) {
-            requestAtServiceProvider =
-                    client.getResource(selectUri.toString(), OslcMediaType.APPLICATION_RDF_XML)
-                            .readEntity(AutomationRequest.class);
+            requestAtServiceProvider = client.getResource(selectUri.toString(), OslcMediaType.APPLICATION_RDF_XML)
+                    .readEntity(AutomationRequest.class);
         }
 
         // oslc_auto:state is defined as one-or-many in the specification
@@ -1420,20 +1251,16 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
     }
 
     /**
-     * A runnable which can be used by a Thread created by the program
-     * controlling the adapter.
+     * A runnable which can be used by a Thread created by the program controlling the adapter.
      *
-     * The runnable will send heart beats to the Automation Service Provider at
-     * the polling interval.
+     * <p>The runnable will send heart beats to the Automation Service Provider at the polling interval.
      *
-     * Stopping the adapter will also stop this runnable.
+     * <p>Stopping the adapter will also stop this runnable.
      *
      * @see AutomationAdapter#stop()
-     *
      */
+    @NoArgsConstructor
     public class HeartbeatRunnable implements Runnable {
-
-        public HeartbeatRunnable() {}
 
         public void run() {
             try {

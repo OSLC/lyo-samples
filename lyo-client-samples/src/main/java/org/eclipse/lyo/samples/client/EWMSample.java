@@ -28,6 +28,7 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
 import javax.xml.namespace.QName;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.GnuParser;
@@ -63,27 +64,22 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.message.internal.MessageBodyProviderNotFoundException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Samples of logging in to IBM Enterprise Workflow Manager and running OSLC operations
  *
- *
- * - run an OLSC ChangeRequest query and retrieve OSLC ChangeRequests and de-serialize them as Java objects
- * - retrieve an OSLC ChangeRequest and print it as XML
- * - create a new ChangeRequest
- * - update an existing ChangeRequest
- *
+ * <p>- run an OLSC ChangeRequest query and retrieve OSLC ChangeRequests and de-serialize them as Java objects -
+ * retrieve an OSLC ChangeRequest and print it as XML - create a new ChangeRequest - update an existing ChangeRequest
  */
+@Slf4j
 public class EWMSample {
 
     private static final String RTC_NAMESPACE = "http://jazz.net/xmlns/prod/jazz/rtc/cm/1.0/";
     private static final String RTC_FILED_AGAINST = "filedAgainst";
-    private static final Logger logger = LoggerFactory.getLogger(EWMSample.class);
 
     /**
      * Login to the RTC server and perform some OSLC actions
+     *
      * @param args
      * @throws ParseException
      */
@@ -103,16 +99,13 @@ public class EWMSample {
         CommandLine cmd = cliParser.parse(options, args);
 
         if (!validateOptions(cmd)) {
-            logger.error(
-                    "Syntax:  java <class_name> -url https://<server>:port/<context>/ -user <user>"
-                            + " -password <password> -project \"<project_area>\" [--basic]");
-            logger.error(
-                    "Example: java EWMSample -url https://exmple.com:9443/ccm -user ADMIN -password"
-                            + " ADMIN -project \"JKE Banking (Change Management)\"");
-            logger.error(
-                    "Example: java EWMSample -url https://jazz.net.example.com/sandbox02-ccm/ -user"
-                            + " ADMIN -password ADMIN -project \"JKE Banking (Change Management)\""
-                            + " --basic");
+            log.error("Syntax:  java <class_name> -url https://<server>:port/<context>/ -user <user>"
+                    + " -password <password> -project \"<project_area>\" [--basic]");
+            log.error("Example: java EWMSample -url https://exmple.com:9443/ccm -user ADMIN -password"
+                    + " ADMIN -project \"JKE Banking (Change Management)\"");
+            log.error("Example: java EWMSample -url https://jazz.net.example.com/sandbox02-ccm/ -user"
+                    + " ADMIN -password ADMIN -project \"JKE Banking (Change Management)\""
+                    + " --basic");
             return;
         }
 
@@ -130,11 +123,9 @@ public class EWMSample {
         try {
 
             // STEP 1: Configure the ClientBuilder as needed for your client application
-            logger.debug(
-                    "STEP 1: Configure the ClientBuilder as needed for your client application");
+            log.debug("STEP 1: Configure the ClientBuilder as needed for your client application");
             // Use HttpClient instead of the default HttpUrlConnection
-            ClientConfig clientConfig =
-                    new ClientConfig().connectorProvider(new ApacheConnectorProvider());
+            ClientConfig clientConfig = new ClientConfig().connectorProvider(new ApacheConnectorProvider());
             // Fixes Invalid cookie header: ... Invalid 'expires' attribute: Thu, 01 Dec 1994
             // 16:00:00 GMT
             clientConfig.property(
@@ -154,10 +145,10 @@ public class EWMSample {
 
             // IBM jazz-apps use JEE Form based authentication
             // except the Jazz sandbox, it uses Basic/JAS auth. USE ONLY ONE
-            logger.debug("STEP 2: Set up authentication");
+            log.debug("STEP 2: Set up authentication");
             if (useBasicAuth) {
                 clientConfig.register(HttpAuthenticationFeature.basic(userId, password));
-                logger.info("Using Basic authentication");
+                log.info("Using Basic authentication");
             }
             clientBuilder.withConfig(clientConfig);
 
@@ -170,36 +161,26 @@ public class EWMSample {
             // do not merge the two if's: order of registration is important
             if (!useBasicAuth) {
                 clientBuilder.register(new JEEFormAuthenticator(webContextUrl, userId, password));
-                logger.info("Using JAS (Forms) authentication");
+                log.info("Using JAS (Forms) authentication");
             }
 
             // STEP 3: Create a new OslcClient
-            logger.debug("STEP 3: Create a new OslcClient");
+            log.debug("STEP 3: Create a new OslcClient");
             OslcClient client = new OslcClient(clientBuilder);
 
             // STEP 4: Get the URL of the OSLC ChangeManagement service from the rootservices
             // document
-            logger.debug(
-                    "STEP 4: Get the URL of the OSLC ChangeManagement service from the rootservices"
-                            + " document");
-            String catalogUrl =
-                    new RootServicesHelper(webContextUrl, OSLCConstants.OSLC_CM_V2, client)
-                            .getCatalogUrl();
+            log.debug("STEP 4: Get the URL of the OSLC ChangeManagement service from the rootservices" + " document");
+            String catalogUrl = new RootServicesHelper(webContextUrl, OSLCConstants.OSLC_CM_V2, client).getCatalogUrl();
 
             // STEP 5: Find the OSLC Service Provider for the project area we want to work with
-            logger.debug(
-                    "STEP 5: Find the OSLC Service Provider for the project area we want to work"
-                            + " with");
+            log.debug("STEP 5: Find the OSLC Service Provider for the project area we want to work" + " with");
             String serviceProviderUrl = client.lookupServiceProviderUrl(catalogUrl, projectArea);
 
             // STEP 6: Get the Query Capabilities URL so that we can run some OSLC queries
-            logger.debug(
-                    "STEP 6: Get the Query Capabilities URL so that we can run some OSLC queries");
-            String queryCapability =
-                    client.lookupQueryCapability(
-                            serviceProviderUrl,
-                            OSLCConstants.OSLC_CM_V2,
-                            OSLCConstants.CM_CHANGE_REQUEST_TYPE);
+            log.debug("STEP 6: Get the Query Capabilities URL so that we can run some OSLC queries");
+            String queryCapability = client.lookupQueryCapability(
+                    serviceProviderUrl, OSLCConstants.OSLC_CM_V2, OSLCConstants.CM_CHANGE_REQUEST_TYPE);
 
             // SCENARIO A: Run a query for all open ChangeRequests with OSLC paging of 10 items per
             // page turned on and list the members of the result
@@ -220,8 +201,7 @@ public class EWMSample {
             // real workitem in your EWM project area
             OslcQueryParameters queryParams2 = new OslcQueryParameters();
             queryParams2.setWhere("dcterms:identifier=7");
-            queryParams2.setSelect(
-                    "dcterms:identifier,dcterms:title,dcterms:creator,dcterms:created,oslc_cm:status");
+            queryParams2.setSelect("dcterms:identifier,dcterms:title,dcterms:creator,dcterms:created,oslc_cm:status");
             OslcQuery query2 = new OslcQuery(client, queryCapability, queryParams2);
 
             OslcQueryResult result2 = query2.submit();
@@ -232,22 +212,18 @@ public class EWMSample {
             // SCENARIO C:  EWM task creation and update
             ChangeRequest task = new ChangeRequest();
             task.setTitle("Implement accessibility in Pet Store application");
-            task.setDescription(
-                    "Image elements must provide a description in the 'alt' attribute for"
-                            + " consumption by screen readers.");
-            task.addTestedByTestCase(
-                    new Link(
-                            new URI("http://qmprovider/testcase/1"),
-                            "Accessibility verification using a screen reader"));
+            task.setDescription("Image elements must provide a description in the 'alt' attribute for"
+                    + " consumption by screen readers.");
+            task.addTestedByTestCase(new Link(
+                    new URI("http://qmprovider/testcase/1"), "Accessibility verification using a screen reader"));
             task.addDctermsType("task");
 
             // Get the Creation Factory URL for task change requests so that we can create one
-            CreationFactory taskCreation =
-                    client.lookupCreationFactoryResource(
-                            serviceProviderUrl,
-                            OSLCConstants.OSLC_CM_V2,
-                            task.getRdfTypes()[0].toString(),
-                            OSLCConstants.OSLC_CM_V2 + "task");
+            CreationFactory taskCreation = client.lookupCreationFactoryResource(
+                    serviceProviderUrl,
+                    OSLCConstants.OSLC_CM_V2,
+                    task.getRdfTypes()[0].toString(),
+                    OSLCConstants.OSLC_CM_V2 + "task");
             String factoryUrl = taskCreation.getCreation().toString();
 
             // Determine what to use for the Filed Against attribute by requesting the resource
@@ -258,31 +234,21 @@ public class EWMSample {
 
             // Look at the allowed values for Filed Against. This is generally a required field for
             // defects.
-            Property filedAgainstProperty =
-                    shape.getProperty(new URI(RTC_NAMESPACE + RTC_FILED_AGAINST));
+            Property filedAgainstProperty = shape.getProperty(new URI(RTC_NAMESPACE + RTC_FILED_AGAINST));
             if (filedAgainstProperty != null) {
                 URI allowedValuesRef = filedAgainstProperty.getAllowedValuesRef();
                 Response allowedValuesResponse = client.getResource(allowedValuesRef.toString());
                 AllowedValues allowedValues = allowedValuesResponse.readEntity(AllowedValues.class);
                 Object[] values = allowedValues.getValues().toArray();
-                task.getExtendedProperties()
-                        .put(new QName(RTC_NAMESPACE, RTC_FILED_AGAINST), (URI) values[0]);
+                task.getExtendedProperties().put(new QName(RTC_NAMESPACE, RTC_FILED_AGAINST), (URI) values[0]);
             }
 
             // Create the change request
-            Response creationResponse =
-                    client.createResource(
-                            factoryUrl,
-                            task,
-                            OslcMediaType.APPLICATION_RDF_XML,
-                            OslcMediaType.APPLICATION_RDF_XML);
-            String changeRequestLocation =
-                    creationResponse.getStringHeaders().getFirst(HttpHeaders.LOCATION);
+            Response creationResponse = client.createResource(
+                    factoryUrl, task, OslcMediaType.APPLICATION_RDF_XML, OslcMediaType.APPLICATION_RDF_XML);
+            String changeRequestLocation = creationResponse.getStringHeaders().getFirst(HttpHeaders.LOCATION);
             if (creationResponse.getStatus() != HttpStatus.SC_CREATED) {
-                System.err.println(
-                        "ERROR: Could not create the task (status "
-                                + creationResponse.getStatus()
-                                + ")\n");
+                System.err.println("ERROR: Could not create the task (status " + creationResponse.getStatus() + ")\n");
                 System.err.println(creationResponse.readEntity(String.class));
                 System.exit(1);
             }
@@ -298,12 +264,8 @@ public class EWMSample {
             String updateUrl = task.getAbout() + "?oslc.properties=dcterms:title";
 
             // Update the change request at the service provider
-            Response updateResponse =
-                    client.updateResource(
-                            updateUrl,
-                            task,
-                            OslcMediaType.APPLICATION_RDF_XML,
-                            OslcMediaType.APPLICATION_RDF_XML);
+            Response updateResponse = client.updateResource(
+                    updateUrl, task, OslcMediaType.APPLICATION_RDF_XML, OslcMediaType.APPLICATION_RDF_XML);
 
             updateResponse.readEntity(String.class);
 
@@ -311,19 +273,16 @@ public class EWMSample {
             ChangeRequest defect = new ChangeRequest();
             defect.setTitle("Error logging in");
             defect.setDescription(
-                    "An error occurred when I tried to log in with a user ID that contained the '@'"
-                            + " symbol.");
-            defect.addTestedByTestCase(
-                    new Link(new URI("http://qmprovider/testcase/3"), "Global Verifcation Test"));
+                    "An error occurred when I tried to log in with a user ID that contained the '@'" + " symbol.");
+            defect.addTestedByTestCase(new Link(new URI("http://qmprovider/testcase/3"), "Global Verifcation Test"));
             defect.addDctermsType("defect");
 
             // Get the Creation Factory URL for change requests so that we can create one
-            CreationFactory defectCreation =
-                    client.lookupCreationFactoryResource(
-                            serviceProviderUrl,
-                            OSLCConstants.OSLC_CM_V2,
-                            defect.getRdfTypes()[0].toString(),
-                            OSLCConstants.OSLC_CM_V2 + "defect");
+            CreationFactory defectCreation = client.lookupCreationFactoryResource(
+                    serviceProviderUrl,
+                    OSLCConstants.OSLC_CM_V2,
+                    defect.getRdfTypes()[0].toString(),
+                    OSLCConstants.OSLC_CM_V2 + "defect");
             factoryUrl = defectCreation.getCreation().toString();
 
             // Determine what to use for the Filed Against attribute by requesting the resource
@@ -345,52 +304,39 @@ public class EWMSample {
                 // project areas. Try the second value instead of the first, most project area
                 // processes
                 // create more than one category
-                defect.getExtendedProperties()
-                        .put(new QName(RTC_NAMESPACE, RTC_FILED_AGAINST), (URI) values[1]);
+                defect.getExtendedProperties().put(new QName(RTC_NAMESPACE, RTC_FILED_AGAINST), (URI) values[1]);
             }
 
             // Create the change request
-            creationResponse =
-                    client.createResource(
-                            factoryUrl,
-                            defect,
-                            OslcMediaType.APPLICATION_RDF_XML,
-                            OslcMediaType.APPLICATION_RDF_XML);
-            String defectLocation =
-                    creationResponse.getStringHeaders().getFirst(HttpHeaders.LOCATION);
+            creationResponse = client.createResource(
+                    factoryUrl, defect, OslcMediaType.APPLICATION_RDF_XML, OslcMediaType.APPLICATION_RDF_XML);
+            String defectLocation = creationResponse.getStringHeaders().getFirst(HttpHeaders.LOCATION);
             if (creationResponse.getStatus() != HttpStatus.SC_CREATED) {
                 System.err.println(
-                        "ERROR: Could not create the defect (status "
-                                + creationResponse.getStatus()
-                                + ")\n");
+                        "ERROR: Could not create the defect (status " + creationResponse.getStatus() + ")\n");
                 System.err.println(creationResponse.readEntity(String.class));
                 System.exit(1);
             }
             creationResponse.readEntity(String.class);
             System.out.println("Defect created at location " + defectLocation);
         } catch (RootServicesException re) {
-            logger.error(
-                    "Unable to access the Jazz rootservices document at: {}/rootservices",
-                    webContextUrl,
-                    re);
+            log.error("Unable to access the Jazz rootservices document at: {}/rootservices", webContextUrl, re);
         } catch (MessageBodyProviderNotFoundException e) {
             if (e.getMessage().contains("text/html")) {
-                logger.error(
-                        "Jazz server returned an HTML page instead of RDF. Are you sure you have"
-                                + " chosen between Basic and JAS Forms auth correctly?");
+                log.error("Jazz server returned an HTML page instead of RDF. Are you sure you have"
+                        + " chosen between Basic and JAS Forms auth correctly?");
             } else {
-                logger.error("Unknown error", e);
+                log.error("Unknown error", e);
             }
         } catch (ProcessingException e) {
             if (e.getCause() instanceof ConnectionClosedException) {
-                logger.error(
-                        "Server has closed the connection. Are you sure you have chosen between"
-                                + " Basic and JAS Forms auth correctly?");
+                log.error("Server has closed the connection. Are you sure you have chosen between"
+                        + " Basic and JAS Forms auth correctly?");
             } else {
-                logger.error("Unknown error", e);
+                log.error("Unknown error", e);
             }
         } catch (Exception e) {
-            logger.error("Unknown error", e);
+            log.error("Unknown error", e);
         }
     }
 
@@ -412,12 +358,7 @@ public class EWMSample {
 
         for (ChangeRequest cr : result.getMembers(ChangeRequest.class)) {
             System.out.println(
-                    "id: "
-                            + cr.getIdentifier()
-                            + ", title: "
-                            + cr.getTitle()
-                            + ", status: "
-                            + cr.getStatus());
+                    "id: " + cr.getIdentifier() + ", title: " + cr.getTitle() + ", status: " + cr.getStatus());
         }
     }
 
@@ -436,10 +377,7 @@ public class EWMSample {
     private static boolean validateOptions(CommandLine cmd) {
         boolean isValid = true;
 
-        if (!(cmd.hasOption("url")
-                && cmd.hasOption("user")
-                && cmd.hasOption("password")
-                && cmd.hasOption("project"))) {
+        if (!(cmd.hasOption("url") && cmd.hasOption("user") && cmd.hasOption("password") && cmd.hasOption("project"))) {
 
             isValid = false;
         }

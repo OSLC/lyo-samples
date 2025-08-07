@@ -28,10 +28,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import lombok.extern.java.Log;
 import net.oauth.OAuthException;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -68,16 +68,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- * Samples of logging in to IBM Enterprise Requirements Manager
- * and running OSLC operations
+ * Samples of logging in to IBM Enterprise Requirements Manager and running OSLC operations
  *
- * - run an OLSC Requirement query and retrieve OSLC Requirements and de-serialize them as Java objects
- * - TODO:  Add more requirement sample scenarios
- *
+ * <p>- run an OLSC Requirement query and retrieve OSLC Requirements and de-serialize them as Java objects - TODO: Add
+ * more requirement sample scenarios
  */
+@Log
 public class ERMSample {
-
-    private static final Logger logger = Logger.getLogger(ERMSample.class.getName());
 
     // Following is a workaround for primaryText issue in DNG ( it is PrimaryText instead of
     // primaryText
@@ -86,6 +83,7 @@ public class ERMSample {
 
     /**
      * Login to the ERM server and perform some OSLC actions
+     *
      * @param args
      * @throws ParseException
      */
@@ -105,16 +103,13 @@ public class ERMSample {
         CommandLine cmd = cliParser.parse(options, args);
 
         if (!validateOptions(cmd)) {
-            logger.severe(
-                    "Syntax:  java <class_name> -url https://<server>:port/<context>/ -user <user>"
-                            + " -password <password> -project \"<project_area>\" [--basic]");
-            logger.severe(
-                    "Example: java ERMSample -url https://exmple.com:9443/rm -user ADMIN -password"
-                            + " ADMIN -project \"JKE Banking (Requirements Management)\"");
-            logger.severe(
-                    "Example: java ERMSample -url https://jazz.net.example.com/sandbox02-rm/ -user"
-                            + " ADMIN -password ADMIN -project \"JKE Banking (Requirements"
-                            + " Management)\" --basic");
+            log.severe("Syntax:  java <class_name> -url https://<server>:port/<context>/ -user <user>"
+                    + " -password <password> -project \"<project_area>\" [--basic]");
+            log.severe("Example: java ERMSample -url https://exmple.com:9443/rm -user ADMIN -password"
+                    + " ADMIN -project \"JKE Banking (Requirements Management)\"");
+            log.severe("Example: java ERMSample -url https://jazz.net.example.com/sandbox02-rm/ -user"
+                    + " ADMIN -password ADMIN -project \"JKE Banking (Requirements"
+                    + " Management)\" --basic");
             return;
         }
 
@@ -129,8 +124,7 @@ public class ERMSample {
             // STEP 1: Configure the ClientBuilder as needed for your client application
 
             // Use HttpClient instead of the default HttpUrlConnection
-            ClientConfig clientConfig =
-                    new ClientConfig().connectorProvider(new ApacheConnectorProvider());
+            ClientConfig clientConfig = new ClientConfig().connectorProvider(new ApacheConnectorProvider());
 
             // Fixes Invalid cookie header: ... Invalid 'expires' attribute: Thu, 01 Dec 1994
             // 16:00:00 GMT
@@ -145,7 +139,7 @@ public class ERMSample {
             // except the Jazz sandbox, it uses Basic/JAS auth. USE ONLY ONE
             if (useBasicAuth) {
                 clientConfig.register(HttpAuthenticationFeature.basic(userId, password));
-                logger.info("Using Basic authentication");
+                log.info("Using Basic authentication");
             }
             clientBuilder.withConfig(clientConfig);
 
@@ -158,7 +152,7 @@ public class ERMSample {
             // do not merge the two if's: order of registration is important
             if (!useBasicAuth) {
                 clientBuilder.register(new JEEFormAuthenticator(webContextUrl, userId, password));
-                logger.info("Using JAS (Forms) authentication");
+                log.info("Using JAS (Forms) authentication");
             }
 
             // STEP 3: Create a new OslcClient
@@ -166,63 +160,52 @@ public class ERMSample {
 
             // STEP 4: Get the URL of the OSLC ChangeManagement service from the rootservices
             // document
-            String catalogUrl =
-                    new RootServicesHelper(webContextUrl, OSLCConstants.OSLC_RM_V2, client)
-                            .getCatalogUrl();
+            String catalogUrl = new RootServicesHelper(webContextUrl, OSLCConstants.OSLC_RM_V2, client).getCatalogUrl();
 
             // STEP 5: Find the OSLC Service Provider for the project area we want to work with
             String serviceProviderUrl = client.lookupServiceProviderUrl(catalogUrl, projectArea);
 
             // STEP 6: Get the Query Capabilities URL so that we can run some OSLC queries
-            String queryCapability =
-                    client.lookupQueryCapability(
-                            serviceProviderUrl,
-                            OSLCConstants.OSLC_RM_V2,
-                            OSLCConstants.RM_REQUIREMENT_TYPE);
+            String queryCapability = client.lookupQueryCapability(
+                    serviceProviderUrl, OSLCConstants.OSLC_RM_V2, OSLCConstants.RM_REQUIREMENT_TYPE);
 
             // STEP 7: Create base requirements
             // Get the Creation Factory URL for change requests so that we can create one
 
-            String requirementFactory =
-                    client.lookupCreationFactory(
-                            serviceProviderUrl,
-                            OSLCConstants.OSLC_RM_V2,
-                            OSLCConstants.RM_REQUIREMENT_TYPE);
+            String requirementFactory = client.lookupCreationFactory(
+                    serviceProviderUrl, OSLCConstants.OSLC_RM_V2, OSLCConstants.RM_REQUIREMENT_TYPE);
 
             // Get Feature Requirement Type URL
             ResourceShape featureInstanceShape = null;
             ResourceShape collectionInstanceShape = null;
             try {
                 try {
-                    featureInstanceShape =
-                            lookupRequirementsInstanceShapes(
-                                    serviceProviderUrl,
-                                    OSLCConstants.OSLC_RM_V2,
-                                    OSLCConstants.RM_REQUIREMENT_TYPE,
-                                    client,
-                                    "Feature",
-                                    null);
+                    featureInstanceShape = lookupRequirementsInstanceShapes(
+                            serviceProviderUrl,
+                            OSLCConstants.OSLC_RM_V2,
+                            OSLCConstants.RM_REQUIREMENT_TYPE,
+                            client,
+                            "Feature",
+                            null);
                 } catch (IOException | URISyntaxException | OAuthException e) {
                     throw e;
                 } catch (ResourceNotFoundException e) {
                     // Feature shape is not defined if SAFe framework is used
-                    featureInstanceShape =
-                            lookupRequirementsInstanceShapes(
-                                    serviceProviderUrl,
-                                    OSLCConstants.OSLC_RM_V2,
-                                    OSLCConstants.RM_REQUIREMENT_TYPE,
-                                    client,
-                                    "User Requirement",
-                                    null);
+                    featureInstanceShape = lookupRequirementsInstanceShapes(
+                            serviceProviderUrl,
+                            OSLCConstants.OSLC_RM_V2,
+                            OSLCConstants.RM_REQUIREMENT_TYPE,
+                            client,
+                            "User Requirement",
+                            null);
                 }
 
-                collectionInstanceShape =
-                        RmUtil.lookupRequirementsInstanceShapes(
-                                serviceProviderUrl,
-                                OSLCConstants.OSLC_RM_V2,
-                                OSLCConstants.RM_REQUIREMENT_COLLECTION_TYPE,
-                                client,
-                                "Collection");
+                collectionInstanceShape = RmUtil.lookupRequirementsInstanceShapes(
+                        serviceProviderUrl,
+                        OSLCConstants.OSLC_RM_V2,
+                        OSLCConstants.RM_REQUIREMENT_COLLECTION_TYPE,
+                        client,
+                        "Collection");
 
                 // We need to use Resource shapes to properly handle date attributes,
                 // so they aren't interpreted as dateTime.
@@ -236,10 +219,9 @@ public class ERMSample {
                 throw new RuntimeException(e);
             } catch (ResourceNotFoundException e) {
                 //				throw new RuntimeException(e);
-                logger.warning(
-                        "OSLC Server does not provide Collection and Feature (or User Requirement)"
-                                + " instance shapes");
-                logger.log(Level.FINE, "Exception", e);
+                log.warning("OSLC Server does not provide Collection and Feature (or User Requirement)"
+                        + " instance shapes");
+                log.log(Level.FINE, "Exception", e);
             }
 
             Requirement requirement = null;
@@ -255,7 +237,7 @@ public class ERMSample {
             String primaryText = null;
             if (requirementFactory != null) {
                 if (featureInstanceShape == null) {
-                    logger.warning("Cannot create resources without access to shapes, skipping");
+                    log.warning("Cannot create resources without access to shapes, skipping");
                 } else {
                     // Create REQ01
                     requirement = new Requirement();
@@ -268,22 +250,17 @@ public class ERMSample {
                     requirement.getExtendedProperties().put(RmConstants.PROPERTY_PRIMARY_TEXT, obj);
 
                     requirement.setDescription("Created By EclipseLyo");
-                    requirement.addImplementedBy(
-                            new Link(new URI("http://google.com"), "Link in REQ01"));
+                    requirement.addImplementedBy(new Link(new URI("http://google.com"), "Link in REQ01"));
                     // Create the Requirement
-                    try (Response creationResponse =
-                            client.createResource(
-                                    requirementFactory,
-                                    requirement,
-                                    OslcMediaType.APPLICATION_RDF_XML,
-                                    OslcMediaType.APPLICATION_RDF_XML)) {
-                        if (creationResponse.getStatus()
-                                == Response.Status.FORBIDDEN.getStatusCode()) {
-                            throw new IllegalStateException(
-                                    "Server is refusing the requests on security grounds.");
+                    try (Response creationResponse = client.createResource(
+                            requirementFactory,
+                            requirement,
+                            OslcMediaType.APPLICATION_RDF_XML,
+                            OslcMediaType.APPLICATION_RDF_XML)) {
+                        if (creationResponse.getStatus() == Response.Status.FORBIDDEN.getStatusCode()) {
+                            throw new IllegalStateException("Server is refusing the requests on security grounds.");
                         }
-                        req01URL =
-                                creationResponse.getStringHeaders().getFirst(HttpHeaders.LOCATION);
+                        req01URL = creationResponse.getStringHeaders().getFirst(HttpHeaders.LOCATION);
                     }
 
                     // Create REQ02
@@ -291,22 +268,17 @@ public class ERMSample {
                     requirement.setInstanceShape(featureInstanceShape.getAbout());
                     requirement.setTitle("Req02");
                     requirement.setDescription("Created By EclipseLyo");
-                    requirement.addValidatedBy(
-                            new Link(new URI("http://bancomer.com"), "Link in REQ02"));
+                    requirement.addValidatedBy(new Link(new URI("http://bancomer.com"), "Link in REQ02"));
                     // Create the change request
-                    try (Response creationResponse =
-                            client.createResource(
-                                    requirementFactory,
-                                    requirement,
-                                    OslcMediaType.APPLICATION_RDF_XML,
-                                    OslcMediaType.APPLICATION_RDF_XML)) {
-                        if (creationResponse.getStatus()
-                                == Response.Status.FORBIDDEN.getStatusCode()) {
-                            throw new IllegalStateException(
-                                    "Server is refusing the requests on security grounds.");
+                    try (Response creationResponse = client.createResource(
+                            requirementFactory,
+                            requirement,
+                            OslcMediaType.APPLICATION_RDF_XML,
+                            OslcMediaType.APPLICATION_RDF_XML)) {
+                        if (creationResponse.getStatus() == Response.Status.FORBIDDEN.getStatusCode()) {
+                            throw new IllegalStateException("Server is refusing the requests on security grounds.");
                         }
-                        req02URL =
-                                creationResponse.getStringHeaders().getFirst(HttpHeaders.LOCATION);
+                        req02URL = creationResponse.getStringHeaders().getFirst(HttpHeaders.LOCATION);
                     }
 
                     // Create REQ03
@@ -314,22 +286,17 @@ public class ERMSample {
                     requirement.setInstanceShape(featureInstanceShape.getAbout());
                     requirement.setTitle("Req03");
                     requirement.setDescription("Created By EclipseLyo");
-                    requirement.addValidatedBy(
-                            new Link(new URI("http://outlook.com"), "Link in REQ03"));
+                    requirement.addValidatedBy(new Link(new URI("http://outlook.com"), "Link in REQ03"));
                     // Create the change request
-                    try (Response creationResponse =
-                            client.createResource(
-                                    requirementFactory,
-                                    requirement,
-                                    OslcMediaType.APPLICATION_RDF_XML,
-                                    OslcMediaType.APPLICATION_RDF_XML)) {
-                        if (creationResponse.getStatus()
-                                == Response.Status.FORBIDDEN.getStatusCode()) {
-                            throw new IllegalStateException(
-                                    "Server is refusing the requests on security grounds.");
+                    try (Response creationResponse = client.createResource(
+                            requirementFactory,
+                            requirement,
+                            OslcMediaType.APPLICATION_RDF_XML,
+                            OslcMediaType.APPLICATION_RDF_XML)) {
+                        if (creationResponse.getStatus() == Response.Status.FORBIDDEN.getStatusCode()) {
+                            throw new IllegalStateException("Server is refusing the requests on security grounds.");
                         }
-                        req03URL =
-                                creationResponse.getStringHeaders().getFirst(HttpHeaders.LOCATION);
+                        req03URL = creationResponse.getStringHeaders().getFirst(HttpHeaders.LOCATION);
                     }
 
                     // Create REQ04
@@ -339,19 +306,15 @@ public class ERMSample {
                     requirement.setDescription("Created By EclipseLyo");
 
                     // Create the Requirement
-                    try (Response creationResponse =
-                            client.createResource(
-                                    requirementFactory,
-                                    requirement,
-                                    OslcMediaType.APPLICATION_RDF_XML,
-                                    OslcMediaType.APPLICATION_RDF_XML)) {
-                        if (creationResponse.getStatus()
-                                == Response.Status.FORBIDDEN.getStatusCode()) {
-                            throw new IllegalStateException(
-                                    "Server is refusing the requests on security grounds.");
+                    try (Response creationResponse = client.createResource(
+                            requirementFactory,
+                            requirement,
+                            OslcMediaType.APPLICATION_RDF_XML,
+                            OslcMediaType.APPLICATION_RDF_XML)) {
+                        if (creationResponse.getStatus() == Response.Status.FORBIDDEN.getStatusCode()) {
+                            throw new IllegalStateException("Server is refusing the requests on security grounds.");
                         }
-                        req04URL =
-                                creationResponse.getStringHeaders().getFirst(HttpHeaders.LOCATION);
+                        req04URL = creationResponse.getStringHeaders().getFirst(HttpHeaders.LOCATION);
                     }
 
                     // Now create a collection
@@ -367,19 +330,15 @@ public class ERMSample {
                     collection.setTitle("Collection01");
                     collection.setDescription("Created By EclipseLyo");
                     // Create the collection
-                    try (Response creationResponse =
-                            client.createResource(
-                                    requirementFactory,
-                                    collection,
-                                    OslcMediaType.APPLICATION_RDF_XML,
-                                    OslcMediaType.APPLICATION_RDF_XML)) {
-                        if (creationResponse.getStatus()
-                                == Response.Status.FORBIDDEN.getStatusCode()) {
-                            throw new IllegalStateException(
-                                    "Server is refusing the requests on security grounds.");
+                    try (Response creationResponse = client.createResource(
+                            requirementFactory,
+                            collection,
+                            OslcMediaType.APPLICATION_RDF_XML,
+                            OslcMediaType.APPLICATION_RDF_XML)) {
+                        if (creationResponse.getStatus() == Response.Status.FORBIDDEN.getStatusCode()) {
+                            throw new IllegalStateException("Server is refusing the requests on security grounds.");
                         }
-                        reqcoll01URL =
-                                creationResponse.getStringHeaders().getFirst(HttpHeaders.LOCATION);
+                        reqcoll01URL = creationResponse.getStringHeaders().getFirst(HttpHeaders.LOCATION);
                     }
 
                     // Check that everything was properly created
@@ -401,47 +360,34 @@ public class ERMSample {
             Map<QName, Object> requestExtProperties = requirement.getExtendedProperties();
             for (QName qname : requestExtProperties.keySet()) {
                 Property attr =
-                        featureInstanceShape.getProperty(
-                                new URI(qname.getNamespaceURI() + qname.getLocalPart()));
+                        featureInstanceShape.getProperty(new URI(qname.getNamespaceURI() + qname.getLocalPart()));
                 String name = null;
                 if (attr != null) {
                     name = attr.getTitle();
                     if (name != null) {
-                        System.out.println(
-                                name + " = " + requirement.getExtendedProperties().get(qname));
+                        System.out.println(name + " = "
+                                + requirement.getExtendedProperties().get(qname));
                     }
                 }
             }
 
             // Save the URI of the root folder in order to used it easily
-            rootFolder =
-                    (URI)
-                            requirement
-                                    .getExtendedProperties()
-                                    .get(RmConstants.PROPERTY_PARENT_FOLDER);
+            rootFolder = (URI) requirement.getExtendedProperties().get(RmConstants.PROPERTY_PARENT_FOLDER);
             Object changedPrimaryText =
-                    (Object)
-                            requirement
-                                    .getExtendedProperties()
-                                    .get(RmConstants.PROPERTY_PRIMARY_TEXT);
+                    (Object) requirement.getExtendedProperties().get(RmConstants.PROPERTY_PRIMARY_TEXT);
             if (changedPrimaryText == null) {
                 // Check with the workaround
                 changedPrimaryText =
-                        (Object)
-                                requirement
-                                        .getExtendedProperties()
-                                        .get(PROPERTY_PRIMARY_TEXT_WORKAROUND);
+                        (Object) requirement.getExtendedProperties().get(PROPERTY_PRIMARY_TEXT_WORKAROUND);
             }
             String primarytextString = null;
             if (changedPrimaryText != null) {
-                primarytextString =
-                        changedPrimaryText
-                                .toString(); // Handle the case where Primary Text is returned as
+                primarytextString = changedPrimaryText.toString(); // Handle the case where Primary Text is returned as
                 // XMLLiteral
             }
 
             if ((primarytextString != null) && (!primarytextString.contains(primaryText))) {
-                logger.log(Level.SEVERE, "Error getting primary Text");
+                log.log(Level.SEVERE, "Error getting primary Text");
             }
 
             // QUERIES
@@ -464,9 +410,7 @@ public class ERMSample {
             queryParams.setPrefix(
                     "nav=<http://com.ibm.rdm/navigation#>,rdf=<http://www.w3.org/1999/02/22-rdf-syntax-ns#>");
             queryParams.setWhere(
-                    "rdf:type=<http://open-services.net/ns/rm#Requirement> and nav:parent=<"
-                            + rootFolder
-                            + ">");
+                    "rdf:type=<http://open-services.net/ns/rm#Requirement> and nav:parent=<" + rootFolder + ">");
             query = new OslcQuery(client, queryCapability, 10, queryParams);
             result = query.submit();
             processAsJavaObjects = false;
@@ -505,8 +449,7 @@ public class ERMSample {
             // SCENARIO 05	Do a query for the links that is validated
             queryParams = new OslcQueryParameters();
             queryParams.setPrefix("oslc_rm=<http://open-services.net/ns/rm#>");
-            queryParams.setWhere(
-                    "oslc_rm:validatedBy in [<http://bancomer.com>,<http://outlook.com>]");
+            queryParams.setWhere("oslc_rm:validatedBy in [<http://bancomer.com>,<http://outlook.com>]");
             query = new OslcQuery(client, queryCapability, 10, queryParams);
             result = query.submit();
             result.getRawResponse().bufferEntity();
@@ -518,12 +461,8 @@ public class ERMSample {
 
             // SCENARIO 06 Do a query for it container folder and for the link that is implemented
             queryParams = new OslcQueryParameters();
-            queryParams.setPrefix(
-                    "nav=<http://com.ibm.rdm/navigation#>,oslc_rm=<http://open-services.net/ns/rm#>");
-            queryParams.setWhere(
-                    "nav:parent=<"
-                            + rootFolder
-                            + "> and oslc_rm:validatedBy=<http://bancomer.com>");
+            queryParams.setPrefix("nav=<http://com.ibm.rdm/navigation#>,oslc_rm=<http://open-services.net/ns/rm#>");
+            queryParams.setWhere("nav:parent=<" + rootFolder + "> and oslc_rm:validatedBy=<http://bancomer.com>");
             query = new OslcQuery(client, queryCapability, 10, queryParams);
             result = query.submit();
             result.getRawResponse().bufferEntity();
@@ -539,17 +478,11 @@ public class ERMSample {
             // Get the eTAG, we need it to update
             String etag = getResponse.getStringHeaders().getFirst(OSLCConstants.ETAG);
             requirement.setTitle("My new Title");
-            requirement.addImplementedBy(
-                    new Link(new URI("http://google.com"), "Link created by an Eclipse Lyo user"));
+            requirement.addImplementedBy(new Link(new URI("http://google.com"), "Link created by an Eclipse Lyo user"));
 
             // Update the requirement with the proper etag
-            Response updateResponse =
-                    client.updateResource(
-                            req03URL,
-                            requirement,
-                            OslcMediaType.APPLICATION_RDF_XML,
-                            OslcMediaType.APPLICATION_RDF_XML,
-                            etag);
+            Response updateResponse = client.updateResource(
+                    req03URL, requirement, OslcMediaType.APPLICATION_RDF_XML, OslcMediaType.APPLICATION_RDF_XML, etag);
 
             updateResponse.readEntity(String.class);
 
@@ -580,15 +513,13 @@ public class ERMSample {
             System.out.println("\n------------------------------\n");
             System.out.println("Number of Results for SCENARIO 08 = " + resultsSize + "\n");
         } catch (RootServicesException re) {
-            logger.log(
+            log.log(
                     Level.SEVERE,
-                    "Unable to access the Jazz rootservices document at: "
-                            + webContextUrl
-                            + "/rootservices",
+                    "Unable to access the Jazz rootservices document at: " + webContextUrl + "/rootservices",
                     re);
             System.exit(1);
         } catch (Exception e) {
-            logger.log(Level.SEVERE, e.getMessage(), e);
+            log.log(Level.SEVERE, e.getMessage(), e);
             System.exit(1);
         }
     }
@@ -605,8 +536,7 @@ public class ERMSample {
         }
     }
 
-    private static void processPagedQueryResults(
-            OslcQueryResult result, OslcClient client, boolean asJavaObjects) {
+    private static void processPagedQueryResults(OslcQueryResult result, OslcClient client, boolean asJavaObjects) {
         int page = 1;
         // For now, just show first 5 pages
         do {
@@ -621,8 +551,7 @@ public class ERMSample {
         } while (true);
     }
 
-    private static void processCurrentPage(
-            OslcQueryResult result, OslcClient client, boolean asJavaObjects) {
+    private static void processCurrentPage(OslcQueryResult result, OslcClient client, boolean asJavaObjects) {
         result.getRawResponse().bufferEntity();
         for (String resultsUrl : result.getMembersUrls()) {
             System.out.println(resultsUrl);
@@ -641,7 +570,7 @@ public class ERMSample {
                     }
                 }
             } catch (Exception e) {
-                logger.log(Level.SEVERE, "Unable to process artfiact at url: " + resultsUrl, e);
+                log.log(Level.SEVERE, "Unable to process artfiact at url: " + resultsUrl, e);
             }
         }
     }
@@ -661,10 +590,7 @@ public class ERMSample {
     private static boolean validateOptions(CommandLine cmd) {
         boolean isValid = true;
 
-        if (!(cmd.hasOption("url")
-                && cmd.hasOption("user")
-                && cmd.hasOption("password")
-                && cmd.hasOption("project"))) {
+        if (!(cmd.hasOption("url") && cmd.hasOption("user") && cmd.hasOption("password") && cmd.hasOption("project"))) {
 
             isValid = false;
         }
@@ -680,9 +606,7 @@ public class ERMSample {
             String configurationContext)
             throws IOException, URISyntaxException, ResourceNotFoundException, OAuthException {
         List<ResourceShape> shapes = new ArrayList<>();
-        Response response =
-                client.getResource(
-                        serviceProviderUrl, null, OSLCConstants.CT_RDF, configurationContext);
+        Response response = client.getResource(serviceProviderUrl, null, OSLCConstants.CT_RDF, configurationContext);
         ServiceProvider serviceProvider = response.readEntity(ServiceProvider.class);
         if (serviceProvider != null) {
             for (Service service : serviceProvider.getServices()) {
@@ -697,21 +621,15 @@ public class ERMSample {
                                     URI[] instanceShapes = creationFactory.getResourceShapes();
                                     if (instanceShapes != null) {
                                         for (URI typeURI : instanceShapes) {
-                                            response =
-                                                    client.getResource(
-                                                            typeURI.toString(),
-                                                            null,
-                                                            OSLCConstants.CT_RDF,
-                                                            configurationContext);
-                                            ResourceShape resourceShape =
-                                                    response.readEntity(ResourceShape.class);
+                                            response = client.getResource(
+                                                    typeURI.toString(),
+                                                    null,
+                                                    OSLCConstants.CT_RDF,
+                                                    configurationContext);
+                                            ResourceShape resourceShape = response.readEntity(ResourceShape.class);
                                             if (Arrays.stream(resourceShape.getDescribes())
-                                                    .anyMatch(
-                                                            uri ->
-                                                                    oslcResourceType.equals(
-                                                                            uri.toString()))) {
-                                                if (requiredInstanceShape.equals(
-                                                        resourceShape.getTitle())) {
+                                                    .anyMatch(uri -> oslcResourceType.equals(uri.toString()))) {
+                                                if (requiredInstanceShape.equals(resourceShape.getTitle())) {
                                                     shapes.add(resourceShape);
                                                 }
                                             }
@@ -728,8 +646,7 @@ public class ERMSample {
         if (shapes.size() == 0) {
             throw new ResourceNotFoundException(serviceProviderUrl, "InstanceShapes");
         } else if (shapes.size() > 1) {
-            throw new IllegalArgumentException(
-                    "There is more than one 'requiredInstanceShape' shape");
+            throw new IllegalArgumentException("There is more than one 'requiredInstanceShape' shape");
         } else {
             return shapes.getFirst();
         }

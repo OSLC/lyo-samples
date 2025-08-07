@@ -15,7 +15,8 @@
  */
 package org.eclipse.lyo.samples.client.automation;
 
-import java.util.logging.Logger;
+import lombok.Setter;
+import lombok.extern.java.Log;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcDescription;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcNamespace;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcOccurs;
@@ -27,41 +28,31 @@ import org.eclipse.lyo.oslc4j.core.model.AbstractResource;
 import org.eclipse.lyo.oslc4j.core.model.Occurs;
 import org.eclipse.lyo.oslc4j.core.model.ValueType;
 
-@OslcResourceShape(
-        title = "Status Response Resource Shape",
-        describes = IConstants.TYPE_STATUS_RESPONSE)
+@Log
+@OslcResourceShape(title = "Status Response Resource Shape", describes = IConstants.TYPE_STATUS_RESPONSE)
 @OslcNamespace(IConstants.NAMESPACE_URI_JAZZ_AUTO_RQM)
 public class StatusResponse extends AbstractResource implements IConstants {
 
-    private static final Logger logger = Logger.getLogger(StatusResponse.class.getName());
-
-    /**
-     * Starting value for normal informational status message
-     */
+    /** Starting value for normal informational status message */
     public static final int STATUS_INFORMATIONAL = 100;
 
-    /**
-     * Starting value for success messages
-     */
+    /** Starting value for success messages */
     public static final int STATUS_OK = 200;
 
-    /**
-     * Starting value for warning messages
-     */
+    /** Starting value for warning messages */
     public static final int STATUS_WARNING = 300;
 
-    /**
-     * Starting value for error messages
-     */
+    /** Starting value for error messages */
     public static final int STATUS_ERROR = 400;
 
     private int statusCode;
 
+    @Setter
     private String status;
 
     /**
-     * Create a new StatusResponse object with the provided statusCode and
-     * status message. The expected range is 100-599.
+     * Create a new StatusResponse object with the provided statusCode and status message. The expected range is
+     * 100-599.
      *
      * @param statusCode
      * @param status
@@ -98,7 +89,7 @@ public class StatusResponse extends AbstractResource implements IConstants {
 
         if (statusCode < 100 || statusCode > 599) {
 
-            logger.warning("status code not in expected range: " + statusCode);
+            log.warning("status code not in expected range: " + statusCode);
         }
     }
 
@@ -109,9 +100,5 @@ public class StatusResponse extends AbstractResource implements IConstants {
     @OslcValueType(ValueType.String)
     public String getStatus() {
         return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 }
