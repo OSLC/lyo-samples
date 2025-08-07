@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2012 IBM Corporation.
  *
  *  All rights reserved. This program and the accompanying materials
@@ -12,7 +12,7 @@
  *  Contributors:
  *
  *     Paul McMahan <pmcmahan@us.ibm.com>     - initial implementation
- *******************************************************************************/
+ */
 package org.eclipse.lyo.samples.client.automation;
 
 import org.eclipse.lyo.client.oslc.resources.AutomationRequest;

@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2012 IBM Corporation.
  *
  *  All rights reserved. This program and the accompanying materials
@@ -12,7 +12,7 @@
  *  Contributors:
  *  
  *     IBM Corporation - initial API and implementation
- *******************************************************************************/
+ */
 package org.eclipse.lyo.server.oauth.webapp.sample;
 
 import java.io.IOException;

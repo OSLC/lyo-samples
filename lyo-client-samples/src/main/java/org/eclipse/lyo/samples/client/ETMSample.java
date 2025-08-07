@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2012, 2014 IBM Corporation.
  *
  *  All rights reserved. This program and the accompanying materials
@@ -15,7 +15,7 @@
  *     Samuel Padgett      - handle test case creation errors
  *     Samuel Padgett      - update command line example to use correct context
  *     Samuel Padgett      - set member property for RTM query results
- *******************************************************************************/
+ */
 package org.eclipse.lyo.samples.client;
 
 import jakarta.ws.rs.client.ClientBuilder;

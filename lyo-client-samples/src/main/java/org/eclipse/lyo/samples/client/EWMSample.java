@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2012, 2014 IBM Corporation.
  *
  *  All rights reserved. This program and the accompanying materials
@@ -15,7 +15,7 @@
  *     Steve Pitschke      - added use of new OslcQueryResult.getMembers()
  *     Samuel Padgett      - examine oslc:usage to find the right creation factory,
  *                           use resource shapes to discover allowed values for Filed Against
- *******************************************************************************/
+ */
 package org.eclipse.lyo.samples.client;
 
 import jakarta.ws.rs.ProcessingException;

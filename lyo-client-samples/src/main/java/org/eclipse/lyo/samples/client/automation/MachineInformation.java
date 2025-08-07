@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2015 IBM Corporation.
  *
  *  All rights reserved. This program and the accompanying materials
@@ -12,7 +12,7 @@
  *  Contributors:
  *
  *     Subhajit Bhuiya <subhuiya@in.ibm.com>     - initial implementation
- *******************************************************************************/
+ */
 package org.eclipse.lyo.samples.client.automation;
 
 import java.net.Inet6Address;
