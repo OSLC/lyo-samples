@@ -46,9 +46,7 @@
                       <exclude>com.sun.xml.bind:jaxb-impl</exclude>
 
                       <!-- https://github.com/eclipse/lyo/pull/220 -->
-                      <!--                    <exclude>log4j:log4j</exclude>-->
-                      <!--log4j
-                      v2 is not used, just for the future-->
+                      <exclude>log4j:log4j</exclude>
                       <exclude>org.apache.logging.log4j:log4j-core</exclude>
                     </excludes>
                   </bannedDependencies>
