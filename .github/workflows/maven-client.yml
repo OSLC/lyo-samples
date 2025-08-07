@@ -2,9 +2,9 @@ name: "CI (client)"
 
 on:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
-    branches: [master]
+    branches: [main]
     paths:
       - '.github/workflows/**'
       - 'lyo-client-samples/**'
