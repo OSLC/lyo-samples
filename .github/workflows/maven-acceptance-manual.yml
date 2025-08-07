@@ -17,14 +17,14 @@ concurrency:
   cancel-in-progress: ${{ github.ref != 'refs/heads/master' && github.ref != 'refs/heads/main' }}
 
 jobs:
-  build-jdk17:
+  build-jdk:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        java-version: [17]
-#        distribution: ['temurin', 'zulu', 'oracle', 'corretto', 'microsoft', 'liberica']
-        distribution: ['temurin']
+#         java-version: [17]
+# #        distribution: ['temurin', 'zulu', 'oracle', 'corretto', 'microsoft', 'liberica']
+#         distribution: ['temurin']
         include:
           - java-version: '21'
             distribution: 'temurin'
