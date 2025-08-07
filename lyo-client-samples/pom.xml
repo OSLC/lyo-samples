@@ -46,9 +46,7 @@
                       <exclude>com.sun.xml.bind:jaxb-impl</exclude>
 
                       <!-- https://github.com/eclipse/lyo/pull/220 -->
-                      <!--                    <exclude>log4j:log4j</exclude>-->
-                      <!--log4j
-                      v2 is not used, just for the future-->
+                      <exclude>log4j:log4j</exclude>
                       <exclude>org.apache.logging.log4j:log4j-core</exclude>
                     </excludes>
                   </bannedDependencies>
@@ -146,75 +144,54 @@
     <dependency>
       <groupId>jakarta.ws.rs</groupId>
       <artifactId>jakarta.ws.rs-api</artifactId>
-      <!-- <version>3.1.0</version> -->
     </dependency>
     <dependency>
       <groupId>org.glassfish.jersey.core</groupId>
       <artifactId>jersey-common</artifactId>
-      <!-- <version>${v.jersey}</version> -->
     </dependency>
     <dependency>
       <groupId>org.glassfish.jersey.core</groupId>
       <artifactId>jersey-client</artifactId>
-      <!-- <version>${v.jersey}</version> -->
     </dependency>
     <dependency>
       <groupId>org.glassfish.jersey.connectors</groupId>
       <artifactId>jersey-apache-connector</artifactId>
-      <!-- FIXME -->
-      <version>${v.jersey}</version>
     </dependency>
     <dependency>
       <groupId>org.glassfish.jersey.media</groupId>
       <artifactId>jersey-media-multipart</artifactId>
-      <version>${v.jersey}</version>
-    </dependency>
-    <dependency>
-      <groupId>commons-cli</groupId>
-      <artifactId>commons-cli</artifactId>
-      <version>1.10.0</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.lyo.oslc4j.core</groupId>
       <artifactId>lyo-core-model</artifactId>
-      <!-- FIXME -->
-      <version>${v.lyo}</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.lyo.oslc4j.core</groupId>
       <artifactId>lyo-core-settings</artifactId>
-      <!-- FIXME -->
-      <version>${v.lyo}</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.lyo.oslc4j.core</groupId>
       <artifactId>oslc4j-core</artifactId>
-      <!-- <version>${v.lyo}</version> -->
     </dependency>
     <dependency>
       <groupId>org.eclipse.lyo.oslc4j.core</groupId>
       <artifactId>oslc4j-jena-provider</artifactId>
-      <!-- <version>${v.lyo}</version> -->
     </dependency>
     <dependency>
       <groupId>org.apache.jena</groupId>
       <artifactId>jena-core</artifactId>
-      <!-- <version>${v.jena}</version> -->
     </dependency>
     <dependency>
       <groupId>org.eclipse.lyo.clients</groupId>
       <artifactId>oslc-client</artifactId>
-      <!-- <version>${v.lyo}</version> -->
     </dependency>
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpcore</artifactId>
-      <!-- <version>4.4.16</version> -->
     </dependency>
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpclient</artifactId>
-      <!-- <version>4.5.14</version> -->
     </dependency>
     <dependency>
       <!-- legacy, not planned for BOM -->
@@ -225,7 +202,17 @@
     <dependency>
       <groupId>org.eclipse.lyo.server</groupId>
       <artifactId>net.oauth.core-oauth-jakarta</artifactId>
-      <!-- <version>${v.lyo}</version> -->
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <!--reload4j
+            addresses security problems in log4j1-->
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-reload4j</artifactId>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>commons-io</groupId>
@@ -233,19 +220,11 @@
       <version>2.20.0</version>
     </dependency>
     <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <!-- <version>2.0.17</version> -->
+      <groupId>commons-cli</groupId>
+      <artifactId>commons-cli</artifactId>
+      <version>1.10.0</version>
     </dependency>
-    <dependency>
-      <!--reload4j
-            addresses security problems in log4j1-->
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-reload4j</artifactId>
-      <!-- FIXME -->
-      <version>2.0.17</version>
-      <scope>runtime</scope>
-    </dependency>
+
   </dependencies>
 
   <repositories>
