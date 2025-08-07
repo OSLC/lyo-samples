@@ -143,7 +143,7 @@ public class ETMSample {
             String catalogUrl =
                     new RootServicesHelper(webContextUrl, OSLCConstants.OSLC_QM_V2, client)
                             .getCatalogUrl();
-            logger.info(String.format("Using %s catalog URI", catalogUrl));
+            logger.info("Using %s catalog URI".formatted(catalogUrl));
 
             // STEP 5: Find the OSLC Service Provider for the project area we want to work with
             String serviceProviderUrl = client.lookupServiceProviderUrl(catalogUrl, projectArea);
