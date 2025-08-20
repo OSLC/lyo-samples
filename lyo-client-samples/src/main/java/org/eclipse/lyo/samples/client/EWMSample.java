@@ -237,6 +237,7 @@ public class EWMSample {
 
             task.setDctermsTypes(new String[] {"Task"});
 
+            // TODO: clean up when https://github.com/eclipse-lyo/lyo/issues/783 is fixed
             //            task.getExtendedProperties()
             //                    .put(
             //                            new QName(Oslc_cmVocabularyConstants.CHANGE_MANAGEMENT_VOCAB_NAMSPACE,
