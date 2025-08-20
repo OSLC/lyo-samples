@@ -23,6 +23,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -526,7 +527,7 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
 
         assertNotCanceled(request);
 
-        request.setState(new TreeSet<Link>(
+        request.setState(new HashSet<Link>(
                 Arrays.asList(new Link(URI.create(Oslc_autoDomainConstants.AUTOMATION_NAMSPACE + "Complete")))));
 
         request.getExtendedProperties().remove(PROPERTY_RQM_PROGRESS);
@@ -615,7 +616,7 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
 
             request.getExtendedProperties().put(PROPERTY_RQM_TAKEN, Boolean.TRUE);
 
-            request.setState(new TreeSet<Link>(
+            request.setState(new HashSet<Link>(
                     Arrays.asList(new Link(URI.create(Oslc_autoDomainConstants.AUTOMATION_NAMSPACE + "inProgress")))));
 
             updateUri = appendOslcProperties(URI.create(requestUrl), "oslc_auto:state", "rqm_auto:taken");
@@ -1199,7 +1200,7 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
         request.setDesiredState(new Link(URI.create(Oslc_autoDomainConstants.AUTOMATION_NAMSPACE + "Canceled")));
 
         // Some automation providers require the client to set the state to canceled
-        request.setState(new TreeSet<Link>(
+        request.setState(new HashSet<Link>(
                 Arrays.asList(new Link(URI.create(Oslc_autoDomainConstants.AUTOMATION_NAMSPACE + "Canceled")))));
 
         URI updateUri = appendOslcProperties(request.getAbout(), "oslc_auto:state");
