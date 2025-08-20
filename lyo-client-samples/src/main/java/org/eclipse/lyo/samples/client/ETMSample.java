@@ -39,11 +39,12 @@ import org.eclipse.lyo.client.OSLCConstants;
 import org.eclipse.lyo.client.OslcClient;
 import org.eclipse.lyo.client.RootServicesHelper;
 import org.eclipse.lyo.client.exception.RootServicesException;
-import org.eclipse.lyo.client.oslc.resources.TestCase;
-import org.eclipse.lyo.client.oslc.resources.TestResult;
 import org.eclipse.lyo.client.query.OslcQuery;
 import org.eclipse.lyo.client.query.OslcQueryParameters;
 import org.eclipse.lyo.client.query.OslcQueryResult;
+import org.eclipse.lyo.oslc.domains.Oslc_qmVocabularyConstants;
+import org.eclipse.lyo.oslc.domains.qm.TestCase;
+import org.eclipse.lyo.oslc.domains.qm.TestResult;
 import org.eclipse.lyo.oslc4j.core.model.Link;
 import org.eclipse.lyo.oslc4j.core.model.OslcMediaType;
 import org.glassfish.jersey.apache.connector.ApacheClientProperties;
@@ -135,7 +136,9 @@ public class ETMSample {
 
             // STEP 4: Get the URL of the OSLC ChangeManagement service from the rootservices
             // document
-            String catalogUrl = new RootServicesHelper(webContextUrl, OSLCConstants.OSLC_QM_V2, client).getCatalogUrl();
+            String catalogUrl = new RootServicesHelper(
+                            webContextUrl, Oslc_qmVocabularyConstants.QUALITY_MANAGEMENT_NAMSPACE, client)
+                    .getCatalogUrl();
             logger.info("Using %s catalog URI".formatted(catalogUrl));
 
             // STEP 5: Find the OSLC Service Provider for the project area we want to work with
@@ -143,7 +146,9 @@ public class ETMSample {
 
             // STEP 6: Get the Query Capabilities URL so that we can run some OSLC queries
             String queryCapability = client.lookupQueryCapability(
-                    serviceProviderUrl, OSLCConstants.OSLC_QM_V2, OSLCConstants.QM_TEST_RESULT_QUERY);
+                    serviceProviderUrl,
+                    Oslc_qmVocabularyConstants.QUALITY_MANAGEMENT_NAMSPACE,
+                    Oslc_qmVocabularyConstants.TYPE_TESTRESULT);
 
             // SCENARIO A: Run a query for all TestResults with a status of passed with OSLC paging
             // of 10 items per
@@ -154,7 +159,7 @@ public class ETMSample {
 
             System.out.println("Running query: " + query.getQueryUrl());
             OslcQueryResult result = query.submit();
-            result.setMemberProperty(OSLCConstants.OSLC_QM_V2 + "testResult");
+            result.setMemberProperty(Oslc_qmVocabularyConstants.QUALITY_MANAGEMENT_NAMSPACE + "testResult");
 
             boolean processAsJavaObjects = true;
             processPagedQueryResults(result, client, processAsJavaObjects);
@@ -170,7 +175,7 @@ public class ETMSample {
             OslcQuery query2 = new OslcQuery(client, queryCapability, queryParams2);
 
             OslcQueryResult result2 = query2.submit();
-            result2.setMemberProperty(OSLCConstants.OSLC_QM_V2 + "testResult");
+            result2.setMemberProperty(Oslc_qmVocabularyConstants.QUALITY_MANAGEMENT_NAMSPACE + "testResult");
             Response rawResponse = result2.getRawResponse();
             processRawResponse(rawResponse);
 
@@ -184,7 +189,9 @@ public class ETMSample {
 
             // Get the Creation Factory URL for test cases so that we can create a test case
             String testcaseCreation = client.lookupCreationFactory(
-                    serviceProviderUrl, OSLCConstants.OSLC_QM_V2, testcase.getRdfTypes()[0].toString());
+                    serviceProviderUrl,
+                    Oslc_qmVocabularyConstants.QUALITY_MANAGEMENT_NAMSPACE,
+                    Oslc_qmVocabularyConstants.TYPE_TESTCASE);
 
             // Create the test case
             Response creationResponse =

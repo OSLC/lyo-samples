@@ -246,10 +246,9 @@
       <artifactId>httpclient</artifactId>
     </dependency>
     <dependency>
-      <!-- legacy, not planned for BOM -->
-      <groupId>org.eclipse.lyo.clients</groupId>
-      <artifactId>oslc-java-client-resources</artifactId>
-      <version>${v.lyo}</version>
+      <groupId>org.eclipse.lyo</groupId>
+      <artifactId>oslc-domains</artifactId>
+      <version>7.0.0.Alpha3</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.lyo.server</groupId>

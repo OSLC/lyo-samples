@@ -43,14 +43,16 @@ import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.eclipse.lyo.client.JEEFormAuthenticator;
-import org.eclipse.lyo.client.OSLCConstants;
 import org.eclipse.lyo.client.OslcClient;
 import org.eclipse.lyo.client.RootServicesHelper;
 import org.eclipse.lyo.client.exception.RootServicesException;
-import org.eclipse.lyo.client.oslc.resources.ChangeRequest;
 import org.eclipse.lyo.client.query.OslcQuery;
 import org.eclipse.lyo.client.query.OslcQueryParameters;
 import org.eclipse.lyo.client.query.OslcQueryResult;
+import org.eclipse.lyo.oslc.domains.Oslc_cmVocabularyConstants;
+import org.eclipse.lyo.oslc.domains.cm.ChangeRequest;
+import org.eclipse.lyo.oslc.domains.cm.Defect;
+import org.eclipse.lyo.oslc.domains.cm.Task;
 import org.eclipse.lyo.oslc4j.core.model.AllowedValues;
 import org.eclipse.lyo.oslc4j.core.model.CreationFactory;
 import org.eclipse.lyo.oslc4j.core.model.Link;
@@ -170,7 +172,9 @@ public class EWMSample {
             // STEP 4: Get the URL of the OSLC ChangeManagement service from the rootservices
             // document
             log.debug("STEP 4: Get the URL of the OSLC ChangeManagement service from the rootservices" + " document");
-            String catalogUrl = new RootServicesHelper(webContextUrl, OSLCConstants.OSLC_CM_V2, client).getCatalogUrl();
+            String catalogUrl = new RootServicesHelper(
+                            webContextUrl, Oslc_cmVocabularyConstants.CHANGE_MANAGEMENT_VOCAB_NAMSPACE, client)
+                    .getCatalogUrl();
 
             // STEP 5: Find the OSLC Service Provider for the project area we want to work with
             log.debug("STEP 5: Find the OSLC Service Provider for the project area we want to work" + " with");
@@ -179,7 +183,9 @@ public class EWMSample {
             // STEP 6: Get the Query Capabilities URL so that we can run some OSLC queries
             log.debug("STEP 6: Get the Query Capabilities URL so that we can run some OSLC queries");
             String queryCapability = client.lookupQueryCapability(
-                    serviceProviderUrl, OSLCConstants.OSLC_CM_V2, OSLCConstants.CM_CHANGE_REQUEST_TYPE);
+                    serviceProviderUrl,
+                    Oslc_cmVocabularyConstants.CHANGE_MANAGEMENT_VOCAB_NAMSPACE,
+                    Oslc_cmVocabularyConstants.TYPE_CHANGEREQUEST);
 
             // SCENARIO A: Run a query for all open ChangeRequests with OSLC paging of 10 items per
             // page turned on and list the members of the result
@@ -209,20 +215,23 @@ public class EWMSample {
             rawResponse.close();
 
             // SCENARIO C:  EWM task creation and update
-            ChangeRequest task = new ChangeRequest();
+            Task task = new Task();
             task.setTitle("Implement accessibility in Pet Store application");
             task.setDescription("Image elements must provide a description in the 'alt' attribute for"
                     + " consumption by screen readers.");
-            task.addTestedByTestCase(new Link(
-                    new URI("http://qmprovider/testcase/1"), "Accessibility verification using a screen reader"));
-            task.addDctermsType("task");
+            task.getExtendedProperties()
+                    .put(
+                            new QName(Oslc_cmVocabularyConstants.CHANGE_MANAGEMENT_VOCAB_NAMSPACE, "testedByTestCase"),
+                            new Link(
+                                    new URI("http://qmprovider/testcase/1"),
+                                    "Accessibility verification using a screen reader"));
 
             // Get the Creation Factory URL for task change requests so that we can create one
             CreationFactory taskCreation = client.lookupCreationFactoryResource(
                     serviceProviderUrl,
-                    OSLCConstants.OSLC_CM_V2,
-                    task.getRdfTypes()[0].toString(),
-                    OSLCConstants.OSLC_CM_V2 + "task");
+                    Oslc_cmVocabularyConstants.CHANGE_MANAGEMENT_VOCAB_NAMSPACE,
+                    Oslc_cmVocabularyConstants.TYPE_TASK,
+                    Oslc_cmVocabularyConstants.CHANGE_MANAGEMENT_VOCAB_NAMSPACE + Oslc_cmVocabularyConstants.TASK);
             String factoryUrl = taskCreation.getCreation().toString();
 
             // Determine what to use for the Filed Against attribute by requesting the resource
@@ -255,7 +264,7 @@ public class EWMSample {
             System.out.println("Task created at location " + changeRequestLocation);
 
             // Get the change request from the service provider and update its title property
-            task = client.getResource(changeRequestLocation).readEntity(ChangeRequest.class);
+            task = client.getResource(changeRequestLocation).readEntity(Task.class);
             task.setTitle(task.getTitle() + " (updated)");
 
             // Create a partial update URL so that only the title will be updated.
@@ -269,19 +278,21 @@ public class EWMSample {
             updateResponse.readEntity(String.class);
 
             // SCENARIO D:  RTC defect creation
-            ChangeRequest defect = new ChangeRequest();
+            Defect defect = new Defect();
             defect.setTitle("Error logging in");
             defect.setDescription(
                     "An error occurred when I tried to log in with a user ID that contained the '@'" + " symbol.");
-            defect.addTestedByTestCase(new Link(new URI("http://qmprovider/testcase/3"), "Global Verifcation Test"));
-            defect.addDctermsType("defect");
+            defect.getExtendedProperties()
+                    .put(
+                            new QName(Oslc_cmVocabularyConstants.CHANGE_MANAGEMENT_VOCAB_NAMSPACE, "testedByTestCase"),
+                            new Link(new URI("http://qmprovider/testcase/3"), "Global Verifcation Test"));
 
             // Get the Creation Factory URL for change requests so that we can create one
             CreationFactory defectCreation = client.lookupCreationFactoryResource(
                     serviceProviderUrl,
-                    OSLCConstants.OSLC_CM_V2,
-                    defect.getRdfTypes()[0].toString(),
-                    OSLCConstants.OSLC_CM_V2 + "defect");
+                    Oslc_cmVocabularyConstants.CHANGE_MANAGEMENT_VOCAB_NAMSPACE,
+                    Oslc_cmVocabularyConstants.TYPE_DEFECT,
+                    Oslc_cmVocabularyConstants.CHANGE_MANAGEMENT_VOCAB_NAMSPACE + Oslc_cmVocabularyConstants.DEFECT);
             factoryUrl = defectCreation.getCreation().toString();
 
             // Determine what to use for the Filed Against attribute by requesting the resource

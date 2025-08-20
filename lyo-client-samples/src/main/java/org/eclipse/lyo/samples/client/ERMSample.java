@@ -26,7 +26,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeSet;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -49,13 +53,14 @@ import org.eclipse.lyo.client.OslcClient;
 import org.eclipse.lyo.client.RootServicesHelper;
 import org.eclipse.lyo.client.exception.ResourceNotFoundException;
 import org.eclipse.lyo.client.exception.RootServicesException;
-import org.eclipse.lyo.client.oslc.resources.Requirement;
-import org.eclipse.lyo.client.oslc.resources.RequirementCollection;
-import org.eclipse.lyo.client.oslc.resources.RmConstants;
 import org.eclipse.lyo.client.query.OslcQuery;
 import org.eclipse.lyo.client.query.OslcQueryParameters;
 import org.eclipse.lyo.client.query.OslcQueryResult;
-import org.eclipse.lyo.client.resources.RmUtil;
+import org.eclipse.lyo.oslc.domains.DctermsVocabularyConstants;
+import org.eclipse.lyo.oslc.domains.Oslc_rmVocabularyConstants;
+import org.eclipse.lyo.oslc.domains.RdfVocabularyConstants;
+import org.eclipse.lyo.oslc.domains.rm.Requirement;
+import org.eclipse.lyo.oslc.domains.rm.RequirementCollection;
 import org.eclipse.lyo.oslc4j.core.OSLC4JUtils;
 import org.eclipse.lyo.oslc4j.core.model.*;
 import org.glassfish.jersey.apache.connector.ApacheClientProperties;
@@ -75,10 +80,10 @@ import org.w3c.dom.Element;
 @Slf4j
 public class ERMSample {
 
+    private static final String JAZZ_RM_NAMESPACE = "http://jazz.net/xmlns/rm/1.0/";
     // Following is a workaround for primaryText issue in DNG ( it is PrimaryText instead of
     // primaryText
-    private static final QName PROPERTY_PRIMARY_TEXT_WORKAROUND =
-            new QName(RmConstants.JAZZ_RM_NAMESPACE, "PrimaryText");
+    private static final QName PROPERTY_PRIMARY_TEXT_WORKAROUND = new QName(JAZZ_RM_NAMESPACE, "PrimaryText");
 
     /**
      * Login to the ERM server and perform some OSLC actions
@@ -158,20 +163,28 @@ public class ERMSample {
 
             // STEP 4: Get the URL of the OSLC ChangeManagement service from the rootservices
             // document
-            String catalogUrl = new RootServicesHelper(webContextUrl, OSLCConstants.OSLC_RM_V2, client).getCatalogUrl();
+            String catalogUrl = new RootServicesHelper(
+                            webContextUrl,
+                            Oslc_rmVocabularyConstants.REQUIREMENTS_MANAGEMENT_VOCABULARY_NAMSPACE,
+                            client)
+                    .getCatalogUrl();
 
             // STEP 5: Find the OSLC Service Provider for the project area we want to work with
             String serviceProviderUrl = client.lookupServiceProviderUrl(catalogUrl, projectArea);
 
             // STEP 6: Get the Query Capabilities URL so that we can run some OSLC queries
             String queryCapability = client.lookupQueryCapability(
-                    serviceProviderUrl, OSLCConstants.OSLC_RM_V2, OSLCConstants.RM_REQUIREMENT_TYPE);
+                    serviceProviderUrl,
+                    Oslc_rmVocabularyConstants.REQUIREMENTS_MANAGEMENT_VOCABULARY_NAMSPACE,
+                    Oslc_rmVocabularyConstants.TYPE_REQUIREMENT);
 
             // STEP 7: Create base requirements
             // Get the Creation Factory URL for change requests so that we can create one
 
             String requirementFactory = client.lookupCreationFactory(
-                    serviceProviderUrl, OSLCConstants.OSLC_RM_V2, OSLCConstants.RM_REQUIREMENT_TYPE);
+                    serviceProviderUrl,
+                    Oslc_rmVocabularyConstants.REQUIREMENTS_MANAGEMENT_VOCABULARY_NAMSPACE,
+                    Oslc_rmVocabularyConstants.TYPE_REQUIREMENT);
 
             // Get Feature Requirement Type URL
             ResourceShape featureInstanceShape = null;
@@ -180,8 +193,8 @@ public class ERMSample {
                 try {
                     featureInstanceShape = lookupRequirementsInstanceShapes(
                             serviceProviderUrl,
-                            OSLCConstants.OSLC_RM_V2,
-                            OSLCConstants.RM_REQUIREMENT_TYPE,
+                            Oslc_rmVocabularyConstants.REQUIREMENTS_MANAGEMENT_VOCABULARY_NAMSPACE,
+                            Oslc_rmVocabularyConstants.TYPE_REQUIREMENT,
                             client,
                             "Feature",
                             null);
@@ -191,19 +204,20 @@ public class ERMSample {
                     // Feature shape is not defined if SAFe framework is used
                     featureInstanceShape = lookupRequirementsInstanceShapes(
                             serviceProviderUrl,
-                            OSLCConstants.OSLC_RM_V2,
-                            OSLCConstants.RM_REQUIREMENT_TYPE,
+                            Oslc_rmVocabularyConstants.REQUIREMENTS_MANAGEMENT_VOCABULARY_NAMSPACE,
+                            Oslc_rmVocabularyConstants.TYPE_REQUIREMENT,
                             client,
                             "User Requirement",
                             null);
                 }
 
-                collectionInstanceShape = RmUtil.lookupRequirementsInstanceShapes(
+                collectionInstanceShape = lookupRequirementsInstanceShapes(
                         serviceProviderUrl,
-                        OSLCConstants.OSLC_RM_V2,
-                        OSLCConstants.RM_REQUIREMENT_COLLECTION_TYPE,
+                        Oslc_rmVocabularyConstants.REQUIREMENTS_MANAGEMENT_VOCABULARY_NAMSPACE,
+                        Oslc_rmVocabularyConstants.TYPE_REQUIREMENTCOLLECTION,
                         client,
-                        "Collection");
+                        "Collection",
+                        null);
 
                 // We need to use Resource shapes to properly handle date attributes,
                 // so they aren't interpreted as dateTime.
@@ -239,13 +253,14 @@ public class ERMSample {
                 } else {
                     // Create REQ01
                     requirement = new Requirement();
-                    requirement.setInstanceShape(featureInstanceShape.getAbout());
+                    requirement.setInstanceShape(
+                            new TreeSet<Link>(Arrays.asList(new Link(featureInstanceShape.getAbout()))));
                     requirement.setTitle("Req01");
 
                     // Decorate the PrimaryText
                     primaryText = "My Primary Text";
                     org.w3c.dom.Element obj = convertStringToHTML(primaryText);
-                    requirement.getExtendedProperties().put(RmConstants.PROPERTY_PRIMARY_TEXT, obj);
+                    requirement.getExtendedProperties().put(new QName(JAZZ_RM_NAMESPACE, "primaryText"), obj);
 
                     requirement.setDescription("Created By EclipseLyo");
                     requirement.addImplementedBy(new Link(new URI("http://google.com"), "Link in REQ01"));
@@ -263,7 +278,8 @@ public class ERMSample {
 
                     // Create REQ02
                     requirement = new Requirement();
-                    requirement.setInstanceShape(featureInstanceShape.getAbout());
+                    requirement.setInstanceShape(
+                            new TreeSet<Link>(Arrays.asList(new Link(featureInstanceShape.getAbout()))));
                     requirement.setTitle("Req02");
                     requirement.setDescription("Created By EclipseLyo");
                     requirement.addValidatedBy(new Link(new URI("http://bancomer.com"), "Link in REQ02"));
@@ -281,7 +297,8 @@ public class ERMSample {
 
                     // Create REQ03
                     requirement = new Requirement();
-                    requirement.setInstanceShape(featureInstanceShape.getAbout());
+                    requirement.setInstanceShape(
+                            new TreeSet<Link>(Arrays.asList(new Link(featureInstanceShape.getAbout()))));
                     requirement.setTitle("Req03");
                     requirement.setDescription("Created By EclipseLyo");
                     requirement.addValidatedBy(new Link(new URI("http://outlook.com"), "Link in REQ03"));
@@ -299,7 +316,8 @@ public class ERMSample {
 
                     // Create REQ04
                     requirement = new Requirement();
-                    requirement.setInstanceShape(featureInstanceShape.getAbout());
+                    requirement.setInstanceShape(
+                            new TreeSet<Link>(Arrays.asList(new Link(featureInstanceShape.getAbout()))));
                     requirement.setTitle("Req04");
                     requirement.setDescription("Created By EclipseLyo");
 
@@ -319,11 +337,12 @@ public class ERMSample {
                     // Create REQ04
                     collection = new RequirementCollection();
 
-                    collection.addUses(new URI(req03URL));
-                    collection.addUses(new URI(req04URL));
+                    collection.addUses(new Link(new URI(req03URL)));
+                    collection.addUses(new Link(new URI(req04URL)));
 
                     if (collectionInstanceShape != null) {
-                        collection.setInstanceShape(collectionInstanceShape.getAbout());
+                        collection.setInstanceShape(
+                                new TreeSet<Link>(Arrays.asList(new Link(collectionInstanceShape.getAbout()))));
                     }
                     collection.setTitle("Collection01");
                     collection.setDescription("Created By EclipseLyo");
@@ -370,9 +389,10 @@ public class ERMSample {
             }
 
             // Save the URI of the root folder in order to used it easily
-            rootFolder = (URI) requirement.getExtendedProperties().get(RmConstants.PROPERTY_PARENT_FOLDER);
+            rootFolder =
+                    ((Link) requirement.getExtendedProperties().get(new QName(JAZZ_RM_NAMESPACE, "parent"))).getValue();
             Object changedPrimaryText =
-                    (Object) requirement.getExtendedProperties().get(RmConstants.PROPERTY_PRIMARY_TEXT);
+                    (Object) requirement.getExtendedProperties().get(new QName(JAZZ_RM_NAMESPACE, "primaryText"));
             if (changedPrimaryText == null) {
                 // Check with the workaround
                 changedPrimaryText =
@@ -391,8 +411,8 @@ public class ERMSample {
             // QUERIES
             // SCENARIO 01  Do a query for type= Requirement
             OslcQueryParameters queryParams = new OslcQueryParameters();
-            queryParams.setPrefix("rdf=<http://www.w3.org/1999/02/22-rdf-syntax-ns#>");
-            queryParams.setWhere("rdf:type=<http://open-services.net/ns/rm#Requirement>");
+            queryParams.setPrefix("rdf=<" + RdfVocabularyConstants.RDF_NAMSPACE + ">");
+            queryParams.setWhere("rdf:type=<" + Oslc_rmVocabularyConstants.TYPE_REQUIREMENT + ">");
             OslcQuery query = new OslcQuery(client, queryCapability, 10, queryParams);
             OslcQueryResult result = query.submit();
             result.getRawResponse().bufferEntity();
@@ -406,9 +426,9 @@ public class ERMSample {
             // rootFolder
             queryParams = new OslcQueryParameters();
             queryParams.setPrefix(
-                    "nav=<http://com.ibm.rdm/navigation#>,rdf=<http://www.w3.org/1999/02/22-rdf-syntax-ns#>");
-            queryParams.setWhere(
-                    "rdf:type=<http://open-services.net/ns/rm#Requirement> and nav:parent=<" + rootFolder + ">");
+                    "nav=<http://com.ibm.rdm/navigation#>,rdf=<" + RdfVocabularyConstants.RDF_NAMSPACE + ">");
+            queryParams.setWhere("rdf:type=<" + Oslc_rmVocabularyConstants.TYPE_REQUIREMENT + "> and nav:parent=<"
+                    + rootFolder + ">");
             query = new OslcQuery(client, queryCapability, 10, queryParams);
             result = query.submit();
             processAsJavaObjects = false;
@@ -420,7 +440,7 @@ public class ERMSample {
 
             // SCENARIO 03	Do a query for title
             queryParams = new OslcQueryParameters();
-            queryParams.setPrefix("dcterms=<http://purl.org/dc/terms/>");
+            queryParams.setPrefix("dcterms=<" + DctermsVocabularyConstants.DUBLIN_CORE_NAMSPACE + ">");
             queryParams.setWhere("dcterms:title=\"Req04\"");
             query = new OslcQuery(client, queryCapability, 10, queryParams);
             result = query.submit();
@@ -433,7 +453,8 @@ public class ERMSample {
 
             // SCENARIO 04	Do a query for the link that is implemented
             queryParams = new OslcQueryParameters();
-            queryParams.setPrefix("oslc_rm=<http://open-services.net/ns/rm#>");
+            queryParams.setPrefix(
+                    "oslc_rm=<" + Oslc_rmVocabularyConstants.REQUIREMENTS_MANAGEMENT_VOCABULARY_NAMSPACE + ">");
             queryParams.setWhere("oslc_rm:implementedBy=<http://google.com>");
             query = new OslcQuery(client, queryCapability, 10, queryParams);
             result = query.submit();
@@ -446,7 +467,8 @@ public class ERMSample {
 
             // SCENARIO 05	Do a query for the links that is validated
             queryParams = new OslcQueryParameters();
-            queryParams.setPrefix("oslc_rm=<http://open-services.net/ns/rm#>");
+            queryParams.setPrefix(
+                    "oslc_rm=<" + Oslc_rmVocabularyConstants.REQUIREMENTS_MANAGEMENT_VOCABULARY_NAMSPACE + ">");
             queryParams.setWhere("oslc_rm:validatedBy in [<http://bancomer.com>,<http://outlook.com>]");
             query = new OslcQuery(client, queryCapability, 10, queryParams);
             result = query.submit();
@@ -459,7 +481,8 @@ public class ERMSample {
 
             // SCENARIO 06 Do a query for it container folder and for the link that is implemented
             queryParams = new OslcQueryParameters();
-            queryParams.setPrefix("nav=<http://com.ibm.rdm/navigation#>,oslc_rm=<http://open-services.net/ns/rm#>");
+            queryParams.setPrefix("nav=<http://com.ibm.rdm/navigation#>,oslc_rm=<"
+                    + Oslc_rmVocabularyConstants.REQUIREMENTS_MANAGEMENT_VOCABULARY_NAMSPACE + ">");
             queryParams.setWhere("nav:parent=<" + rootFolder + "> and oslc_rm:validatedBy=<http://bancomer.com>");
             query = new OslcQuery(client, queryCapability, 10, queryParams);
             result = query.submit();
@@ -487,7 +510,7 @@ public class ERMSample {
             /*Do a query in order to see if the requirement have changed*/
             // SCENARIO 07 Do a query for the new title just changed
             queryParams = new OslcQueryParameters();
-            queryParams.setPrefix("dcterms=<http://purl.org/dc/terms/>");
+            queryParams.setPrefix("dcterms=<" + DctermsVocabularyConstants.DUBLIN_CORE_NAMSPACE + ">");
             queryParams.setWhere("dcterms:title=\"My new Title\"");
             query = new OslcQuery(client, queryCapability, 10, queryParams);
             result = query.submit();
@@ -500,7 +523,8 @@ public class ERMSample {
 
             // SCENARIO 08	Do a query for implementedBy links
             queryParams = new OslcQueryParameters();
-            queryParams.setPrefix("oslc_rm=<http://open-services.net/ns/rm#>");
+            queryParams.setPrefix(
+                    "oslc_rm=<" + Oslc_rmVocabularyConstants.REQUIREMENTS_MANAGEMENT_VOCABULARY_NAMSPACE + ">");
             queryParams.setWhere("oslc_rm:implementedBy=<http://google.com>");
             query = new OslcQuery(client, queryCapability, 10, queryParams);
             result = query.submit();
@@ -519,11 +543,13 @@ public class ERMSample {
         }
     }
 
+    private static final String NAMESPACE_URI_XHTML = "http://www.w3.org/1999/xhtml";
+
     private static Element convertStringToHTML(String primaryText) {
         try {
             Document document =
                     DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-            Element divElement = document.createElementNS(RmConstants.NAMESPACE_URI_XHTML, "div");
+            Element divElement = document.createElementNS(NAMESPACE_URI_XHTML, "div");
             divElement.setTextContent(primaryText);
             return divElement;
         } catch (ParserConfigurationException e) {
