@@ -28,7 +28,6 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.namespace.QName;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.CommandLine;
@@ -91,9 +90,9 @@ public class EWMSample {
      * @throws ParseException
      */
     public static void main(String[] args) throws ParseException {
-        
+
         SLF4JBridgeHandler.install();
-        
+
         Options options = new Options();
 
         options.addOption("url", true, "url");
@@ -172,12 +171,11 @@ public class EWMSample {
                 log.info("Using JAS (Forms) authentication");
             }
 
-            if (log.isDebugEnabled()) {
+            if (log.isTraceEnabled()) {
                 var clientLogger = java.util.logging.Logger.getLogger("");
                 clientLogger.setLevel(Level.FINEST);
-                clientBuilder.register(new LoggingFeature(clientLogger, Level.INFO,
-                        LoggingFeature.Verbosity.PAYLOAD_ANY,
-                        null));
+                clientBuilder.register(
+                        new LoggingFeature(clientLogger, Level.INFO, LoggingFeature.Verbosity.PAYLOAD_ANY, null));
             }
 
             // STEP 3: Create a new OslcClient
@@ -256,8 +254,9 @@ public class EWMSample {
             CreationFactory taskCreation = client.lookupCreationFactoryResource(
                     serviceProviderUrl,
                     Oslc_cmVocabularyConstants.CHANGE_MANAGEMENT_VOCAB_NAMSPACE,
-                    Oslc_cmVocabularyConstants.TYPE_TASK,
-                    Oslc_cmVocabularyConstants.CHANGE_MANAGEMENT_VOCAB_NAMSPACE + Oslc_cmVocabularyConstants.TASK);
+                    Oslc_cmVocabularyConstants.TYPE_CHANGEREQUEST,
+                    // not capital Task - this is a usage, not a type
+                    Oslc_cmVocabularyConstants.CHANGE_MANAGEMENT_VOCAB_NAMSPACE + "task");
             String factoryUrl = taskCreation.getCreation().toString();
 
             // Determine what to use for the Filed Against attribute by requesting the resource
@@ -320,7 +319,7 @@ public class EWMSample {
             defect.getExtendedProperties()
                     .put(
                             new QName(Oslc_cmVocabularyConstants.CHANGE_MANAGEMENT_VOCAB_NAMSPACE, "testedByTestCase"),
-                            new Link(new URI("http://qmprovider/testcase/3"), "Global Verifcation Test"));
+                            new URI("http://qmprovider/testcase/3"));
 
             // Get the Creation Factory URL for change requests so that we can create one
             CreationFactory defectCreation = client.lookupCreationFactoryResource(
