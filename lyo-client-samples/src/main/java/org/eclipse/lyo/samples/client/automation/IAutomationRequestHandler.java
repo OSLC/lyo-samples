@@ -15,8 +15,8 @@
  */
 package org.eclipse.lyo.samples.client.automation;
 
-import org.eclipse.lyo.client.oslc.resources.AutomationRequest;
-import org.eclipse.lyo.client.oslc.resources.AutomationResult;
+import org.eclipse.lyo.oslc.domains.auto.AutomationRequest;
+import org.eclipse.lyo.oslc.domains.auto.AutomationResult;
 
 public interface IAutomationRequestHandler {
 
