@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import javax.xml.namespace.QName;
 import lombok.extern.slf4j.Slf4j;
@@ -49,6 +50,7 @@ import org.eclipse.lyo.client.exception.RootServicesException;
 import org.eclipse.lyo.client.query.OslcQuery;
 import org.eclipse.lyo.client.query.OslcQueryParameters;
 import org.eclipse.lyo.client.query.OslcQueryResult;
+import org.eclipse.lyo.oslc.domains.DctermsDomainConstants;
 import org.eclipse.lyo.oslc.domains.Oslc_cmVocabularyConstants;
 import org.eclipse.lyo.oslc.domains.cm.ChangeRequest;
 import org.eclipse.lyo.oslc.domains.cm.Defect;
@@ -60,6 +62,7 @@ import org.eclipse.lyo.oslc4j.core.model.OslcMediaType;
 import org.eclipse.lyo.oslc4j.core.model.Property;
 import org.eclipse.lyo.oslc4j.core.model.ResourceShape;
 import org.eclipse.lyo.oslc4j.provider.jena.AbstractOslcRdfXmlProvider;
+import org.eclipse.lyo.oslc4j.provider.jena.JenaModelHelper;
 import org.glassfish.jersey.apache.connector.ApacheClientProperties;
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
@@ -215,16 +218,17 @@ public class EWMSample {
             rawResponse.close();
 
             // SCENARIO C:  EWM task creation and update
-            Task task = new Task();
+            var task = new ChangeRequest();
             task.setTitle("Implement accessibility in Pet Store application");
             task.setDescription("Image elements must provide a description in the 'alt' attribute for"
                     + " consumption by screen readers.");
             task.getExtendedProperties()
+                    .put(new QName(DctermsDomainConstants.DUBLIN_CORE_NAMSPACE, "type"), Set.of("Task"));
+
+            task.getExtendedProperties()
                     .put(
                             new QName(Oslc_cmVocabularyConstants.CHANGE_MANAGEMENT_VOCAB_NAMSPACE, "testedByTestCase"),
-                            new Link(
-                                    new URI("http://qmprovider/testcase/1"),
-                                    "Accessibility verification using a screen reader"));
+                            new URI("http://qmprovider/testcase/1"));
 
             // Get the Creation Factory URL for task change requests so that we can create one
             CreationFactory taskCreation = client.lookupCreationFactoryResource(
@@ -249,6 +253,15 @@ public class EWMSample {
                 AllowedValues allowedValues = allowedValuesResponse.readEntity(AllowedValues.class);
                 Object[] values = allowedValues.getValues().toArray();
                 task.getExtendedProperties().put(new QName(RTC_NAMESPACE, RTC_FILED_AGAINST), (URI) values[0]);
+            } else {
+                log.warn("RTC_FILED_AGAINST was not found in the shape for the creation factory for tasks");
+            }
+
+            if (log.isDebugEnabled()) {
+                var model = JenaModelHelper.createJenaModel(new Object[] {task});
+                model.write(System.out, "RDFXML");
+                
+                System.out.println();
             }
 
             // Create the change request

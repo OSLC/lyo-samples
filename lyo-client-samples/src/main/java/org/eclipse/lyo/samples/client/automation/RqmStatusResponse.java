@@ -31,7 +31,7 @@ import org.eclipse.lyo.oslc4j.core.model.ValueType;
 @Slf4j
 @OslcResourceShape(title = "Status Response Resource Shape", describes = IConstants.TYPE_STATUS_RESPONSE)
 @OslcNamespace(IConstants.NAMESPACE_URI_JAZZ_AUTO_RQM)
-public class StatusResponse extends AbstractResource implements IConstants {
+public class RqmStatusResponse extends AbstractResource implements IConstants {
 
     /** Starting value for normal informational status message */
     public static final int STATUS_INFORMATIONAL = 100;
@@ -56,12 +56,12 @@ public class StatusResponse extends AbstractResource implements IConstants {
      *
      * @param statusCode
      * @param status
-     * @see @link {@link StatusResponse#STATUS_INFORMATIONAL}
-     * @see @link {@link StatusResponse#STATUS_OK}
-     * @see @link {@link StatusResponse#STATUS_WARNING}
-     * @see @link {@link StatusResponse#STATUS_ERROR}
+     * @see @link {@link RqmStatusResponse#STATUS_INFORMATIONAL}
+     * @see @link {@link RqmStatusResponse#STATUS_OK}
+     * @see @link {@link RqmStatusResponse#STATUS_WARNING}
+     * @see @link {@link RqmStatusResponse#STATUS_ERROR}
      */
-    public StatusResponse(int statusCode, String status) {
+    public RqmStatusResponse(int statusCode, String status) {
         this.status = status;
         setStatusCode(statusCode);
     }
@@ -79,10 +79,10 @@ public class StatusResponse extends AbstractResource implements IConstants {
      * Set the status code for this response. The expected range is 100-599.
      *
      * @param statusCode
-     * @see @link {@link StatusResponse#STATUS_INFORMATIONAL}
-     * @see @link {@link StatusResponse#STATUS_OK}
-     * @see @link {@link StatusResponse#STATUS_WARNING}
-     * @see @link {@link StatusResponse#STATUS_ERROR}
+     * @see @link {@link RqmStatusResponse#STATUS_INFORMATIONAL}
+     * @see @link {@link RqmStatusResponse#STATUS_OK}
+     * @see @link {@link RqmStatusResponse#STATUS_WARNING}
+     * @see @link {@link RqmStatusResponse#STATUS_ERROR}
      */
     public void setStatusCode(int statusCode) {
         this.statusCode = statusCode;

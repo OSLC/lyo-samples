@@ -176,11 +176,11 @@ public class ETMAutomationSample implements IConstants, IAutomationRequestHandle
             // An example of how to get the script for the AutomationRequest.
             // The script might contain references to resources needed to
             // execute the test.
-            adapter.sendMessageForRequest(new Message("LYO_1", "Downloading script document"), request);
+            adapter.sendMessageForRequest(new RqmMessage("LYO_1", "Downloading script document"), request);
 
             Document script = adapter.getScriptDocument(request);
 
-            adapter.sendMessageForRequest(new Message("LYO_2", "Script document successfully downloaded"), request);
+            adapter.sendMessageForRequest(new RqmMessage("LYO_2", "Script document successfully downloaded"), request);
 
             // update progress indication
             adapter.sendProgressForRequest(50, request);
@@ -270,8 +270,8 @@ public class ETMAutomationSample implements IConstants, IAutomationRequestHandle
         Thread.sleep(1000);
 
         // Update the request status
-        StatusResponse statusResponse =
-                new StatusResponse(StatusResponse.STATUS_OK, "Script '" + scriptTitle + "' was executed successfully.");
+        RqmStatusResponse statusResponse = new RqmStatusResponse(
+                RqmStatusResponse.STATUS_OK, "Script '" + scriptTitle + "' was executed successfully.");
 
         adapter.sendStatusForRequest(statusResponse, request);
     }

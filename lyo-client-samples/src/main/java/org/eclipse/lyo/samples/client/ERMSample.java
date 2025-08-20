@@ -28,9 +28,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeSet;
+import java.util.Optional;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -238,7 +239,7 @@ public class ERMSample {
 
             Requirement requirement = null;
             RequirementCollection collection = null;
-            URI rootFolder = null;
+            Optional<Link> rootFolder = Optional.empty();
 
             String req01URL = null;
             String req02URL = null;
@@ -254,7 +255,7 @@ public class ERMSample {
                     // Create REQ01
                     requirement = new Requirement();
                     requirement.setInstanceShape(
-                            new TreeSet<Link>(Arrays.asList(new Link(featureInstanceShape.getAbout()))));
+                            new HashSet<Link>(Arrays.asList(new Link(featureInstanceShape.getAbout()))));
                     requirement.setTitle("Req01");
 
                     // Decorate the PrimaryText
@@ -271,7 +272,8 @@ public class ERMSample {
                             OslcMediaType.APPLICATION_RDF_XML,
                             OslcMediaType.APPLICATION_RDF_XML)) {
                         if (creationResponse.getStatus() == Response.Status.FORBIDDEN.getStatusCode()) {
-                            throw new IllegalStateException("Server is refusing the requests on security grounds.");
+                            throw new IllegalStateException("Server is refusing the requests on security grounds:\n"
+                                    + creationResponse.readEntity(String.class));
                         }
                         req01URL = creationResponse.getStringHeaders().getFirst(HttpHeaders.LOCATION);
                     }
@@ -279,7 +281,7 @@ public class ERMSample {
                     // Create REQ02
                     requirement = new Requirement();
                     requirement.setInstanceShape(
-                            new TreeSet<Link>(Arrays.asList(new Link(featureInstanceShape.getAbout()))));
+                            new HashSet<Link>(Arrays.asList(new Link(featureInstanceShape.getAbout()))));
                     requirement.setTitle("Req02");
                     requirement.setDescription("Created By EclipseLyo");
                     requirement.addValidatedBy(new Link(new URI("http://bancomer.com"), "Link in REQ02"));
@@ -290,7 +292,8 @@ public class ERMSample {
                             OslcMediaType.APPLICATION_RDF_XML,
                             OslcMediaType.APPLICATION_RDF_XML)) {
                         if (creationResponse.getStatus() == Response.Status.FORBIDDEN.getStatusCode()) {
-                            throw new IllegalStateException("Server is refusing the requests on security grounds.");
+                            throw new IllegalStateException("Server is refusing the requests on security grounds:\n"
+                                    + creationResponse.readEntity(String.class));
                         }
                         req02URL = creationResponse.getStringHeaders().getFirst(HttpHeaders.LOCATION);
                     }
@@ -298,7 +301,7 @@ public class ERMSample {
                     // Create REQ03
                     requirement = new Requirement();
                     requirement.setInstanceShape(
-                            new TreeSet<Link>(Arrays.asList(new Link(featureInstanceShape.getAbout()))));
+                            new HashSet<Link>(Arrays.asList(new Link(featureInstanceShape.getAbout()))));
                     requirement.setTitle("Req03");
                     requirement.setDescription("Created By EclipseLyo");
                     requirement.addValidatedBy(new Link(new URI("http://outlook.com"), "Link in REQ03"));
@@ -317,7 +320,7 @@ public class ERMSample {
                     // Create REQ04
                     requirement = new Requirement();
                     requirement.setInstanceShape(
-                            new TreeSet<Link>(Arrays.asList(new Link(featureInstanceShape.getAbout()))));
+                            new HashSet<Link>(Arrays.asList(new Link(featureInstanceShape.getAbout()))));
                     requirement.setTitle("Req04");
                     requirement.setDescription("Created By EclipseLyo");
 
@@ -342,7 +345,7 @@ public class ERMSample {
 
                     if (collectionInstanceShape != null) {
                         collection.setInstanceShape(
-                                new TreeSet<Link>(Arrays.asList(new Link(collectionInstanceShape.getAbout()))));
+                                new HashSet<Link>(Arrays.asList(new Link(collectionInstanceShape.getAbout()))));
                     }
                     collection.setTitle("Collection01");
                     collection.setDescription("Created By EclipseLyo");
@@ -389,8 +392,8 @@ public class ERMSample {
             }
 
             // Save the URI of the root folder in order to used it easily
-            rootFolder =
-                    ((Link) requirement.getExtendedProperties().get(new QName(JAZZ_RM_NAMESPACE, "parent"))).getValue();
+            rootFolder = Optional.ofNullable(
+                    ((Link) requirement.getExtendedProperties().get(new QName(JAZZ_RM_NAMESPACE, "parent"))));
             Object changedPrimaryText =
                     (Object) requirement.getExtendedProperties().get(new QName(JAZZ_RM_NAMESPACE, "primaryText"));
             if (changedPrimaryText == null) {
@@ -428,7 +431,7 @@ public class ERMSample {
             queryParams.setPrefix(
                     "nav=<http://com.ibm.rdm/navigation#>,rdf=<" + RdfVocabularyConstants.RDF_NAMSPACE + ">");
             queryParams.setWhere("rdf:type=<" + Oslc_rmVocabularyConstants.TYPE_REQUIREMENT + "> and nav:parent=<"
-                    + rootFolder + ">");
+                    + rootFolder.map(link -> link.getValue().toString()).orElse(null) + ">");
             query = new OslcQuery(client, queryCapability, 10, queryParams);
             result = query.submit();
             processAsJavaObjects = false;
@@ -483,7 +486,9 @@ public class ERMSample {
             queryParams = new OslcQueryParameters();
             queryParams.setPrefix("nav=<http://com.ibm.rdm/navigation#>,oslc_rm=<"
                     + Oslc_rmVocabularyConstants.REQUIREMENTS_MANAGEMENT_VOCABULARY_NAMSPACE + ">");
-            queryParams.setWhere("nav:parent=<" + rootFolder + "> and oslc_rm:validatedBy=<http://bancomer.com>");
+            queryParams.setWhere("nav:parent=<"
+                    + rootFolder.map(link -> link.getValue().toString()).orElse(null)
+                    + "> and oslc_rm:validatedBy=<http://bancomer.com>");
             query = new OslcQuery(client, queryCapability, 10, queryParams);
             result = query.submit();
             result.getRawResponse().bufferEntity();

@@ -29,7 +29,7 @@ import org.eclipse.lyo.oslc4j.core.model.ValueType;
 
 @OslcResourceShape(title = "Message Resource Shape", describes = IConstants.TYPE_MESSAGE)
 @OslcNamespace(IConstants.NAMESPACE_URI_JAZZ_AUTO_RQM)
-public class Message extends AbstractResource implements IConstants {
+public class RqmMessage extends AbstractResource implements IConstants {
 
     @Setter
     private String name;
@@ -43,7 +43,7 @@ public class Message extends AbstractResource implements IConstants {
      * @param name Name or ID of the message. Cannot be null.
      * @param value The actual message content. Cannot be null.
      */
-    public Message(String name, String value) {
+    public RqmMessage(String name, String value) {
         assert name != null;
         assert value != null;
 

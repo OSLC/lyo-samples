@@ -1091,7 +1091,7 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
      * @throws AutomationException
      * @throws IOException
      */
-    public void sendStatusForRequest(StatusResponse statusResponse, AutomationRequest request)
+    public void sendStatusForRequest(RqmStatusResponse statusResponse, AutomationRequest request)
             throws AutomationException, IOException, URISyntaxException {
 
         if (client == null) {
@@ -1141,7 +1141,7 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
      * @throws AutomationException
      * @throws IOException
      */
-    public void sendMessageForRequest(Message message, AutomationRequest request)
+    public void sendMessageForRequest(RqmMessage message, AutomationRequest request)
             throws AutomationException, IOException, URISyntaxException {
 
         if (client == null) {
