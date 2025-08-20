@@ -26,8 +26,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.namespace.QName;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.CommandLine;
@@ -50,11 +51,9 @@ import org.eclipse.lyo.client.exception.RootServicesException;
 import org.eclipse.lyo.client.query.OslcQuery;
 import org.eclipse.lyo.client.query.OslcQueryParameters;
 import org.eclipse.lyo.client.query.OslcQueryResult;
-import org.eclipse.lyo.oslc.domains.DctermsDomainConstants;
 import org.eclipse.lyo.oslc.domains.Oslc_cmVocabularyConstants;
 import org.eclipse.lyo.oslc.domains.cm.ChangeRequest;
 import org.eclipse.lyo.oslc.domains.cm.Defect;
-import org.eclipse.lyo.oslc.domains.cm.Task;
 import org.eclipse.lyo.oslc4j.core.model.AllowedValues;
 import org.eclipse.lyo.oslc4j.core.model.CreationFactory;
 import org.eclipse.lyo.oslc4j.core.model.Link;
@@ -63,12 +62,15 @@ import org.eclipse.lyo.oslc4j.core.model.Property;
 import org.eclipse.lyo.oslc4j.core.model.ResourceShape;
 import org.eclipse.lyo.oslc4j.provider.jena.AbstractOslcRdfXmlProvider;
 import org.eclipse.lyo.oslc4j.provider.jena.JenaModelHelper;
+import org.eclipse.lyo.samples.client.resources.JazzChangeRequest;
 import org.glassfish.jersey.apache.connector.ApacheClientProperties;
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
+import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.message.internal.MessageBodyProviderNotFoundException;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 
 /**
  * Samples of logging in to IBM Enterprise Workflow Manager and running OSLC operations
@@ -89,7 +91,9 @@ public class EWMSample {
      * @throws ParseException
      */
     public static void main(String[] args) throws ParseException {
-
+        
+        SLF4JBridgeHandler.install();
+        
         Options options = new Options();
 
         options.addOption("url", true, "url");
@@ -168,6 +172,14 @@ public class EWMSample {
                 log.info("Using JAS (Forms) authentication");
             }
 
+            if (log.isDebugEnabled()) {
+                var clientLogger = java.util.logging.Logger.getLogger("");
+                clientLogger.setLevel(Level.FINEST);
+                clientBuilder.register(new LoggingFeature(clientLogger, Level.INFO,
+                        LoggingFeature.Verbosity.PAYLOAD_ANY,
+                        null));
+            }
+
             // STEP 3: Create a new OslcClient
             log.debug("STEP 3: Create a new OslcClient");
             OslcClient client = new OslcClient(clientBuilder);
@@ -218,17 +230,27 @@ public class EWMSample {
             rawResponse.close();
 
             // SCENARIO C:  EWM task creation and update
-            var task = new ChangeRequest();
+            var task = new JazzChangeRequest();
             task.setTitle("Implement accessibility in Pet Store application");
             task.setDescription("Image elements must provide a description in the 'alt' attribute for"
                     + " consumption by screen readers.");
-            task.getExtendedProperties()
-                    .put(new QName(DctermsDomainConstants.DUBLIN_CORE_NAMSPACE, "type"), Set.of("Task"));
+            //            task.getExtendedProperties()
+            //                    .put(new QName(DctermsDomainConstants.DUBLIN_CORE_NAMSPACE, "type"), Set.of("Task"));
 
-            task.getExtendedProperties()
-                    .put(
-                            new QName(Oslc_cmVocabularyConstants.CHANGE_MANAGEMENT_VOCAB_NAMSPACE, "testedByTestCase"),
-                            new URI("http://qmprovider/testcase/1"));
+            task.setDctermsTypes(new String[] {"Task"});
+
+            //            task.getExtendedProperties()
+            //                    .put(
+            //                            new QName(Oslc_cmVocabularyConstants.CHANGE_MANAGEMENT_VOCAB_NAMSPACE,
+            // "testedByTestCase"),
+            //                            // new URI("http://qmprovider/testcase/1")
+            //                            Set.of(new Link(
+            //                                    new URI("http://qmprovider/testcase/1"),
+            //                                    "Accessibility verification using a screen reader")));
+
+            task.setTestedByTestCases(new Link[] {
+                new Link(new URI("http://qmprovider/testcase/1"), "Accessibility verification using a screen reader")
+            });
 
             // Get the Creation Factory URL for task change requests so that we can create one
             CreationFactory taskCreation = client.lookupCreationFactoryResource(
@@ -260,7 +282,7 @@ public class EWMSample {
             if (log.isDebugEnabled()) {
                 var model = JenaModelHelper.createJenaModel(new Object[] {task});
                 model.write(System.out, "RDFXML");
-                
+
                 System.out.println();
             }
 
@@ -277,7 +299,7 @@ public class EWMSample {
             System.out.println("Task created at location " + changeRequestLocation);
 
             // Get the change request from the service provider and update its title property
-            task = client.getResource(changeRequestLocation).readEntity(Task.class);
+            task = client.getResource(changeRequestLocation).readEntity(JazzChangeRequest.class);
             task.setTitle(task.getTitle() + " (updated)");
 
             // Create a partial update URL so that only the title will be updated.

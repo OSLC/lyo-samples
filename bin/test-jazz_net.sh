@@ -17,9 +17,9 @@ mvn -B exec:java -Dexec.mainClass="org.eclipse.lyo.samples.client.EWMSample" -De
   -user ${JAZZ_NET_USERNAME} -password \"${JAZZ_NET_PASSWORD}\" \
   -project \"${JAZZ_NET_PROJECT_NAME}\" --basic"
 
-# ERM
-mvn -B exec:java -Dexec.mainClass="org.eclipse.lyo.samples.client.ERMSample" -Dexec.args="-url https://jazz.net/${JAZZ_NET_PROJECT_ID}-rm/ \
- -user ${JAZZ_NET_USERNAME} -password \"${JAZZ_NET_PASSWORD}\" \
- -project \"smarx721 Project (Requirements Management)\" --basic"
+# # ERM
+# mvn -B exec:java -Dexec.mainClass="org.eclipse.lyo.samples.client.ERMSample" -Dexec.args="-url https://jazz.net/${JAZZ_NET_PROJECT_ID}-rm/ \
+#  -user ${JAZZ_NET_USERNAME} -password \"${JAZZ_NET_PASSWORD}\" \
+#  -project \"smarx721 Project (Requirements Management)\" --basic"
 
 popd
