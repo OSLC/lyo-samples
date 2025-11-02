@@ -33,10 +33,11 @@ import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.eclipse.lyo.client.OSLCConstants;
 import org.eclipse.lyo.client.OslcClient;
-import org.eclipse.lyo.client.oslc.resources.ChangeRequest;
 import org.eclipse.lyo.client.query.OslcQuery;
 import org.eclipse.lyo.client.query.OslcQueryParameters;
 import org.eclipse.lyo.client.query.OslcQueryResult;
+import org.eclipse.lyo.oslc.domains.Oslc_cmVocabularyConstants;
+import org.eclipse.lyo.oslc.domains.cm.ChangeRequest;
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
@@ -118,11 +119,15 @@ public class CMSample {
             // STEP 3: Get the Query Capabilities and Creation Factory URLs so that we can run some
             // OSLC queries
             String queryCapability = client.lookupQueryCapability(
-                    serviceProviderUrl, OSLCConstants.OSLC_CM_V2, OSLCConstants.CM_CHANGE_REQUEST_TYPE);
+                    serviceProviderUrl,
+                    Oslc_cmVocabularyConstants.CHANGE_MANAGEMENT_VOCAB_NAMSPACE,
+                    Oslc_cmVocabularyConstants.TYPE_CHANGEREQUEST);
             System.out.println("queryCapability: " + queryCapability);
 
             String creationFactory = client.lookupCreationFactory(
-                    serviceProviderUrl, OSLCConstants.OSLC_CM_V2, OSLCConstants.CM_CHANGE_REQUEST_TYPE);
+                    serviceProviderUrl,
+                    Oslc_cmVocabularyConstants.CHANGE_MANAGEMENT_VOCAB_NAMSPACE,
+                    Oslc_cmVocabularyConstants.TYPE_CHANGEREQUEST);
             System.out.println("creationFactory: " + creationFactory);
 
             // SCENARIO A: Run a query for all ChangeRequests
@@ -148,7 +153,7 @@ public class CMSample {
             // SCENARIO C:  ChangeRequest creation and update
             ChangeRequest newChangeRequest = new ChangeRequest();
             newChangeRequest.setTitle("Update database schema");
-            newChangeRequest.setTitle("Need to update the database schema to reflect the data model changes");
+            newChangeRequest.setDescription("Need to update the database schema to reflect the data model changes");
 
             rawResponse = client.createResource(creationFactory, newChangeRequest, OSLCConstants.CT_RDF);
             int statusCode = rawResponse.getStatus();

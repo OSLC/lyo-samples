@@ -23,6 +23,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -45,11 +46,11 @@ import org.eclipse.lyo.client.OslcClient;
 import org.eclipse.lyo.client.RootServicesHelper;
 import org.eclipse.lyo.client.exception.ResourceNotFoundException;
 import org.eclipse.lyo.client.exception.RootServicesException;
-import org.eclipse.lyo.client.oslc.resources.AutomationConstants;
-import org.eclipse.lyo.client.oslc.resources.AutomationPlan;
-import org.eclipse.lyo.client.oslc.resources.AutomationRequest;
-import org.eclipse.lyo.client.oslc.resources.AutomationResult;
-import org.eclipse.lyo.client.oslc.resources.TestScript;
+import org.eclipse.lyo.oslc.domains.auto.AutomationPlan;
+import org.eclipse.lyo.oslc.domains.auto.AutomationRequest;
+import org.eclipse.lyo.oslc.domains.auto.AutomationResult;
+import org.eclipse.lyo.oslc.domains.auto.Oslc_autoDomainConstants;
+import org.eclipse.lyo.oslc.domains.qm.TestScript;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcDescription;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcName;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcNamespace;
@@ -493,8 +494,8 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
 
                 resultCreationFactoryUrl = client.lookupCreationFactory(
                         serviceProviderUrl,
-                        AutomationConstants.AUTOMATION_DOMAIN,
-                        AutomationConstants.TYPE_AUTOMATION_RESULT);
+                        Oslc_autoDomainConstants.AUTOMATION_NAMSPACE,
+                        Oslc_autoDomainConstants.AUTOMATIONRESULT_TYPE);
             }
 
             response = client.createResource(resultCreationFactoryUrl, result, OslcMediaType.APPLICATION_RDF_XML);
@@ -526,7 +527,8 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
 
         assertNotCanceled(request);
 
-        request.setStates(new URI[] {URI.create(AutomationConstants.STATE_COMPLETE)});
+        request.setState(new HashSet<Link>(
+                Arrays.asList(new Link(URI.create(Oslc_autoDomainConstants.AUTOMATION_NAMSPACE + "Complete")))));
 
         request.getExtendedProperties().remove(PROPERTY_RQM_PROGRESS);
 
@@ -582,8 +584,8 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
             model.read(is, assignedWorkUrl.toString());
         }
 
-        StmtIterator stmtIter =
-                model.listStatements(null, RDF.type, model.createResource(AutomationConstants.TYPE_AUTOMATION_REQUEST));
+        StmtIterator stmtIter = model.listStatements(
+                null, RDF.type, model.createResource(Oslc_autoDomainConstants.AUTOMATIONREQUEST_TYPE));
 
         if (stmtIter.hasNext()) {
             return stmtIter.next().getSubject().getURI();
@@ -614,7 +616,8 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
 
             request.getExtendedProperties().put(PROPERTY_RQM_TAKEN, Boolean.TRUE);
 
-            request.setStates(new URI[] {URI.create(AutomationConstants.STATE_IN_PROGRESS)});
+            request.setState(new HashSet<Link>(
+                    Arrays.asList(new Link(URI.create(Oslc_autoDomainConstants.AUTOMATION_NAMSPACE + "inProgress")))));
 
             updateUri = appendOslcProperties(URI.create(requestUrl), "oslc_auto:state", "rqm_auto:taken");
 
@@ -675,7 +678,7 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
                 }
 
                 adapterCreationFactoryUrl = client.lookupCreationFactory(
-                        serviceProviderUrl, AutomationConstants.AUTOMATION_DOMAIN, TYPE_AUTOMATION_ADAPTER);
+                        serviceProviderUrl, Oslc_autoDomainConstants.AUTOMATION_NAMSPACE, TYPE_AUTOMATION_ADAPTER);
 
                 response = client.createResource(adapterCreationFactoryUrl, this, OslcMediaType.APPLICATION_RDF_XML);
 
@@ -899,7 +902,7 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
 
         Link automationPlan = request.getExecutesAutomationPlan();
 
-        result.setInputParameters(request.getInputParameters());
+        result.setInputParameter(request.getInputParameter());
 
         Map<QName, Object> requestExtProperties = request.getExtendedProperties();
 
@@ -1089,7 +1092,7 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
      * @throws AutomationException
      * @throws IOException
      */
-    public void sendStatusForRequest(StatusResponse statusResponse, AutomationRequest request)
+    public void sendStatusForRequest(RqmStatusResponse statusResponse, AutomationRequest request)
             throws AutomationException, IOException, URISyntaxException {
 
         if (client == null) {
@@ -1139,7 +1142,7 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
      * @throws AutomationException
      * @throws IOException
      */
-    public void sendMessageForRequest(Message message, AutomationRequest request)
+    public void sendMessageForRequest(RqmMessage message, AutomationRequest request)
             throws AutomationException, IOException, URISyntaxException {
 
         if (client == null) {
@@ -1194,10 +1197,11 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
             throw new AutomationException("The adapter has not logged into the server.");
         }
 
-        request.setDesiredState(URI.create(AutomationConstants.STATE_CANCELED));
+        request.setDesiredState(new Link(URI.create(Oslc_autoDomainConstants.AUTOMATION_NAMSPACE + "Canceled")));
 
         // Some automation providers require the client to set the state to canceled
-        request.setStates(new URI[] {URI.create(AutomationConstants.STATE_CANCELED)});
+        request.setState(new HashSet<Link>(
+                Arrays.asList(new Link(URI.create(Oslc_autoDomainConstants.AUTOMATION_NAMSPACE + "Canceled")))));
 
         URI updateUri = appendOslcProperties(request.getAbout(), "oslc_auto:state");
 
@@ -1242,11 +1246,16 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
         }
 
         // oslc_auto:state is defined as one-or-many in the specification
-        URI stateUri = requestAtServiceProvider.getStates()[0];
+        Set<Link> states = requestAtServiceProvider.getState();
 
-        if (URI.create(AutomationConstants.STATE_CANCELED).equals(stateUri)) {
+        if (states != null) {
+            for (Link state : states) {
+                if (URI.create(Oslc_autoDomainConstants.AUTOMATION_NAMSPACE + "Canceled")
+                        .equals(state.getValue())) {
 
-            throw new AutomationRequestCanceledException(request);
+                    throw new AutomationRequestCanceledException(request);
+                }
+            }
         }
     }
 
