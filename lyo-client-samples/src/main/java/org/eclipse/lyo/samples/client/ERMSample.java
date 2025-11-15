@@ -539,7 +539,6 @@ public class ERMSample {
     }
 
     private static void processCurrentPage(OslcQueryResult result, OslcClient client, boolean asJavaObjects) {
-        result.getRawResponse().bufferEntity();
         for (String resultsUrl : result.getMembersUrls()) {
             System.out.println(resultsUrl);
 
