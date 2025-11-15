@@ -395,7 +395,6 @@ public class ERMSample {
             queryParams.setWhere("rdf:type=<http://open-services.net/ns/rm#Requirement>");
             OslcQuery query = new OslcQuery(client, queryCapability, 10, queryParams);
             OslcQueryResult result = query.submit();
-            result.getRawResponse().bufferEntity();
             boolean processAsJavaObjects = false;
             int resultsSize = result.getMembersUrls().length;
             processPagedQueryResults(result, client, processAsJavaObjects);
@@ -412,7 +411,6 @@ public class ERMSample {
             query = new OslcQuery(client, queryCapability, 10, queryParams);
             result = query.submit();
             processAsJavaObjects = false;
-            result.getRawResponse().bufferEntity();
             resultsSize = result.getMembersUrls().length;
             processPagedQueryResults(result, client, processAsJavaObjects);
             System.out.println("\n------------------------------\n");
@@ -424,7 +422,6 @@ public class ERMSample {
             queryParams.setWhere("dcterms:title=\"Req04\"");
             query = new OslcQuery(client, queryCapability, 10, queryParams);
             result = query.submit();
-            result.getRawResponse().bufferEntity();
             resultsSize = result.getMembersUrls().length;
             processAsJavaObjects = false;
             processPagedQueryResults(result, client, processAsJavaObjects);
@@ -437,7 +434,6 @@ public class ERMSample {
             queryParams.setWhere("oslc_rm:implementedBy=<http://google.com>");
             query = new OslcQuery(client, queryCapability, 10, queryParams);
             result = query.submit();
-            result.getRawResponse().bufferEntity();
             resultsSize = result.getMembersUrls().length;
             processAsJavaObjects = false;
             processPagedQueryResults(result, client, processAsJavaObjects);
@@ -450,7 +446,6 @@ public class ERMSample {
             queryParams.setWhere("oslc_rm:validatedBy in [<http://bancomer.com>,<http://outlook.com>]");
             query = new OslcQuery(client, queryCapability, 10, queryParams);
             result = query.submit();
-            result.getRawResponse().bufferEntity();
             resultsSize = result.getMembersUrls().length;
             processAsJavaObjects = false;
             processPagedQueryResults(result, client, processAsJavaObjects);
@@ -463,7 +458,6 @@ public class ERMSample {
             queryParams.setWhere("nav:parent=<" + rootFolder + "> and oslc_rm:validatedBy=<http://bancomer.com>");
             query = new OslcQuery(client, queryCapability, 10, queryParams);
             result = query.submit();
-            result.getRawResponse().bufferEntity();
             resultsSize = result.getMembersUrls().length;
             processAsJavaObjects = false;
             processPagedQueryResults(result, client, processAsJavaObjects);
@@ -491,7 +485,6 @@ public class ERMSample {
             queryParams.setWhere("dcterms:title=\"My new Title\"");
             query = new OslcQuery(client, queryCapability, 10, queryParams);
             result = query.submit();
-            result.getRawResponse().bufferEntity();
             resultsSize = result.getMembersUrls().length;
             processAsJavaObjects = false;
             processPagedQueryResults(result, client, processAsJavaObjects);
@@ -504,7 +497,6 @@ public class ERMSample {
             queryParams.setWhere("oslc_rm:implementedBy=<http://google.com>");
             query = new OslcQuery(client, queryCapability, 10, queryParams);
             result = query.submit();
-            result.getRawResponse().bufferEntity();
             resultsSize = result.getMembersUrls().length;
             processAsJavaObjects = false;
             processPagedQueryResults(result, client, processAsJavaObjects);
