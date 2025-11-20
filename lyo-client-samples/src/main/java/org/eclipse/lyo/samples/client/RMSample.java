@@ -29,10 +29,10 @@ import org.apache.commons.cli.ParseException;
 import org.apache.http.HttpStatus;
 import org.eclipse.lyo.client.OSLCConstants;
 import org.eclipse.lyo.client.OslcClient;
-import org.eclipse.lyo.client.oslc.resources.Requirement;
 import org.eclipse.lyo.client.query.OslcQuery;
 import org.eclipse.lyo.client.query.OslcQueryParameters;
 import org.eclipse.lyo.client.query.OslcQueryResult;
+import org.eclipse.lyo.oslc.domains.rm.Requirement;
 
 /**
  * Samples of accessing a generic Requirements Management provider and running OSLC operations.

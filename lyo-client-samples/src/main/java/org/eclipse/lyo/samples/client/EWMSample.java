@@ -47,13 +47,14 @@ import org.eclipse.lyo.client.OSLCConstants;
 import org.eclipse.lyo.client.OslcClient;
 import org.eclipse.lyo.client.RootServicesHelper;
 import org.eclipse.lyo.client.exception.RootServicesException;
-import org.eclipse.lyo.client.oslc.resources.ChangeRequest;
 import org.eclipse.lyo.client.query.OslcQuery;
 import org.eclipse.lyo.client.query.OslcQueryParameters;
 import org.eclipse.lyo.client.query.OslcQueryResult;
+import org.eclipse.lyo.oslc.domains.cm.ChangeRequest;
 import org.eclipse.lyo.oslc4j.core.model.AllowedValues;
 import org.eclipse.lyo.oslc4j.core.model.CreationFactory;
 import org.eclipse.lyo.oslc4j.core.model.Link;
+import org.eclipse.lyo.oslc4j.core.model.OslcConstants;
 import org.eclipse.lyo.oslc4j.core.model.OslcMediaType;
 import org.eclipse.lyo.oslc4j.core.model.Property;
 import org.eclipse.lyo.oslc4j.core.model.ResourceShape;
@@ -213,15 +214,19 @@ public class EWMSample {
             task.setTitle("Implement accessibility in Pet Store application");
             task.setDescription("Image elements must provide a description in the 'alt' attribute for"
                     + " consumption by screen readers.");
-            task.addTestedByTestCase(new Link(
-                    new URI("http://qmprovider/testcase/1"), "Accessibility verification using a screen reader"));
-            task.addDctermsType("task");
+            task.getExtendedProperties()
+                    .put(
+                            new QName(OSLCConstants.OSLC_QM_V2, "testedByTestCase"),
+                            new Link(
+                                    new URI("http://qmprovider/testcase/1"),
+                                    "Accessibility verification using a screen reader"));
+            task.getExtendedProperties().put(new QName(OslcConstants.DCTERMS_NAMESPACE, "type"), "task");
 
             // Get the Creation Factory URL for task change requests so that we can create one
             CreationFactory taskCreation = client.lookupCreationFactoryResource(
                     serviceProviderUrl,
                     OSLCConstants.OSLC_CM_V2,
-                    task.getRdfTypes()[0].toString(),
+                    OSLCConstants.OSLC_CM_V2 + "ChangeRequest",
                     OSLCConstants.OSLC_CM_V2 + "task");
             String factoryUrl = taskCreation.getCreation().toString();
 
@@ -273,14 +278,17 @@ public class EWMSample {
             defect.setTitle("Error logging in");
             defect.setDescription(
                     "An error occurred when I tried to log in with a user ID that contained the '@'" + " symbol.");
-            defect.addTestedByTestCase(new Link(new URI("http://qmprovider/testcase/3"), "Global Verifcation Test"));
-            defect.addDctermsType("defect");
+            defect.getExtendedProperties()
+                    .put(
+                            new QName(OSLCConstants.OSLC_QM_V2, "testedByTestCase"),
+                            new Link(new URI("http://qmprovider/testcase/3"), "Global Verifcation Test"));
+            defect.getExtendedProperties().put(new QName(OslcConstants.DCTERMS_NAMESPACE, "type"), "defect");
 
             // Get the Creation Factory URL for change requests so that we can create one
             CreationFactory defectCreation = client.lookupCreationFactoryResource(
                     serviceProviderUrl,
                     OSLCConstants.OSLC_CM_V2,
-                    defect.getRdfTypes()[0].toString(),
+                    OSLCConstants.OSLC_CM_V2 + "ChangeRequest",
                     OSLCConstants.OSLC_CM_V2 + "defect");
             factoryUrl = defectCreation.getCreation().toString();
 

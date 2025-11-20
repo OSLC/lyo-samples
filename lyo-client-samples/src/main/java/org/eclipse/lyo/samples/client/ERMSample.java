@@ -49,13 +49,12 @@ import org.eclipse.lyo.client.OslcClient;
 import org.eclipse.lyo.client.RootServicesHelper;
 import org.eclipse.lyo.client.exception.ResourceNotFoundException;
 import org.eclipse.lyo.client.exception.RootServicesException;
-import org.eclipse.lyo.client.oslc.resources.Requirement;
-import org.eclipse.lyo.client.oslc.resources.RequirementCollection;
-import org.eclipse.lyo.client.oslc.resources.RmConstants;
 import org.eclipse.lyo.client.query.OslcQuery;
 import org.eclipse.lyo.client.query.OslcQueryParameters;
 import org.eclipse.lyo.client.query.OslcQueryResult;
 import org.eclipse.lyo.client.resources.RmUtil;
+import org.eclipse.lyo.oslc.domains.rm.Requirement;
+import org.eclipse.lyo.oslc.domains.rm.RequirementCollection;
 import org.eclipse.lyo.oslc4j.core.OSLC4JUtils;
 import org.eclipse.lyo.oslc4j.core.model.*;
 import org.glassfish.jersey.apache.connector.ApacheClientProperties;
@@ -77,8 +76,12 @@ public class ERMSample {
 
     // Following is a workaround for primaryText issue in DNG ( it is PrimaryText instead of
     // primaryText
-    private static final QName PROPERTY_PRIMARY_TEXT_WORKAROUND =
-            new QName(RmConstants.JAZZ_RM_NAMESPACE, "PrimaryText");
+    private static final String JAZZ_RM_NAMESPACE = "http://jazz.net/xmlns/prod/jazz/rm/1.0/";
+    private static final QName PROPERTY_PRIMARY_TEXT = new QName(JAZZ_RM_NAMESPACE, "PrimaryText");
+    private static final QName PROPERTY_PARENT_FOLDER = new QName("http://com.ibm.rdm/navigation#", "parent");
+    private static final String NAMESPACE_URI_XHTML = "http://www.w3.org/1999/xhtml";
+
+    private static final QName PROPERTY_PRIMARY_TEXT_WORKAROUND = new QName(JAZZ_RM_NAMESPACE, "PrimaryText");
 
     /**
      * Login to the ERM server and perform some OSLC actions
@@ -239,13 +242,13 @@ public class ERMSample {
                 } else {
                     // Create REQ01
                     requirement = new Requirement();
-                    requirement.setInstanceShape(featureInstanceShape.getAbout());
+                    requirement.setInstanceShape(Collections.singleton(new Link(featureInstanceShape.getAbout())));
                     requirement.setTitle("Req01");
 
                     // Decorate the PrimaryText
                     primaryText = "My Primary Text";
                     org.w3c.dom.Element obj = convertStringToHTML(primaryText);
-                    requirement.getExtendedProperties().put(RmConstants.PROPERTY_PRIMARY_TEXT, obj);
+                    requirement.getExtendedProperties().put(PROPERTY_PRIMARY_TEXT, obj);
 
                     requirement.setDescription("Created By EclipseLyo");
                     requirement.addImplementedBy(new Link(new URI("http://google.com"), "Link in REQ01"));
@@ -263,7 +266,7 @@ public class ERMSample {
 
                     // Create REQ02
                     requirement = new Requirement();
-                    requirement.setInstanceShape(featureInstanceShape.getAbout());
+                    requirement.setInstanceShape(Collections.singleton(new Link(featureInstanceShape.getAbout())));
                     requirement.setTitle("Req02");
                     requirement.setDescription("Created By EclipseLyo");
                     requirement.addValidatedBy(new Link(new URI("http://bancomer.com"), "Link in REQ02"));
@@ -281,7 +284,7 @@ public class ERMSample {
 
                     // Create REQ03
                     requirement = new Requirement();
-                    requirement.setInstanceShape(featureInstanceShape.getAbout());
+                    requirement.setInstanceShape(Collections.singleton(new Link(featureInstanceShape.getAbout())));
                     requirement.setTitle("Req03");
                     requirement.setDescription("Created By EclipseLyo");
                     requirement.addValidatedBy(new Link(new URI("http://outlook.com"), "Link in REQ03"));
@@ -299,7 +302,7 @@ public class ERMSample {
 
                     // Create REQ04
                     requirement = new Requirement();
-                    requirement.setInstanceShape(featureInstanceShape.getAbout());
+                    requirement.setInstanceShape(Collections.singleton(new Link(featureInstanceShape.getAbout())));
                     requirement.setTitle("Req04");
                     requirement.setDescription("Created By EclipseLyo");
 
@@ -319,11 +322,12 @@ public class ERMSample {
                     // Create REQ04
                     collection = new RequirementCollection();
 
-                    collection.addUses(new URI(req03URL));
-                    collection.addUses(new URI(req04URL));
+                    collection.addUses(new Link(new URI(req03URL)));
+                    collection.addUses(new Link(new URI(req04URL)));
 
                     if (collectionInstanceShape != null) {
-                        collection.setInstanceShape(collectionInstanceShape.getAbout());
+                        collection.setInstanceShape(
+                                Collections.singleton(new Link(collectionInstanceShape.getAbout())));
                     }
                     collection.setTitle("Collection01");
                     collection.setDescription("Created By EclipseLyo");
@@ -370,9 +374,9 @@ public class ERMSample {
             }
 
             // Save the URI of the root folder in order to used it easily
-            rootFolder = (URI) requirement.getExtendedProperties().get(RmConstants.PROPERTY_PARENT_FOLDER);
+            rootFolder = (URI) requirement.getExtendedProperties().get(PROPERTY_PARENT_FOLDER);
             Object changedPrimaryText =
-                    (Object) requirement.getExtendedProperties().get(RmConstants.PROPERTY_PRIMARY_TEXT);
+                    (Object) requirement.getExtendedProperties().get(PROPERTY_PRIMARY_TEXT);
             if (changedPrimaryText == null) {
                 // Check with the workaround
                 changedPrimaryText =
@@ -515,7 +519,7 @@ public class ERMSample {
         try {
             Document document =
                     DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-            Element divElement = document.createElementNS(RmConstants.NAMESPACE_URI_XHTML, "div");
+            Element divElement = document.createElementNS(NAMESPACE_URI_XHTML, "div");
             divElement.setTextContent(primaryText);
             return divElement;
         } catch (ParserConfigurationException e) {

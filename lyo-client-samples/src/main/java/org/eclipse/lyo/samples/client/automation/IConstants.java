@@ -49,4 +49,12 @@ public interface IConstants {
     QName PROPERTY_RQM_EXECUTED_ON_MACHINE = new QName(IConstants.NAMESPACE_URI_JAZZ_AUTO_RQM, "executedOnMachine");
     QName PROPERTY_RQM_STATUS_RESPONSE = new QName(IConstants.NAMESPACE_URI_JAZZ_AUTO_RQM, "statusResponse");
     QName PROPERTY_RQM_MESSAGE = new QName(IConstants.NAMESPACE_URI_JAZZ_AUTO_RQM, "message");
+
+    String AUTOMATION_DOMAIN = "http://open-services.net/ns/auto#";
+    String TYPE_AUTOMATION_RESULT = "AutomationResult";
+    String TYPE_AUTOMATION_REQUEST = "AutomationRequest";
+    String STATE_COMPLETE = AUTOMATION_DOMAIN + "complete";
+    String STATE_IN_PROGRESS = AUTOMATION_DOMAIN + "inProgress";
+    String STATE_CANCELED = AUTOMATION_DOMAIN + "canceled";
+    String VERDICT_PASSED = AUTOMATION_DOMAIN + "passed";
 }
