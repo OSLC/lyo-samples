@@ -9,6 +9,10 @@ on:
         description: 'Lyo branch to test on'
         required: true
         default: 'master'
+      lyoRepo:
+        description: 'Lyo repository or fork'
+        required: true
+        default: 'eclipse/lyo'
       link:
         description: 'PR/issue link (e.g., to Lyo)'
 
@@ -39,7 +43,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
-          repository: eclipse/lyo
+          repository: "${{ github.event.inputs.lyoRepo }}"
           ref: "${{ github.event.inputs.lyoBranch }}"
           path: lyo-trunk
       - uses: actions/checkout@v5
