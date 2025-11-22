@@ -234,6 +234,9 @@ public class EWMSample {
             // dcterms:type
             task.getExtendedProperties().put(new QName(OslcConstants.DCTERMS_NAMESPACE, "type"), "task");
 
+            // Set rdf:type for Creation Factory lookup
+            task.setTypes(java.util.Collections.singleton(URI.create(OSLCConstants.OSLC_CM_V2 + "ChangeRequest")));
+
             // Get the Creation Factory URL for task change requests so that we can create one
             CreationFactory taskCreation = client.lookupCreationFactoryResource(
                     serviceProviderUrl,
@@ -300,6 +303,9 @@ public class EWMSample {
                             new Link(new URI("http://qmprovider/testcase/3"), "Global Verifcation Test"));
 
             defect.getExtendedProperties().put(new QName(OslcConstants.DCTERMS_NAMESPACE, "type"), "defect");
+
+            // Set rdf:type for Creation Factory lookup
+            defect.setTypes(java.util.Collections.singleton(URI.create(OSLCConstants.OSLC_CM_V2 + "ChangeRequest")));
 
             // Get the Creation Factory URL for change requests so that we can create one
             CreationFactory defectCreation = client.lookupCreationFactoryResource(

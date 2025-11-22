@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
+import java.util.Collections;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.GnuParser;
@@ -165,6 +166,7 @@ public class ETMSample {
                     + " content fully complies with accessibility standards");
             testcase.addTestsChangeRequest(new Link(
                     new URI("http://cmprovider/changerequest/1"), "Implement accessibility in Pet Store application"));
+            testcase.setTypes(Collections.singleton(URI.create(OSLCConstants.OSLC_QM_V2 + "TestCase")));
 
             String testcaseCreation = client.lookupCreationFactory(
                     serviceProviderUrl,
