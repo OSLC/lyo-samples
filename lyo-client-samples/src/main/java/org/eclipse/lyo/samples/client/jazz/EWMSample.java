@@ -249,6 +249,9 @@ public class EWMSample {
             if (creationResponse.getStatus() != HttpStatus.SC_CREATED) {
                 System.err.println("ERROR: Could not create the task (status " + creationResponse.getStatus() + ")\n");
                 System.err.println(creationResponse.readEntity(String.class));
+                if (Boolean.getBoolean("lyo.test.mode")) {
+                    throw new RuntimeException("Creation failed");
+                }
                 System.exit(1);
             }
             creationResponse.readEntity(String.class);
@@ -314,18 +317,27 @@ public class EWMSample {
                 System.err.println(
                         "ERROR: Could not create the defect (status " + creationResponse.getStatus() + ")\n");
                 System.err.println(creationResponse.readEntity(String.class));
+                if (Boolean.getBoolean("lyo.test.mode")) {
+                    throw new RuntimeException("Creation failed");
+                }
                 System.exit(1);
             }
             creationResponse.readEntity(String.class);
             System.out.println("Defect created at location " + defectLocation);
         } catch (RootServicesException re) {
             log.error("Unable to access the Jazz rootservices document at: {}/rootservices", webContextUrl, re);
+            if (Boolean.getBoolean("lyo.test.mode")) {
+                throw new RuntimeException(re);
+            }
         } catch (MessageBodyProviderNotFoundException e) {
             if (e.getMessage().contains("text/html")) {
                 log.error("Jazz server returned an HTML page instead of RDF. Are you sure you have"
                         + " chosen between Basic and JAS Forms auth correctly?");
             } else {
                 log.error("Unknown error", e);
+            }
+            if (Boolean.getBoolean("lyo.test.mode")) {
+                throw new RuntimeException(e);
             }
         } catch (ProcessingException e) {
             if (e.getCause() instanceof ConnectionClosedException) {
@@ -334,8 +346,14 @@ public class EWMSample {
             } else {
                 log.error("Unknown error", e);
             }
+            if (Boolean.getBoolean("lyo.test.mode")) {
+                throw new RuntimeException(e);
+            }
         } catch (Exception e) {
             log.error("Unknown error", e);
+            if (Boolean.getBoolean("lyo.test.mode")) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

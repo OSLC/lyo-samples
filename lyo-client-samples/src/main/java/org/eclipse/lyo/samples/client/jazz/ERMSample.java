@@ -504,9 +504,15 @@ public class ERMSample {
             System.out.println("Number of Results for SCENARIO 08 = " + resultsSize + "\n");
         } catch (RootServicesException re) {
             log.error("Unable to access the Jazz rootservices document at: {}/rootservices", webContextUrl, re);
+            if (Boolean.getBoolean("lyo.test.mode")) {
+                throw new RuntimeException(re);
+            }
             System.exit(1);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+            if (Boolean.getBoolean("lyo.test.mode")) {
+                throw new RuntimeException(e);
+            }
             System.exit(1);
         }
     }

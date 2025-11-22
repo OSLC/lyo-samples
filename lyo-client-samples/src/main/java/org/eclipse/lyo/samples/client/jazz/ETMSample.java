@@ -175,6 +175,9 @@ public class ETMSample {
                 System.err.println(
                         "ERROR: Could not create the test case (status " + creationResponse.getStatus() + ")\n");
                 System.err.println(creationResponse.readEntity(String.class));
+                if (Boolean.getBoolean("lyo.test.mode")) {
+                    throw new RuntimeException("Creation failed");
+                }
                 System.exit(1);
             }
             creationResponse.readEntity(String.class);
@@ -189,8 +192,14 @@ public class ETMSample {
 
         } catch (RootServicesException re) {
             logger.error("Unable to access the Jazz rootservices document at: {}/rootservices", webContextUrl, re);
+            if (Boolean.getBoolean("lyo.test.mode")) {
+                throw new RuntimeException(re);
+            }
         } catch (Exception e) {
             logger.error("Unknown error", e);
+            if (Boolean.getBoolean("lyo.test.mode")) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
