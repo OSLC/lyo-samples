@@ -24,7 +24,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-enforcer-plugin</artifactId>
-          <version>3.6.1</version>
+          <version>3.6.2</version>
           <executions>
             <execution>
               <id>enforce-maven</id>
@@ -95,7 +95,7 @@
       <plugin>
         <groupId>org.openrewrite.maven</groupId>
         <artifactId>rewrite-maven-plugin</artifactId>
-        <version>6.15.0</version>
+        <version>6.23.0</version>
         <configuration>
           <activeRecipes>
             <!-- <recipe>org.openrewrite.java.migrate.UpgradeToJava17</recipe> -->
@@ -113,12 +113,12 @@
           <dependency>
             <groupId>org.openrewrite.recipe</groupId>
             <artifactId>rewrite-migrate-java</artifactId>
-            <version>3.14.1</version>
+            <version>3.21.1</version>
           </dependency>
           <dependency>
             <groupId>org.openrewrite.recipe</groupId>
             <artifactId>rewrite-testing-frameworks</artifactId>
-            <version>3.20.0</version>
+            <version>3.21.2</version>
           </dependency>
           <dependency>
             <groupId>org.openrewrite.recipe</groupId>
@@ -131,7 +131,7 @@
       <plugin>
         <groupId>com.diffplug.spotless</groupId>
         <artifactId>spotless-maven-plugin</artifactId>
-        <version>2.46.1</version>
+        <version>3.0.0</version>
         <executions>
           <execution>
             <id>auto-style</id>
@@ -286,6 +286,24 @@
       <groupId>commons-cli</groupId>
       <artifactId>commons-cli</artifactId>
       <version>1.10.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.10.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mock-server</groupId>
+      <artifactId>mockserver-netty</artifactId>
+      <version>5.15.0</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>com.sun.xml.bind</groupId>
+          <artifactId>jaxb-impl</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
   </dependencies>
