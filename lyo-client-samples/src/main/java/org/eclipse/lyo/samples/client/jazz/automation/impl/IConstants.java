@@ -28,6 +28,15 @@ public interface IConstants {
     String TYPE_STATUS_RESPONSE = NAMESPACE_URI_JAZZ_AUTO_RQM + "StatusResponse";
     String TYPE_MESSAGE = NAMESPACE_URI_JAZZ_AUTO_RQM + "Message";
 
+    // OSLC Automation Constants
+    String AUTOMATION_DOMAIN = "http://open-services.net/ns/auto#";
+    String TYPE_AUTOMATION_REQUEST = AUTOMATION_DOMAIN + "AutomationRequest";
+    String TYPE_AUTOMATION_RESULT = AUTOMATION_DOMAIN + "AutomationResult";
+    String STATE_COMPLETE = AUTOMATION_DOMAIN + "Complete";
+    String STATE_IN_PROGRESS = AUTOMATION_DOMAIN + "InProgress";
+    String STATE_CANCELED = AUTOMATION_DOMAIN + "Canceled";
+    String VERDICT_PASSED = AUTOMATION_DOMAIN + "Passed";
+
     QName PROPERTY_DC_RELATION = new QName(OSLCConstants.DC, "relation");
 
     QName PROPERTY_QM_REPORTS_ON_TEST_CASE = new QName(OSLCConstants.OSLC_QM_V2, "reportsOnTestCase");

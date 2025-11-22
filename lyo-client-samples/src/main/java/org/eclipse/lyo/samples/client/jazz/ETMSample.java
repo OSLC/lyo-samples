@@ -39,11 +39,11 @@ import org.eclipse.lyo.client.OSLCConstants;
 import org.eclipse.lyo.client.OslcClient;
 import org.eclipse.lyo.client.RootServicesHelper;
 import org.eclipse.lyo.client.exception.RootServicesException;
-import org.eclipse.lyo.client.oslc.resources.TestCase;
-import org.eclipse.lyo.client.oslc.resources.TestResult;
 import org.eclipse.lyo.client.query.OslcQuery;
 import org.eclipse.lyo.client.query.OslcQueryParameters;
 import org.eclipse.lyo.client.query.OslcQueryResult;
+import org.eclipse.lyo.oslc.domains.qm.TestCase;
+import org.eclipse.lyo.oslc.domains.qm.TestResult;
 import org.eclipse.lyo.oslc4j.core.model.Link;
 import org.eclipse.lyo.oslc4j.core.model.OslcMediaType;
 import org.glassfish.jersey.apache.connector.ApacheClientProperties;
@@ -167,7 +167,9 @@ public class ETMSample {
                     new URI("http://cmprovider/changerequest/1"), "Implement accessibility in Pet Store application"));
 
             String testcaseCreation = client.lookupCreationFactory(
-                    serviceProviderUrl, OSLCConstants.OSLC_QM_V2, testcase.getRdfTypes()[0].toString());
+                    serviceProviderUrl,
+                    OSLCConstants.OSLC_QM_V2,
+                    testcase.getTypes().iterator().next().toString());
             Response creationResponse = client.createResource(
                     testcaseCreation, testcase, OslcMediaType.APPLICATION_RDF_XML, OslcMediaType.APPLICATION_RDF_XML);
             String testcaseLocation = creationResponse.getStringHeaders().getFirst(HttpHeaders.LOCATION);

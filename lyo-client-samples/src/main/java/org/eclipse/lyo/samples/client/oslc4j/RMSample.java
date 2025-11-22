@@ -29,10 +29,10 @@ import org.apache.commons.cli.ParseException;
 import org.apache.http.HttpStatus;
 import org.eclipse.lyo.client.OSLCConstants;
 import org.eclipse.lyo.client.OslcClient;
-import org.eclipse.lyo.client.oslc.resources.Requirement;
 import org.eclipse.lyo.client.query.OslcQuery;
 import org.eclipse.lyo.client.query.OslcQueryParameters;
 import org.eclipse.lyo.client.query.OslcQueryResult;
+import org.eclipse.lyo.oslc.domains.rm.Requirement;
 
 /**
  * Samples of accessing a generic Requirements Management provider and running OSLC operations.
@@ -115,7 +115,7 @@ public class RMSample {
             // SCENARIO C:  Requirement creation and update
             Requirement newRequirement = new Requirement();
             newRequirement.setTitle("Database schema needs new attributes");
-            newRequirement.setTitle("The data model needs to support new attributes");
+            newRequirement.setDescription("The data model needs to support new attributes");
 
             rawResponse = client.createResource(creationFactory, newRequirement, OSLCConstants.CT_RDF);
             int statusCode = rawResponse.getStatus();

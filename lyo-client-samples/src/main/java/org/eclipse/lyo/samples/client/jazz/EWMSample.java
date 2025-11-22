@@ -47,13 +47,14 @@ import org.eclipse.lyo.client.OSLCConstants;
 import org.eclipse.lyo.client.OslcClient;
 import org.eclipse.lyo.client.RootServicesHelper;
 import org.eclipse.lyo.client.exception.RootServicesException;
-import org.eclipse.lyo.client.oslc.resources.ChangeRequest;
 import org.eclipse.lyo.client.query.OslcQuery;
 import org.eclipse.lyo.client.query.OslcQueryParameters;
 import org.eclipse.lyo.client.query.OslcQueryResult;
+import org.eclipse.lyo.oslc.domains.cm.ChangeRequest;
 import org.eclipse.lyo.oslc4j.core.model.AllowedValues;
 import org.eclipse.lyo.oslc4j.core.model.CreationFactory;
 import org.eclipse.lyo.oslc4j.core.model.Link;
+import org.eclipse.lyo.oslc4j.core.model.OslcConstants;
 import org.eclipse.lyo.oslc4j.core.model.OslcMediaType;
 import org.eclipse.lyo.oslc4j.core.model.Property;
 import org.eclipse.lyo.oslc4j.core.model.ResourceShape;
@@ -213,15 +214,31 @@ public class EWMSample {
             task.setTitle("Implement accessibility in Pet Store application");
             task.setDescription("Image elements must provide a description in the 'alt' attribute for"
                     + " consumption by screen readers.");
-            task.addTestedByTestCase(new Link(
-                    new URI("http://qmprovider/testcase/1"), "Accessibility verification using a screen reader"));
-            task.addDctermsType("task");
+            // testedByTestCase is not part of standard OSLC CM 2.0 ChangeRequest, so we use extended properties.
+            // Note: In oslc-java-client-resources it was available, but in oslc-domains it is strict to spec.
+            // Jazz uses http://jazz.net/xmlns/prod/jazz/rtc/cm/1.0/testedByTestCase ?
+            // Actually, the original code used addTestedByTestCase(Link).
+            // We'll use the QName for it.
+            // However, the property name in Jazz might be "http://open-services.net/ns/cm#testedByTestCase" or similar
+            // if it was generated.
+            // The method name `addTestedByTestCase` suggests `testedByTestCase`.
+            // Let's assume it is in the oslc_cm namespace or rtc_cm namespace.
+            // Based on previous resources, it was often `oslc_cm:testedByTestCase`.
+            task.getExtendedProperties()
+                    .put(
+                            new QName(OSLCConstants.OSLC_CM_V2, "testedByTestCase"),
+                            new Link(
+                                    new URI("http://qmprovider/testcase/1"),
+                                    "Accessibility verification using a screen reader"));
+
+            // dcterms:type
+            task.getExtendedProperties().put(new QName(OslcConstants.DCTERMS_NAMESPACE, "type"), "task");
 
             // Get the Creation Factory URL for task change requests so that we can create one
             CreationFactory taskCreation = client.lookupCreationFactoryResource(
                     serviceProviderUrl,
                     OSLCConstants.OSLC_CM_V2,
-                    task.getRdfTypes()[0].toString(),
+                    task.getTypes().iterator().next().toString(),
                     OSLCConstants.OSLC_CM_V2 + "task");
             String factoryUrl = taskCreation.getCreation().toString();
 
@@ -276,14 +293,19 @@ public class EWMSample {
             defect.setTitle("Error logging in");
             defect.setDescription(
                     "An error occurred when I tried to log in with a user ID that contained the '@'" + " symbol.");
-            defect.addTestedByTestCase(new Link(new URI("http://qmprovider/testcase/3"), "Global Verifcation Test"));
-            defect.addDctermsType("defect");
+
+            defect.getExtendedProperties()
+                    .put(
+                            new QName(OSLCConstants.OSLC_CM_V2, "testedByTestCase"),
+                            new Link(new URI("http://qmprovider/testcase/3"), "Global Verifcation Test"));
+
+            defect.getExtendedProperties().put(new QName(OslcConstants.DCTERMS_NAMESPACE, "type"), "defect");
 
             // Get the Creation Factory URL for change requests so that we can create one
             CreationFactory defectCreation = client.lookupCreationFactoryResource(
                     serviceProviderUrl,
                     OSLCConstants.OSLC_CM_V2,
-                    defect.getRdfTypes()[0].toString(),
+                    defect.getTypes().iterator().next().toString(),
                     OSLCConstants.OSLC_CM_V2 + "defect");
             factoryUrl = defectCreation.getCreation().toString();
 
