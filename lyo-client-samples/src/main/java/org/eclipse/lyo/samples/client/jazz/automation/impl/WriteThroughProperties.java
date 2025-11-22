@@ -13,7 +13,7 @@
  *
  *     Paul McMahan <pmcmahan@us.ibm.com>     - initial implementation
  */
-package org.eclipse.lyo.samples.client.automation;
+package org.eclipse.lyo.samples.client.jazz.automation.impl;
 
 import java.io.File;
 import java.io.FileInputStream;

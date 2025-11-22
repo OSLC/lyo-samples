@@ -13,7 +13,7 @@
  *
  *     Paul McMahan <pmcmahan@us.ibm.com>     - initial implementation
  */
-package org.eclipse.lyo.samples.client.automation;
+package org.eclipse.lyo.samples.client.jazz.automation;
 
 import jakarta.ws.rs.client.ClientBuilder;
 import java.io.File;
@@ -37,6 +37,14 @@ import org.eclipse.lyo.client.oslc.resources.AutomationConstants;
 import org.eclipse.lyo.client.oslc.resources.AutomationRequest;
 import org.eclipse.lyo.client.oslc.resources.AutomationResult;
 import org.eclipse.lyo.client.oslc.resources.ParameterInstance;
+import org.eclipse.lyo.samples.client.jazz.automation.impl.AutomationAdapter;
+import org.eclipse.lyo.samples.client.jazz.automation.impl.AutomationException;
+import org.eclipse.lyo.samples.client.jazz.automation.impl.AutomationRequestCanceledException;
+import org.eclipse.lyo.samples.client.jazz.automation.impl.IAutomationRequestHandler;
+import org.eclipse.lyo.samples.client.jazz.automation.impl.IConstants;
+import org.eclipse.lyo.samples.client.jazz.automation.impl.Message;
+import org.eclipse.lyo.samples.client.jazz.automation.impl.StatusResponse;
+import org.eclipse.lyo.samples.client.jazz.automation.impl.WriteThroughProperties;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.HttpUrlConnectorProvider;

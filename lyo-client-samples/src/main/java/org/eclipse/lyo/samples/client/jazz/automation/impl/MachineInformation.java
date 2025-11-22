@@ -13,7 +13,7 @@
  *
  *     Subhajit Bhuiya <subhuiya@in.ibm.com>     - initial implementation
  */
-package org.eclipse.lyo.samples.client.automation;
+package org.eclipse.lyo.samples.client.jazz.automation.impl;
 
 import java.net.Inet6Address;
 import java.net.InetAddress;

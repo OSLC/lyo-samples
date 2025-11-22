@@ -14,9 +14,9 @@
  *     Michael Fiedler     - initial API and implementation
  *     Gabriel Ruelas      - Fix handling of Rich text, include parsing extended properties
  */
-package org.eclipse.lyo.samples.client;
+package org.eclipse.lyo.samples.client.jazz;
 
-import static org.eclipse.lyo.samples.client.RMSample.printRequirementInfo;
+import static org.eclipse.lyo.samples.client.oslc4j.RMSample.printRequirementInfo;
 
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.core.Response;

@@ -16,7 +16,7 @@
  *     Samuel Padgett      - update command line example to use correct context
  *     Samuel Padgett      - set member property for RTM query results
  */
-package org.eclipse.lyo.samples.client;
+package org.eclipse.lyo.samples.client.jazz;
 
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.core.Response;
@@ -49,6 +49,7 @@ import org.eclipse.lyo.oslc4j.core.model.OslcMediaType;
 import org.glassfish.jersey.apache.connector.ApacheClientProperties;
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,6 +78,7 @@ public class ETMSample {
         options.addOption("user", true, "user ID");
         options.addOption("password", true, "password");
         options.addOption("project", true, "project area");
+        options.addOption("b", "basic", false, "Use Basic auth (use if JAS is enabled)");
 
         CommandLineParser cliParser = new GnuParser();
 
@@ -85,9 +87,11 @@ public class ETMSample {
 
         if (!validateOptions(cmd)) {
             logger.error("Syntax:  java <class_name> -url https://<server>:port/<context>/ -user <user>"
-                    + " -password <password> -project \"<project_area>\"");
-            logger.error("Example: java ETMSample -url https://exmple.com:9443/qm -user ADMIN -password"
-                    + " ADMIN -project \"JKE Banking (Quality Management)\"");
+                    + " -password <password> -project \"<project_area>\" [--basic]");
+            logger.error("Example: java ETMSample -url https://example.com:9443/qm -user ADMIN -password ADMIN"
+                    + " -project \"JKE Banking (Quality Management)\"");
+            logger.error("Example: java ETMSample -url https://jazz.net/sandbox01-qm/ -user ADMIN -password ADMIN"
+                    + " -project \"JKE Banking (Quality Management)\" --basic");
             return;
         }
 
@@ -95,48 +99,35 @@ public class ETMSample {
         String userId = cmd.getOptionValue("user");
         String password = cmd.getOptionValue("password");
         String projectArea = cmd.getOptionValue("project");
+        boolean useBasicAuth = cmd.hasOption("basic");
 
         try {
-
             // STEP 1: Configure the ClientBuilder as needed for your client application
-
-            // Use HttpClient instead of the default HttpUrlConnection
             ClientConfig clientConfig = new ClientConfig().connectorProvider(new ApacheConnectorProvider());
-            // Fixes Invalid cookie header: ... Invalid 'expires' attribute: Thu, 01 Dec 1994
-            // 16:00:00 GMT
             clientConfig.property(
                     ApacheClientProperties.REQUEST_CONFIG,
-                    RequestConfig.custom()
-                            .setCookieSpec(CookieSpecs.STANDARD)
-                            //					.setProxy(new HttpHost("localhost", 12345))
-                            .build());
+                    RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD).build());
             clientConfig.register(MultiPartFeature.class);
 
             ClientBuilder clientBuilder = ClientBuilder.newBuilder();
+            if (useBasicAuth) {
+                clientConfig.register(HttpAuthenticationFeature.basic(userId, password));
+                logger.info("Using Basic authentication");
+            }
             clientBuilder.withConfig(clientConfig);
 
-            // Setup SSL support to ignore self-assigned SSL certificates - for testing only!!
-            //		    SSLContextBuilder sslContextBuilder = new SSLContextBuilder();
-            //		    sslContextBuilder.loadTrustMaterial(TrustSelfSignedStrategy.INSTANCE);
-            //			logger.warn("Self-signed TLS cert trust enabled");
-            //
-            ////			sslContextBuilder.loadTrustMaterial((chain, authType) -> true); // WARNING! Only
-            // use with mitmproxy
-            ////			logger.warn("MITM Proxy TLS cert trust enabled");
-            //
-            //			clientBuilder.sslContext(sslContextBuilder.build());
-            //		    clientBuilder.hostnameVerifier(NoopHostnameVerifier.INSTANCE);
-
-            // IBM jazz-apps use JEE Form based authentication
-            clientBuilder.register(new JEEFormAuthenticator(webContextUrl, userId, password));
+            // JEE Form authentication only if not using Basic
+            if (!useBasicAuth) {
+                clientBuilder.register(new JEEFormAuthenticator(webContextUrl, userId, password));
+                logger.info("Using JAS (Forms) authentication");
+            }
 
             // STEP 3: Create a new OslcClient
             OslcClient client = new OslcClient(clientBuilder);
 
-            // STEP 4: Get the URL of the OSLC ChangeManagement service from the rootservices
-            // document
+            // STEP 4: Get the URL of the OSLC QM service from the rootservices document
             String catalogUrl = new RootServicesHelper(webContextUrl, OSLCConstants.OSLC_QM_V2, client).getCatalogUrl();
-            logger.info("Using %s catalog URI".formatted(catalogUrl));
+            logger.info("Using catalog URI {}", catalogUrl);
 
             // STEP 5: Find the OSLC Service Provider for the project area we want to work with
             String serviceProviderUrl = client.lookupServiceProviderUrl(catalogUrl, projectArea);
@@ -145,36 +136,29 @@ public class ETMSample {
             String queryCapability = client.lookupQueryCapability(
                     serviceProviderUrl, OSLCConstants.OSLC_QM_V2, OSLCConstants.QM_TEST_RESULT_QUERY);
 
-            // SCENARIO A: Run a query for all TestResults with a status of passed with OSLC paging
-            // of 10 items per
-            // page turned on and list the members of the result
+            // SCENARIO A: Query passed TestResults (paged)
             OslcQueryParameters queryParams = new OslcQueryParameters();
             queryParams.setWhere("oslc_qm:status=\"com.ibm.rqm.execution.common.state.passed\"");
             OslcQuery query = new OslcQuery(client, queryCapability, 10, queryParams);
-
-            System.out.println("Running query: " + query.getQueryUrl());
+            logger.info("Running query: {}", query.getQueryUrl());
             OslcQueryResult result = query.submit();
             result.setMemberProperty(OSLCConstants.OSLC_QM_V2 + "testResult");
-
-            boolean processAsJavaObjects = true;
-            processPagedQueryResults(result, client, processAsJavaObjects);
+            processPagedQueryResults(result, client, true);
 
             System.out.println("\n------------------------------\n");
 
-            // SCENARIO B:  Run a query for a specific TestResult selecting only certain
-            // attributes and then print it as raw XML.  Change the dcterms:title below to match a
-            // real TestResult in your RTM project area
+            // SCENARIO B: Query a specific TestResult selecting a subset of attributes
             OslcQueryParameters queryParams2 = new OslcQueryParameters();
             queryParams2.setWhere("dcterms:title=\"Consistent_display_of_currency_Firefox_DB2_WAS_Windows_S1\"");
             queryParams2.setSelect("dcterms:identifier,dcterms:title,dcterms:creator,dcterms:created,oslc_qm:status");
             OslcQuery query2 = new OslcQuery(client, queryCapability, queryParams2);
-
             OslcQueryResult result2 = query2.submit();
             result2.setMemberProperty(OSLCConstants.OSLC_QM_V2 + "testResult");
             Response rawResponse = result2.getRawResponse();
             processRawResponse(rawResponse);
+            rawResponse.close();
 
-            // SCENARIO C:  ETM TestCase creation and update
+            // SCENARIO C: TestCase creation and update
             TestCase testcase = new TestCase();
             testcase.setTitle("Accessibility verification using a screen reader");
             testcase.setDescription("This test case uses a screen reader application to ensure that the web browser"
@@ -182,41 +166,31 @@ public class ETMSample {
             testcase.addTestsChangeRequest(new Link(
                     new URI("http://cmprovider/changerequest/1"), "Implement accessibility in Pet Store application"));
 
-            // Get the Creation Factory URL for test cases so that we can create a test case
             String testcaseCreation = client.lookupCreationFactory(
                     serviceProviderUrl, OSLCConstants.OSLC_QM_V2, testcase.getRdfTypes()[0].toString());
-
-            // Create the test case
-            Response creationResponse =
-                    client.createResource(testcaseCreation, testcase, OslcMediaType.APPLICATION_RDF_XML);
+            Response creationResponse = client.createResource(
+                    testcaseCreation, testcase, OslcMediaType.APPLICATION_RDF_XML, OslcMediaType.APPLICATION_RDF_XML);
+            String testcaseLocation = creationResponse.getStringHeaders().getFirst(HttpHeaders.LOCATION);
             if (creationResponse.getStatus() != HttpStatus.SC_CREATED) {
                 System.err.println(
                         "ERROR: Could not create the test case (status " + creationResponse.getStatus() + ")\n");
                 System.err.println(creationResponse.readEntity(String.class));
                 System.exit(1);
             }
-
             creationResponse.readEntity(String.class);
-            String testcaseLocation = creationResponse.getStringHeaders().getFirst(HttpHeaders.LOCATION);
             System.out.println("Test Case created at location " + testcaseLocation);
 
-            // Get the test case from the service provider and update its title property
-            testcase = client.getResource(testcaseLocation, OslcMediaType.APPLICATION_RDF_XML)
-                    .readEntity(TestCase.class);
+            testcase = client.getResource(testcaseLocation).readEntity(TestCase.class);
             testcase.setTitle(testcase.getTitle() + " (updated)");
-
-            // Create a partial update URL so that only the title will be updated.
-            // Assuming (for readability) that the test case URL does not already contain a '?'
             String updateUrl = testcase.getAbout() + "?oslc.properties=dcterms:title";
-
-            // Update the test case at the service provider
-            client.updateResource(updateUrl, testcase, OslcMediaType.APPLICATION_RDF_XML)
-                    .readEntity(String.class);
+            Response updateResponse = client.updateResource(
+                    updateUrl, testcase, OslcMediaType.APPLICATION_RDF_XML, OslcMediaType.APPLICATION_RDF_XML);
+            updateResponse.readEntity(String.class);
 
         } catch (RootServicesException re) {
             logger.error("Unable to access the Jazz rootservices document at: {}/rootservices", webContextUrl, re);
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+            logger.error("Unknown error", e);
         }
     }
 
@@ -235,24 +209,14 @@ public class ETMSample {
     }
 
     private static void processCurrentPage(OslcQueryResult result, OslcClient client, boolean asJavaObjects) {
-
         for (String resultsUrl : result.getMembersUrls()) {
             System.out.println(resultsUrl);
-
-            Response response = null;
-            try {
-
-                // Get a single artifact by its URL
-                response = client.getResource(resultsUrl, OSLCConstants.CT_RDF);
-
+            try (Response response = client.getResource(resultsUrl, OSLCConstants.CT_RDF)) {
                 if (response != null) {
-                    // De-serialize it as a Java object
                     if (asJavaObjects) {
                         TestResult tr = response.readEntity(TestResult.class);
-                        printTestResultInfo(tr); // print a few attributes
+                        printTestResultInfo(tr);
                     } else {
-
-                        // Just print the raw RDF/XML (or process the XML as desired)
                         processRawResponse(response);
                     }
                 }
@@ -271,11 +235,9 @@ public class ETMSample {
             System.out.println(line);
         }
         System.out.println();
-        response.readEntity(String.class);
     }
 
     private static void printTestResultInfo(TestResult tr) {
-        // See the OSLC4J TestResult class for a full list of attributes you can access.
         if (tr != null) {
             System.out.println(
                     "ID: " + tr.getIdentifier() + ", Title: " + tr.getTitle() + ", Status: " + tr.getStatus());
@@ -283,12 +245,6 @@ public class ETMSample {
     }
 
     private static boolean validateOptions(CommandLine cmd) {
-        boolean isValid = true;
-
-        if (!(cmd.hasOption("url") && cmd.hasOption("user") && cmd.hasOption("password") && cmd.hasOption("project"))) {
-
-            isValid = false;
-        }
-        return isValid;
+        return cmd.hasOption("url") && cmd.hasOption("user") && cmd.hasOption("password") && cmd.hasOption("project");
     }
 }
