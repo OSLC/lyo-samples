@@ -41,6 +41,7 @@ import org.eclipse.lyo.samples.client.jazz.automation.impl.AutomationAdapter;
 import org.eclipse.lyo.samples.client.jazz.automation.impl.AutomationException;
 import org.eclipse.lyo.samples.client.jazz.automation.impl.AutomationRequestCanceledException;
 import org.eclipse.lyo.samples.client.jazz.automation.impl.IAutomationRequestHandler;
+import org.eclipse.lyo.oslc.domains.auto.Oslc_autoDomainConstants;
 import org.eclipse.lyo.samples.client.jazz.automation.impl.IConstants;
 import org.eclipse.lyo.samples.client.jazz.automation.impl.Message;
 import org.eclipse.lyo.samples.client.jazz.automation.impl.StatusResponse;
@@ -202,7 +203,7 @@ public class ETMAutomationSample implements IConstants, IAutomationRequestHandle
 
             // Add some rich text to the result
             Element xhtmlTableElement = createXhtmlTable();
-            QName contributionQname = new QName(AUTOMATION_DOMAIN, "contribution");
+            QName contributionQname = new QName(Oslc_autoDomainConstants.AUTOMATION_NAMSPACE, "contribution");
             result.getExtendedProperties().put(contributionQname, xhtmlTableElement);
 
             // Set the verdict for the result
