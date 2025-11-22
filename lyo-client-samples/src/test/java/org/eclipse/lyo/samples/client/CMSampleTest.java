@@ -3,6 +3,7 @@ package org.eclipse.lyo.samples.client;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
+import org.eclipse.lyo.samples.client.oslc4j.CMSample;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

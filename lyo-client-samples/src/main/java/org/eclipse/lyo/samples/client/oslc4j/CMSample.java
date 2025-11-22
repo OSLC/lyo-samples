@@ -13,7 +13,7 @@
  *
  *     Michael Fiedler     - initial API and implementation
  */
-package org.eclipse.lyo.samples.client;
+package org.eclipse.lyo.samples.client.oslc4j;
 
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.core.Response;

@@ -16,7 +16,7 @@
  *     Samuel Padgett      - examine oslc:usage to find the right creation factory,
  *                           use resource shapes to discover allowed values for Filed Against
  */
-package org.eclipse.lyo.samples.client;
+package org.eclipse.lyo.samples.client.jazz;
 
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.client.ClientBuilder;

@@ -16,7 +16,7 @@
  *     Samuel Padgett      - update command line example to use correct context
  *     Samuel Padgett      - set member property for RTM query results
  */
-package org.eclipse.lyo.samples.client;
+package org.eclipse.lyo.samples.client.jazz;
 
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.core.Response;

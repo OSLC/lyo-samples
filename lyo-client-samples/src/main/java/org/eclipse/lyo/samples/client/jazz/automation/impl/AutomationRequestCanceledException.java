@@ -13,21 +13,25 @@
  *
  *     Paul McMahan <pmcmahan@us.ibm.com>     - initial implementation
  */
-package org.eclipse.lyo.samples.client.automation;
+package org.eclipse.lyo.samples.client.jazz.automation.impl;
 
+import java.io.Serial;
 import org.eclipse.lyo.client.oslc.resources.AutomationRequest;
-import org.eclipse.lyo.client.oslc.resources.AutomationResult;
 
-public interface IAutomationRequestHandler {
+/** An exception thrown when an AutomationRequest has been canceled */
+public class AutomationRequestCanceledException extends AutomationException {
 
-    /**
-     * Handle the Automation Request assigned to an Automation Adapter and return an Automation Response.
-     *
-     * @param request
-     * @param adapter
-     * @return An Automation Response, or null if there is no response to be returned.
-     * @throws AutomationException
-     */
-    AutomationResult handleAutomationRequest(AutomationRequest request, AutomationAdapter adapter)
-            throws AutomationException;
+    private final AutomationRequest request;
+
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    public AutomationRequestCanceledException(AutomationRequest request) {
+        super();
+        this.request = request;
+    }
+
+    public AutomationRequest getCanceledRequest() {
+        return request;
+    }
 }

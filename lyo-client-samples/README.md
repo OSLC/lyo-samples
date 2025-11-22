@@ -5,7 +5,7 @@ Prerequisites: Register for Jazz.net or run your own instance or run your own IB
 If you registered on the Jazz.net, you will need to use basic auth, use the flag `--basic` for that (replace `YourUserName` with your login):
 
 ```
-mvn exec:java -Dexec.mainClass="org.eclipse.lyo.samples.client.EWMSample" -Dexec.args="-url https://jazz.net/sandbox02-ccm/ \
+mvn exec:java -Dexec.mainClass="org.eclipse.lyo.samples.client.jazz.EWMSample" -Dexec.args="-url https://jazz.net/sandbox02-ccm/ \
 -user YourUserName -password \"s3cret\" \
 -project \"YourUserName Project (Change and Architecture Management)\" --basic"
 ```
@@ -13,7 +13,7 @@ mvn exec:java -Dexec.mainClass="org.eclipse.lyo.samples.client.EWMSample" -Dexec
 For form-based auth, use the following command (replace `YourUserName` with your login and replace the URL with the URL of your installation):
 
 ```
-mvn exec:java -Dexec.mainClass="org.eclipse.lyo.samples.client.EWMSample" -Dexec.args="-url https://nordic.clm.ibmcloud.com/ccm/ \
+mvn exec:java -Dexec.mainClass="org.eclipse.lyo.samples.client.jazz.EWMSample" -Dexec.args="-url https://nordic.clm.ibmcloud.com/ccm/ \
 -user YourUserName \
 -password \"s3cret\" \
 -project \"OSLC Environment (EWM)\""
