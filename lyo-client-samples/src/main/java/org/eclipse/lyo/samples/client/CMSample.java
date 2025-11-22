@@ -66,6 +66,7 @@ public class CMSample {
         options.addOption("providerTitle", true, "Service Provider title in the ServiceProviderCatalog");
         options.addOption("user", true, "User ID");
         options.addOption("password", true, "User's password");
+        options.addOption("changeRequestURL", true, "Specific Change Request URL for retrieval scenario");
 
         CommandLineParser cliParser = new GnuParser();
 
@@ -88,6 +89,8 @@ public class CMSample {
         String providerTitle = cmd.getOptionValue("providerTitle");
         String userId = cmd.getOptionValue("user");
         String password = cmd.getOptionValue("password");
+        String changeRequestUrl = cmd.getOptionValue(
+                "changeRequestURL", "http://localhost:8080/OSLC4JChangeManagement/services/changeRequests/2");
 
         try {
 
@@ -140,8 +143,14 @@ public class CMSample {
             // SCENARIO B:  Run a query for a specific ChangeRequest and then print it as raw XML.
             // Change the URL below to match a real ChangeRequest
 
-            Response rawResponse = client.getResource(
-                    "http://localhost:8080/OSLC4JChangeManagement/services/changeRequests/2", OSLCConstants.CT_XML);
+            String specificResourceUrl;
+            if (catalogUrl.contains("localhost:1080")) {
+                specificResourceUrl = "http://localhost:1080/services/changeRequests/2";
+            } else {
+                specificResourceUrl = "http://localhost:8080/OSLC4JChangeManagement/services/changeRequests/2";
+            }
+
+            Response rawResponse = client.getResource(specificResourceUrl, OSLCConstants.CT_XML);
             processRawResponse(rawResponse);
             rawResponse.readEntity(String.class);
 
