@@ -288,6 +288,24 @@
       <artifactId>commons-cli</artifactId>
       <version>1.10.0</version>
     </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.10.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mock-server</groupId>
+      <artifactId>mockserver-netty</artifactId>
+      <version>5.15.0</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>com.sun.xml.bind</groupId>
+          <artifactId>jaxb-impl</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
 
   </dependencies>
 
