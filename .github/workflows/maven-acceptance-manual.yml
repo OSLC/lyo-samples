@@ -41,12 +41,12 @@ jobs:
           # - java-version: '22-ea'
           #   distribution: zulu
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           repository: "${{ github.event.inputs.lyoRepo }}"
           ref: "${{ github.event.inputs.lyoBranch }}"
           path: lyo-trunk
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           path: main
       - name: Set up JDK ${{ matrix.java-version }}
