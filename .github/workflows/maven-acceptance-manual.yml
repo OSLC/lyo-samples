@@ -1,6 +1,7 @@
 # Smoke testing client samples on Jazz sandbox instances
 
-name: Smoke testing (Lyo HEAD)
+name: Acceptance test (Lyo HEAD)
+run-name: "acceptance@${{ github.ref_name }} (Lyo@${{ github.event.inputs.lyoBranch }}; comment: ${{ inputs.comment }})"
 
 on:
   workflow_dispatch:
