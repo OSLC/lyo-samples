@@ -11,22 +11,22 @@ import org.mockserver.integration.ClientAndServer;
 import org.mockserver.model.MediaType;
 import org.mockserver.verify.VerificationTimes;
 
-public class CMSampleTest {
+class CMSampleTest {
 
     private ClientAndServer mockServer;
 
     @BeforeEach
-    public void startServer() {
+    void startServer() {
         mockServer = ClientAndServer.startClientAndServer(1080);
     }
 
     @AfterEach
-    public void stopServer() {
+    void stopServer() {
         mockServer.stop();
     }
 
     @Test
-    public void testMain() throws Exception {
+    void main() throws Exception {
         // 1. Catalog Request
         String catalogBody = """
                 <?xml version="1.0" encoding="UTF-8"?>
