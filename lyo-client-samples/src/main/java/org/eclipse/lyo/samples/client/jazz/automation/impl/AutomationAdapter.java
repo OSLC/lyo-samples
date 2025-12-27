@@ -109,58 +109,183 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
     private String projectArea;
 
     // properties provided to the server
+    @Getter(
+            onMethod_ = {
+                @OslcDescription("Title (reference: Dublin Core) or often a single line summary of the resource"
+                        + " represented as rich text in XHTML content."),
+                @OslcOccurs(Occurs.ExactlyOne),
+                @OslcPropertyDefinition(OslcConstants.DCTERMS_NAMESPACE + "title"),
+                @OslcTitle("Title"),
+                @OslcValueType(ValueType.XMLLiteral)
+            })
     @Setter
     private String title;
 
+    @Getter(
+            onMethod_ = {
+                @OslcDescription("Descriptive text (reference: Dublin Core) about resource represented as rich text in"
+                        + " XHTML content."),
+                @OslcPropertyDefinition(OslcConstants.DCTERMS_NAMESPACE + "description"),
+                @OslcTitle("Description"),
+                @OslcValueType(ValueType.XMLLiteral)
+            })
     @Setter
     private String description;
 
+    @Getter(
+            onMethod_ = {
+                @OslcDescription("Type (reference: Dublin Core) of adapter."),
+                @OslcPropertyDefinition(OslcConstants.DCTERMS_NAMESPACE + "type"),
+                @OslcTitle("Type"),
+                @OslcValueType(ValueType.String)
+            })
     @Setter
     private String type;
 
+    @Getter(
+            onMethod_ = {
+                @OslcPropertyDefinition(NAMESPACE_URI_JAZZ_AUTO_RQM + "hostname"),
+                @OslcTitle("Hostname"),
+                @OslcValueType(ValueType.String)
+            })
     @Setter
     private String hostname;
 
+    @Getter(
+            onMethod_ = {
+                @OslcPropertyDefinition(NAMESPACE_URI_JAZZ_AUTO_RQM + "ipAddress"),
+                @OslcTitle("IP Address"),
+                @OslcValueType(ValueType.String)
+            })
     @Setter
     private String ipAddress;
 
+    @Getter(
+            onMethod_ = {
+                @OslcPropertyDefinition(NAMESPACE_URI_JAZZ_AUTO_RQM + "pollingInterval"),
+                @OslcTitle("Polling Interval"),
+                @OslcValueType(ValueType.Integer)
+            })
     @Setter
     private Integer pollingInterval;
 
+    @Getter(
+            onMethod_ = {
+                @OslcPropertyDefinition(NAMESPACE_URI_JAZZ_AUTO_RQM + "macAddress"),
+                @OslcTitle("MAC Address"),
+                @OslcValueType(ValueType.String)
+            })
     @Setter
     private String macAddress;
 
+    @Getter(
+            onMethod_ = {
+                @OslcPropertyDefinition(NAMESPACE_URI_JAZZ_AUTO_RQM + "fullyQualifiedDomainName"),
+                @OslcTitle("Fully Qualified Domain Name"),
+                @OslcValueType(ValueType.String)
+            })
     @Setter
     private String fullyQualifiedDomainName;
 
     // properties provided by the server
+    @Getter(
+            onMethod_ = {
+                @OslcDescription("Relation (reference: Dublin Core) of adapter to other QM resources."),
+                @OslcPropertyDefinition(OslcConstants.DCTERMS_NAMESPACE + "relation"),
+                @OslcTitle("Relation"),
+                @OslcValueType(ValueType.Resource)
+            })
     @Setter
     private URI relation;
 
+    @Getter(
+            onMethod_ = {
+                @OslcDescription("URL to poll for work assigned to the adapter."),
+                @OslcPropertyDefinition(NAMESPACE_URI_JAZZ_AUTO_RQM + "workAvailableUrl"),
+                @OslcTitle("Work Available URL"),
+                @OslcValueType(ValueType.Resource)
+            })
     @Setter
     private URI workAvailableUrl;
 
+    @Getter(
+            onMethod_ = {
+                @OslcDescription("Boolean indicating whether work is available for the adapter."),
+                @OslcPropertyDefinition(NAMESPACE_URI_JAZZ_AUTO_RQM + "workAvailable"),
+                @OslcTitle("Is Work Available"),
+                @OslcValueType(ValueType.Boolean)
+            })
     @Setter
     private Boolean workAvailable;
 
+    @Getter(
+            onMethod_ = {
+                @OslcDescription("Identifier (reference: Dublin Core) for the adapter."),
+                @OslcPropertyDefinition(OslcConstants.DCTERMS_NAMESPACE + "identifier"),
+                @OslcTitle("Identifier"),
+                @OslcValueType(ValueType.String)
+            })
     @Setter
     private String identifier;
 
+    @Getter(
+            onMethod_ = {
+                @OslcDescription("Last modification date (reference: Dublin Core) of the adapter."),
+                @OslcPropertyDefinition(OslcConstants.DCTERMS_NAMESPACE + "modified"),
+                @OslcTitle("Modified"),
+                @OslcValueType(ValueType.DateTime)
+            })
     @Setter
     private Date modified;
 
+    @Getter(
+            onMethod_ = {
+                @OslcDescription("Creator (reference: Dublin Core) of the adapter."),
+                @OslcPropertyDefinition(OslcConstants.DCTERMS_NAMESPACE + "creator"),
+                @OslcTitle("Creator"),
+                @OslcValueType(ValueType.Resource)
+            })
     @Setter
     private URI creator;
 
+    @Getter(
+            onMethod_ = {
+                @OslcDescription("Resource Shape that provides hints as to resource property value-types and allowed"
+                        + " values. "),
+                @OslcPropertyDefinition(OslcConstants.OSLC_CORE_NAMESPACE + "instanceShape"),
+                @OslcRange(OslcConstants.TYPE_RESOURCE_SHAPE),
+                @OslcTitle("Instance Shape")
+            })
     @Setter
     private URI instanceShape;
 
+    @Getter(
+            onMethod_ = {
+                @OslcDescription("URL for the machine that the adapter is running on."),
+                @OslcPropertyDefinition(NAMESPACE_URI_JAZZ_AUTO_RQM + "runsOnMachine"),
+                @OslcTitle("Runs On Machine"),
+                @OslcValueType(ValueType.Resource)
+            })
     @Setter
     private URI runsOnMachine;
 
+    @Getter(
+            onMethod_ = {
+                @OslcDescription("The scope of a resource is a URI for the resource's OSLC Service Provider."),
+                @OslcPropertyDefinition(OslcConstants.OSLC_CORE_NAMESPACE + "serviceProvider"),
+                @OslcRange(OslcConstants.TYPE_SERVICE_PROVIDER),
+                @OslcTitle("Service Provider")
+            })
     @Setter
     private URI serviceProvider;
 
+    @Getter(
+            onMethod_ = {
+                @OslcDescription("URL for the work assigned to the adapter."),
+                @OslcPropertyDefinition(NAMESPACE_URI_JAZZ_AUTO_RQM + "assignedWorkUrl"),
+                @OslcTitle("Work Available URL"),
+                @OslcValueType(ValueType.Resource)
+            })
     @Setter
     private URI assignedWorkUrl;
 
@@ -219,68 +344,6 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
         fullyQualifiedDomainName = machine.getFQDN();
     }
 
-    @OslcDescription(
-            "Descriptive text (reference: Dublin Core) about resource represented as rich text in" + " XHTML content.")
-    @OslcPropertyDefinition(OslcConstants.DCTERMS_NAMESPACE + "description")
-    @OslcTitle("Description")
-    @OslcValueType(ValueType.XMLLiteral)
-    public String getDescription() {
-        return description;
-    }
-
-    @OslcDescription("Title (reference: Dublin Core) or often a single line summary of the resource"
-            + " represented as rich text in XHTML content.")
-    @OslcOccurs(Occurs.ExactlyOne)
-    @OslcPropertyDefinition(OslcConstants.DCTERMS_NAMESPACE + "title")
-    @OslcTitle("Title")
-    @OslcValueType(ValueType.XMLLiteral)
-    public String getTitle() {
-        return title;
-    }
-
-    @OslcDescription("Type (reference: Dublin Core) of adapter.")
-    @OslcPropertyDefinition(OslcConstants.DCTERMS_NAMESPACE + "type")
-    @OslcTitle("Type")
-    @OslcValueType(ValueType.String)
-    public String getType() {
-        return type;
-    }
-
-    @OslcPropertyDefinition(NAMESPACE_URI_JAZZ_AUTO_RQM + "hostname")
-    @OslcTitle("Hostname")
-    @OslcValueType(ValueType.String)
-    public String getHostname() {
-        return hostname;
-    }
-
-    @OslcPropertyDefinition(NAMESPACE_URI_JAZZ_AUTO_RQM + "ipAddress")
-    @OslcTitle("IP Address")
-    @OslcValueType(ValueType.String)
-    public String getIpAddress() {
-        return ipAddress;
-    }
-
-    @OslcPropertyDefinition(NAMESPACE_URI_JAZZ_AUTO_RQM + "pollingInterval")
-    @OslcTitle("Polling Interval")
-    @OslcValueType(ValueType.Integer)
-    public Integer getPollingInterval() {
-        return pollingInterval;
-    }
-
-    @OslcPropertyDefinition(NAMESPACE_URI_JAZZ_AUTO_RQM + "macAddress")
-    @OslcTitle("MAC Address")
-    @OslcValueType(ValueType.String)
-    public String getMacAddress() {
-        return macAddress;
-    }
-
-    @OslcPropertyDefinition(NAMESPACE_URI_JAZZ_AUTO_RQM + "fullyQualifiedDomainName")
-    @OslcTitle("Fully Qualified Domain Name")
-    @OslcValueType(ValueType.String)
-    public String getFullyQualifiedDomainName() {
-        return fullyQualifiedDomainName;
-    }
-
     @OslcDescription("Capability of the adapter like Execute, Record, Import.")
     @OslcName("capability")
     @OslcPropertyDefinition(NAMESPACE_URI_JAZZ_AUTO_RQM + "capability")
@@ -300,86 +363,6 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
         if (capabilities != null) {
             this.capabilities.addAll(Arrays.asList(capabilities));
         }
-    }
-
-    @OslcDescription("Relation (reference: Dublin Core) of adapter to other QM resources.")
-    @OslcPropertyDefinition(OslcConstants.DCTERMS_NAMESPACE + "relation")
-    @OslcTitle("Relation")
-    @OslcValueType(ValueType.Resource)
-    public URI getRelation() {
-        return relation;
-    }
-
-    @OslcDescription("URL to poll for work assigned to the adapter.")
-    @OslcPropertyDefinition(NAMESPACE_URI_JAZZ_AUTO_RQM + "workAvailableUrl")
-    @OslcTitle("Work Available URL")
-    @OslcValueType(ValueType.Resource)
-    public URI getWorkAvailableUrl() {
-        return workAvailableUrl;
-    }
-
-    @OslcDescription("Boolean indicating whether work is available for the adapter.")
-    @OslcPropertyDefinition(NAMESPACE_URI_JAZZ_AUTO_RQM + "workAvailable")
-    @OslcTitle("Is Work Available")
-    @OslcValueType(ValueType.Boolean)
-    public Boolean getWorkAvailable() {
-        return workAvailable;
-    }
-
-    @OslcDescription("Identifier (reference: Dublin Core) for the adapter.")
-    @OslcPropertyDefinition(OslcConstants.DCTERMS_NAMESPACE + "identifier")
-    @OslcTitle("Identifier")
-    @OslcValueType(ValueType.String)
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    @OslcDescription("Last modification date (reference: Dublin Core) of the adapter.")
-    @OslcPropertyDefinition(OslcConstants.DCTERMS_NAMESPACE + "modified")
-    @OslcTitle("Modified")
-    @OslcValueType(ValueType.DateTime)
-    public Date getModified() {
-        return modified;
-    }
-
-    @OslcDescription("Creator (reference: Dublin Core) of the adapter.")
-    @OslcPropertyDefinition(OslcConstants.DCTERMS_NAMESPACE + "creator")
-    @OslcTitle("Creator")
-    @OslcValueType(ValueType.Resource)
-    public URI getCreator() {
-        return creator;
-    }
-
-    @OslcDescription("Resource Shape that provides hints as to resource property value-types and allowed" + " values. ")
-    @OslcPropertyDefinition(OslcConstants.OSLC_CORE_NAMESPACE + "instanceShape")
-    @OslcRange(OslcConstants.TYPE_RESOURCE_SHAPE)
-    @OslcTitle("Instance Shape")
-    public URI getInstanceShape() {
-        return instanceShape;
-    }
-
-    @OslcDescription("URL for the machine that the adapter is running on.")
-    @OslcPropertyDefinition(NAMESPACE_URI_JAZZ_AUTO_RQM + "runsOnMachine")
-    @OslcTitle("Runs On Machine")
-    @OslcValueType(ValueType.Resource)
-    public URI getRunsOnMachine() {
-        return runsOnMachine;
-    }
-
-    @OslcDescription("The scope of a resource is a URI for the resource's OSLC Service Provider.")
-    @OslcPropertyDefinition(OslcConstants.OSLC_CORE_NAMESPACE + "serviceProvider")
-    @OslcRange(OslcConstants.TYPE_SERVICE_PROVIDER)
-    @OslcTitle("Service Provider")
-    public URI getServiceProvider() {
-        return serviceProvider;
-    }
-
-    @OslcDescription("URL for the work assigned to the adapter.")
-    @OslcPropertyDefinition(NAMESPACE_URI_JAZZ_AUTO_RQM + "assignedWorkUrl")
-    @OslcTitle("Work Available URL")
-    @OslcValueType(ValueType.Resource)
-    public URI getAssignedWorkUrl() {
-        return assignedWorkUrl;
     }
 
     /**

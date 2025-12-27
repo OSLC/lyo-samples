@@ -15,6 +15,7 @@
  */
 package org.eclipse.lyo.samples.client.jazz.automation.impl;
 
+import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcDescription;
@@ -45,8 +46,24 @@ public class StatusResponse extends AbstractResource implements IConstants {
     /** Starting value for error messages */
     public static final int STATUS_ERROR = 400;
 
+    @Getter(
+            onMethod_ = {
+                @OslcDescription("The severity of the status"),
+                @OslcPropertyDefinition(NAMESPACE_URI_JAZZ_AUTO_RQM + "statusCode"),
+                @OslcTitle("Status Code"),
+                @OslcOccurs(Occurs.ExactlyOne),
+                @OslcValueType(ValueType.Integer)
+            })
     private int statusCode;
 
+    @Getter(
+            onMethod_ = {
+                @OslcDescription("Human friendly description of the status"),
+                @OslcPropertyDefinition(NAMESPACE_URI_JAZZ_AUTO_RQM + "status"),
+                @OslcTitle("Status"),
+                @OslcOccurs(Occurs.ZeroOrOne),
+                @OslcValueType(ValueType.String)
+            })
     @Setter
     private String status;
 
@@ -66,15 +83,6 @@ public class StatusResponse extends AbstractResource implements IConstants {
         setStatusCode(statusCode);
     }
 
-    @OslcDescription("The severity of the status")
-    @OslcPropertyDefinition(NAMESPACE_URI_JAZZ_AUTO_RQM + "statusCode")
-    @OslcTitle("Status Code")
-    @OslcOccurs(Occurs.ExactlyOne)
-    @OslcValueType(ValueType.Integer)
-    public int getStatusCode() {
-        return statusCode;
-    }
-
     /**
      * Set the status code for this response. The expected range is 100-599.
      *
@@ -91,14 +99,5 @@ public class StatusResponse extends AbstractResource implements IConstants {
 
             log.warn("status code not in expected range: {}", statusCode);
         }
-    }
-
-    @OslcDescription("Human friendly description of the status")
-    @OslcPropertyDefinition(NAMESPACE_URI_JAZZ_AUTO_RQM + "status")
-    @OslcTitle("Status")
-    @OslcOccurs(Occurs.ZeroOrOne)
-    @OslcValueType(ValueType.String)
-    public String getStatus() {
-        return status;
     }
 }
