@@ -16,7 +16,7 @@
     <!-- Jersey version compatible with Jakarta EE -->
     <version.jersey>3.1.10</version.jersey>
     <version.swagger>2.2.41</version.swagger>
-    <version.lyo>7.0.0.Alpha3</version.lyo>
+    <version.lyo>7.0.0.Alpha8</version.lyo>
   </properties>
   <repositories>
     <repository>
