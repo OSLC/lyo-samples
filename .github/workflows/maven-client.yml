@@ -47,14 +47,15 @@ jobs:
           mvn -B clean verify --file lyo-client-samples/pom.xml
       - name: Run Spotless (Maven plugin)
         run: |
-          set -x
+          # set -x
           mvn -B spotless:apply --file lyo-client-samples/pom.xml
-          git -C ./ status --porcelain
+          # git -C ./ status --porcelain
           git add -A
-          git -C ./ status --porcelain
+          # git -C ./ status --porcelain
           if [ -z "$(git -C ./ status --porcelain)" ]; then
             echo "Spotless PASS"
           else
+            git -C ./ status --porcelain
             echo "Spotless FAIL; run 'mvn -B spotless:apply --file lyo-client-samples/pom.xml' locally" >&2
             exit 1
           fi
@@ -65,6 +66,7 @@ jobs:
           if [ -z "$(git -C ./ status --porcelain)" ]; then
             echo "rewrite PASS"
           else
+            git -C ./ status --porcelain
             echo "rewrite FAIL; run 'mvn -B org.openrewrite.maven:rewrite-maven-plugin:run spotless:apply -DskipTests --file lyo-client-samples/pom.xml' locally" >&2
             exit 1
           fi
