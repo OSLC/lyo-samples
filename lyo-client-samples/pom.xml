@@ -72,6 +72,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.14.1</version>
         <configuration>
           <annotationProcessorPaths>
             <path>
@@ -95,7 +96,7 @@
         <configuration>
           <activeRecipes>
             <!-- <recipe>org.openrewrite.java.migrate.UpgradeToJava17</recipe> -->
-            <!-- <recipe>org.openrewrite.java.migrate.UpgradeToJava21</recipe> -->
+            <recipe>org.openrewrite.java.migrate.UpgradeToJava21</recipe>
             <recipe>org.openrewrite.java.testing.junit5.JUnit5BestPractices</recipe>
             <recipe>org.openrewrite.java.logging.slf4j.ParameterizedLogging</recipe>
             <!-- <recipe>org.openrewrite.java.logging.slf4j.Log4jToSlf4j</recipe> -->
