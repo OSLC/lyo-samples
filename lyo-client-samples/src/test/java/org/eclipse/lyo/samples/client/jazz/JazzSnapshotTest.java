@@ -23,7 +23,7 @@ import org.mockserver.model.HttpRequest;
 import org.mockserver.model.MediaType;
 
 class JazzSnapshotTest {
-
+    
     private static final MediaType RDF_XML = MediaType.parse("application/rdf+xml");
     private static ClientAndServer mockServer;
     private static MockServerClient mockServerClient;
@@ -307,7 +307,7 @@ class JazzSnapshotTest {
                     .append("\n");
             String body = req.getBodyAsString();
             if (body != null && !body.isEmpty()) {
-                if (body.contains("<rdf:RDF")) {
+                if (isRdfBody(body)) {
                     snapshot.append(SnapshotUtils.stabilizeRdf(body));
                 } else {
                     snapshot.append(body);
@@ -322,7 +322,7 @@ class JazzSnapshotTest {
         loadedFixtures.entrySet().stream().sorted(Map.Entry.comparingByKey()).forEach(entry -> {
             snapshot.append("--- ").append(entry.getKey()).append(" ---\n");
             String body = entry.getValue().trim();
-            if (body.contains("<rdf:RDF")) {
+            if (isRdfBody(body)) {
                 snapshot.append(SnapshotUtils.stabilizeRdf(body));
             } else {
                 snapshot.append(body);
@@ -334,5 +334,14 @@ class JazzSnapshotTest {
         String stabilized = snapshot.toString().replace(baseUri, "http://localhost:PORT");
 
         expectSelfie(stabilized).toMatchDisk();
+    }
+
+    private boolean isRdfBody(String body) {
+        return body.contains("<rdf:RDF")
+                || body.contains("PREFIX ")
+                || body.contains("@prefix")
+                || body.contains("prefix ")
+                || body.contains("@base")
+                || body.contains("BASE ");
     }
 }

@@ -20,19 +20,27 @@ import org.apache.jena.rdf.model.Resource;
 public class SnapshotUtils {
 
     /**
-     * Stabilizes an RDF/XML string by converting it to N-TRIPLES, canonicalizing blank node IDs, and sorting triples.
+     * Stabilizes an RDF string by converting it to N-TRIPLES, canonicalizing blank node IDs, and sorting triples.
      *
      * <p>This implementation uses a rudimentary canonicalization algorithm: 1. Compute a "signature" for each blank
      * node based on its non-blank neighbors (properties/values). 2. Sort blank nodes by this signature. 3. Assign
      * sequential IDs (_:b1, _:b2, ...) to the sorted nodes.
      *
-     * @param rdfXml the RDF/XML string to stabilize
+     * @param rdfXml the RDF content to stabilize (RDF/XML, Turtle, or N-TRIPLES)
      * @return the stabilized N-TRIPLES string
      */
     public static String stabilizeRdf(String rdfXml) {
         try {
             Model model = ModelFactory.createDefaultModel();
-            model.read(new StringReader(rdfXml), null, "RDF/XML");
+            if (!tryRead(model, rdfXml, "RDF/XML")) {
+                model = ModelFactory.createDefaultModel();
+                if (!tryRead(model, rdfXml, "TURTLE")) {
+                    model = ModelFactory.createDefaultModel();
+                    if (!tryRead(model, rdfXml, "N-TRIPLES")) {
+                        return rdfXml.lines().sorted().collect(Collectors.joining("\n"));
+                    }
+                }
+            }
 
             // 1. Identify all blank nodes
             List<Resource> blankNodes = new ArrayList<>();
@@ -121,6 +129,15 @@ public class SnapshotUtils {
         } catch (Exception e) {
             // Fallback to primitive clean if parsing fails, or return original
             return rdfXml.lines().sorted().collect(Collectors.joining("\n"));
+        }
+    }
+
+    private static boolean tryRead(Model model, String rdfContent, String lang) {
+        try {
+            model.read(new StringReader(rdfContent), null, lang);
+            return true;
+        } catch (Exception e) {
+            return false;
         }
     }
 }
