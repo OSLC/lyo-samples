@@ -6,15 +6,12 @@ import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
 import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
+import org.eclipse.lyo.samples.client.SnapshotUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +23,7 @@ import org.mockserver.model.HttpRequest;
 import org.mockserver.model.MediaType;
 
 class JazzSnapshotTest {
-
+    // SELFIEWRITE
     private static final MediaType RDF_XML = MediaType.parse("application/rdf+xml");
     private static ClientAndServer mockServer;
     private static MockServerClient mockServerClient;
@@ -311,7 +308,7 @@ class JazzSnapshotTest {
             String body = req.getBodyAsString();
             if (body != null && !body.isEmpty()) {
                 if (body.contains("<rdf:RDF")) {
-                    snapshot.append(stabilizeRdf(body));
+                    snapshot.append(SnapshotUtils.stabilizeRdf(body));
                 } else {
                     snapshot.append(body);
                 }
@@ -326,7 +323,7 @@ class JazzSnapshotTest {
             snapshot.append("--- ").append(entry.getKey()).append(" ---\n");
             String body = entry.getValue().trim();
             if (body.contains("<rdf:RDF")) {
-                snapshot.append(stabilizeRdf(body));
+                snapshot.append(SnapshotUtils.stabilizeRdf(body));
             } else {
                 snapshot.append(body);
             }
@@ -337,24 +334,5 @@ class JazzSnapshotTest {
         String stabilized = snapshot.toString().replace(baseUri, "http://localhost:PORT");
 
         expectSelfie(stabilized).toMatchDisk();
-    }
-
-    private String stabilizeRdf(String rdfXml) {
-        try {
-            Model model = ModelFactory.createDefaultModel();
-            model.read(new StringReader(rdfXml), null, "RDF/XML");
-            StringWriter out = new StringWriter();
-            model.write(out, "N-TRIPLES");
-
-            // Anonymize blank node IDs and sort triples for determinism
-            return out.toString()
-                    .lines()
-                    .filter(line -> !line.isBlank())
-                    .map(line -> line.replaceAll("_:B[a-zA-Z0-9]+", "_:blank"))
-                    .sorted()
-                    .collect(java.util.stream.Collectors.joining("\n"));
-        } catch (Exception e) {
-            return rdfXml;
-        }
     }
 }
