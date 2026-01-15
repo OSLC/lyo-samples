@@ -13,7 +13,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.junit.jupiter.api.AfterAll;
@@ -345,8 +344,15 @@ class JazzSnapshotTest {
             Model model = ModelFactory.createDefaultModel();
             model.read(new StringReader(rdfXml), null, "RDF/XML");
             StringWriter out = new StringWriter();
-            model.write(out, "TURTLE");
-            return out.toString();
+            model.write(out, "N-TRIPLES");
+
+            // Anonymize blank node IDs and sort triples for determinism
+            return out.toString()
+                    .lines()
+                    .filter(line -> !line.isBlank())
+                    .map(line -> line.replaceAll("_:B[a-zA-Z0-9]+", "_:blank"))
+                    .sorted()
+                    .collect(java.util.stream.Collectors.joining("\n"));
         } catch (Exception e) {
             return rdfXml;
         }
