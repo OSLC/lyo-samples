@@ -1,0 +1,8 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:oslc="http://open-services.net/ns/core#">
+  <oslc:ResponseInfo rdf:about="{{baseUri}}/polarion/oslc/services/projects/OslcDev/query">
+    <rdfs:member rdf:resource="{{baseUri}}/polarion/oslc/services/projects/OslcDev/workitems/OD-400" />
+  </oslc:ResponseInfo>
+</rdf:RDF>

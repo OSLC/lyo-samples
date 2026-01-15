@@ -1,0 +1,12 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:oslc="http://open-services.net/ns/core#"
+    xmlns:dcterms="http://purl.org/dc/terms/">
+  <oslc:ServiceProviderCatalog rdf:about="{{baseUri}}/polarion/oslc/catalog">
+    <oslc:serviceProvider>
+      <oslc:ServiceProvider rdf:about="{{baseUri}}/polarion/oslc/services/projects/OslcDev">
+        <dcterms:title>{{projectName}}</dcterms:title>
+      </oslc:ServiceProvider>
+    </oslc:serviceProvider>
+  </oslc:ServiceProviderCatalog>
+</rdf:RDF>

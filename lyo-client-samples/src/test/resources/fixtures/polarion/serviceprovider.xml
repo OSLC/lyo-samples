@@ -1,0 +1,17 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:oslc="http://open-services.net/ns/core#">
+  <oslc:ServiceProvider rdf:about="{{baseUri}}/polarion/oslc/services/projects/OslcDev">
+    <oslc:service>
+      <oslc:Service>
+        <oslc:domain rdf:resource="http://open-services.net/ns/rm#"/>
+        <oslc:queryCapability>
+          <oslc:QueryCapability>
+            <oslc:resourceType rdf:resource="http://open-services.net/ns/rm#Requirement"/>
+            <oslc:queryBase rdf:resource="{{baseUri}}/polarion/oslc/services/projects/OslcDev/query"/>
+          </oslc:QueryCapability>
+        </oslc:queryCapability>
+      </oslc:Service>
+    </oslc:service>
+  </oslc:ServiceProvider>
+</rdf:RDF>

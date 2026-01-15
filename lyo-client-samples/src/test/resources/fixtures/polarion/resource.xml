@@ -1,0 +1,9 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:dcterms="http://purl.org/dc/terms/"
+    xmlns:oslc_rm="http://open-services.net/ns/rm#">
+  <oslc_rm:Requirement rdf:about="{{baseUri}}/polarion/oslc/services/projects/OslcDev/workitems/OD-400">
+    <dcterms:title>OD-400 Requirement</dcterms:title>
+    <dcterms:description>Sample Requirement description</dcterms:description>
+  </oslc_rm:Requirement>
+</rdf:RDF>
