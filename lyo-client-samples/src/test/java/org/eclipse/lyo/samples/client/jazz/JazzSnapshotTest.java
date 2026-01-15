@@ -6,11 +6,16 @@ import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
 import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -306,7 +311,12 @@ class JazzSnapshotTest {
                     .append("\n");
             String body = req.getBodyAsString();
             if (body != null && !body.isEmpty()) {
-                snapshot.append(body).append("\n");
+                if (body.contains("<rdf:RDF")) {
+                    snapshot.append(stabilizeRdf(body));
+                } else {
+                    snapshot.append(body);
+                }
+                snapshot.append("\n");
             }
             snapshot.append("--------------------------------------------------\n");
         }
@@ -315,12 +325,30 @@ class JazzSnapshotTest {
         // Sort keys for deterministic order
         loadedFixtures.entrySet().stream().sorted(Map.Entry.comparingByKey()).forEach(entry -> {
             snapshot.append("--- ").append(entry.getKey()).append(" ---\n");
-            snapshot.append(entry.getValue().trim()).append("\n\n");
+            String body = entry.getValue().trim();
+            if (body.contains("<rdf:RDF")) {
+                snapshot.append(stabilizeRdf(body));
+            } else {
+                snapshot.append(body);
+            }
+            snapshot.append("\n\n");
         });
 
         // Stabilize ports in the entire snapshot
         String stabilized = snapshot.toString().replace(baseUri, "http://localhost:PORT");
 
         expectSelfie(stabilized).toMatchDisk();
+    }
+
+    private String stabilizeRdf(String rdfXml) {
+        try {
+            Model model = ModelFactory.createDefaultModel();
+            model.read(new StringReader(rdfXml), null, "RDF/XML");
+            StringWriter out = new StringWriter();
+            model.write(out, "TURTLE");
+            return out.toString();
+        } catch (Exception e) {
+            return rdfXml;
+        }
     }
 }

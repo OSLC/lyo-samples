@@ -24,111 +24,54 @@ GET /rm/oslc/contexts/_1/rm/services.xml
 GET /rm/types/Collection
 --------------------------------------------------
 POST /rm/oslc/contexts/_1/rm/create
-<?xml version="1.0" encoding="UTF-8"?>
-<rdf:RDF
-    xmlns:dcterms="http://purl.org/dc/terms/"
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:oslc="http://open-services.net/ns/core#"
-    xmlns:j.0="http://open-services.net/ns/rm#"
-    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-    xmlns:j.1="http://jazz.net/ns/rm#">
-  <rdf:Statement>
-    <dcterms:title>Link in REQ01</dcterms:title>
-    <rdf:object rdf:resource="http://google.com"/>
-    <rdf:predicate rdf:resource="http://open-services.net/ns/rm#implementedBy"/>
-    <rdf:subject>
-      <j.0:Requirement>
-        <j.1:primaryText>&lt;div xmlns="http://www.w3.org/1999/xhtml"&gt;My Primary Text&lt;/div&gt;</j.1:primaryText>
-        <j.0:implementedBy rdf:resource="http://google.com"/>
-        <oslc:instanceShape rdf:resource="http://localhost:PORT/rm/types/UserRequirement"/>
-        <dcterms:title rdf:parseType="Literal">Req01</dcterms:title>
-        <dcterms:description rdf:parseType="Literal">Created By EclipseLyo</dcterms:description>
-      </j.0:Requirement>
-    </rdf:subject>
-  </rdf:Statement>
-</rdf:RDF>
-
+_:b0 <http://purl.org/dc/terms/title> "Link in REQ01" .
+_:b0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#object> <http://google.com> .
+_:b0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <http://open-services.net/ns/rm#implementedBy> .
+_:b0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> _:b1 .
+_:b0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement> .
+_:b1 <http://jazz.net/ns/rm#primaryText> "<div xmlns=\"http://www.w3.org/1999/xhtml\">My Primary Text</div>" .
+_:b1 <http://open-services.net/ns/core#instanceShape> <http://localhost:PORT/rm/types/UserRequirement> .
+_:b1 <http://open-services.net/ns/rm#implementedBy> <http://google.com> .
+_:b1 <http://purl.org/dc/terms/description> "Created By EclipseLyo"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .
+_:b1 <http://purl.org/dc/terms/title> "Req01"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .
+_:b1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/rm#Requirement> .
 --------------------------------------------------
 POST /rm/oslc/contexts/_1/rm/create
-<?xml version="1.0" encoding="UTF-8"?>
-<rdf:RDF
-    xmlns:dcterms="http://purl.org/dc/terms/"
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:oslc="http://open-services.net/ns/core#"
-    xmlns:j.0="http://open-services.net/ns/rm#"
-    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
-  <rdf:Statement>
-    <dcterms:title>Link in REQ02</dcterms:title>
-    <rdf:object rdf:resource="http://bancomer.com"/>
-    <rdf:predicate rdf:resource="http://open-services.net/ns/rm#validatedBy"/>
-    <rdf:subject>
-      <j.0:Requirement>
-        <oslc:instanceShape rdf:resource="http://localhost:PORT/rm/types/UserRequirement"/>
-        <j.0:validatedBy rdf:resource="http://bancomer.com"/>
-        <dcterms:title rdf:parseType="Literal">Req02</dcterms:title>
-        <dcterms:description rdf:parseType="Literal">Created By EclipseLyo</dcterms:description>
-      </j.0:Requirement>
-    </rdf:subject>
-  </rdf:Statement>
-</rdf:RDF>
-
+_:b0 <http://open-services.net/ns/core#instanceShape> <http://localhost:PORT/rm/types/UserRequirement> .
+_:b0 <http://open-services.net/ns/rm#validatedBy> <http://bancomer.com> .
+_:b0 <http://purl.org/dc/terms/description> "Created By EclipseLyo"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .
+_:b0 <http://purl.org/dc/terms/title> "Req02"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .
+_:b0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/rm#Requirement> .
+_:b1 <http://purl.org/dc/terms/title> "Link in REQ02" .
+_:b1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#object> <http://bancomer.com> .
+_:b1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <http://open-services.net/ns/rm#validatedBy> .
+_:b1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> _:b0 .
+_:b1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement> .
 --------------------------------------------------
 POST /rm/oslc/contexts/_1/rm/create
-<?xml version="1.0" encoding="UTF-8"?>
-<rdf:RDF
-    xmlns:dcterms="http://purl.org/dc/terms/"
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:oslc="http://open-services.net/ns/core#"
-    xmlns:j.0="http://open-services.net/ns/rm#"
-    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
-  <rdf:Statement>
-    <dcterms:title>Link in REQ03</dcterms:title>
-    <rdf:object rdf:resource="http://outlook.com"/>
-    <rdf:predicate rdf:resource="http://open-services.net/ns/rm#validatedBy"/>
-    <rdf:subject>
-      <j.0:Requirement>
-        <oslc:instanceShape rdf:resource="http://localhost:PORT/rm/types/UserRequirement"/>
-        <j.0:validatedBy rdf:resource="http://outlook.com"/>
-        <dcterms:title rdf:parseType="Literal">Req03</dcterms:title>
-        <dcterms:description rdf:parseType="Literal">Created By EclipseLyo</dcterms:description>
-      </j.0:Requirement>
-    </rdf:subject>
-  </rdf:Statement>
-</rdf:RDF>
-
+_:b0 <http://purl.org/dc/terms/title> "Link in REQ03" .
+_:b0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#object> <http://outlook.com> .
+_:b0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <http://open-services.net/ns/rm#validatedBy> .
+_:b0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> _:b1 .
+_:b0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement> .
+_:b1 <http://open-services.net/ns/core#instanceShape> <http://localhost:PORT/rm/types/UserRequirement> .
+_:b1 <http://open-services.net/ns/rm#validatedBy> <http://outlook.com> .
+_:b1 <http://purl.org/dc/terms/description> "Created By EclipseLyo"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .
+_:b1 <http://purl.org/dc/terms/title> "Req03"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .
+_:b1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/rm#Requirement> .
 --------------------------------------------------
 POST /rm/oslc/contexts/_1/rm/create
-<?xml version="1.0" encoding="UTF-8"?>
-<rdf:RDF
-    xmlns:dcterms="http://purl.org/dc/terms/"
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:oslc="http://open-services.net/ns/core#"
-    xmlns:j.0="http://open-services.net/ns/rm#"
-    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
-  <j.0:Requirement>
-    <oslc:instanceShape rdf:resource="http://localhost:PORT/rm/types/UserRequirement"/>
-    <dcterms:title rdf:parseType="Literal">Req04</dcterms:title>
-    <dcterms:description rdf:parseType="Literal">Created By EclipseLyo</dcterms:description>
-  </j.0:Requirement>
-</rdf:RDF>
-
+_:b0 <http://open-services.net/ns/core#instanceShape> <http://localhost:PORT/rm/types/UserRequirement> .
+_:b0 <http://purl.org/dc/terms/description> "Created By EclipseLyo"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .
+_:b0 <http://purl.org/dc/terms/title> "Req04"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .
+_:b0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/rm#Requirement> .
 --------------------------------------------------
 POST /rm/oslc/contexts/_1/rm/create
-<?xml version="1.0" encoding="UTF-8"?>
-<rdf:RDF
-    xmlns:dcterms="http://purl.org/dc/terms/"
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:oslc="http://open-services.net/ns/core#"
-    xmlns:j.0="http://open-services.net/ns/rm#"
-    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
-  <j.0:RequirementCollection>
-    <oslc:instanceShape rdf:resource="http://localhost:PORT/rm/types/Collection"/>
-    <dcterms:title rdf:parseType="Literal">Collection01</dcterms:title>
-    <dcterms:description rdf:parseType="Literal">Created By EclipseLyo</dcterms:description>
-    <j.0:uses rdf:resource="http://localhost:PORT/rm/oslc/rm/req01"/>
-  </j.0:RequirementCollection>
-</rdf:RDF>
-
+_:b0 <http://open-services.net/ns/core#instanceShape> <http://localhost:PORT/rm/types/Collection> .
+_:b0 <http://open-services.net/ns/rm#uses> <http://localhost:PORT/rm/oslc/rm/req01> .
+_:b0 <http://purl.org/dc/terms/description> "Created By EclipseLyo"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .
+_:b0 <http://purl.org/dc/terms/title> "Collection01"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .
+_:b0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/rm#RequirementCollection> .
 --------------------------------------------------
 GET /rm/oslc/rm/req01
 --------------------------------------------------
@@ -147,30 +90,16 @@ GET /rm/oslc/contexts/_1/rm/query
 GET /rm/oslc/rm/req01
 --------------------------------------------------
 PUT /rm/oslc/rm/req01
-<?xml version="1.0" encoding="UTF-8"?>
-<rdf:RDF
-    xmlns:dcterms="http://purl.org/dc/terms/"
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:oslc="http://open-services.net/ns/core#"
-    xmlns:j.0="http://open-services.net/ns/rm#"
-    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-    xmlns:j.1="http://com.ibm.rdm/navigation#"
-    xmlns:j.2="http://www.ibm.com/xmlns/rdm/rdf/">
-  <rdf:Statement>
-    <dcterms:title>Link created by an Eclipse Lyo user</dcterms:title>
-    <rdf:object rdf:resource="http://google.com"/>
-    <rdf:predicate rdf:resource="http://open-services.net/ns/rm#implementedBy"/>
-    <rdf:subject>
-      <j.0:Requirement rdf:about="http://localhost:PORT/rm/oslc/rm/req01">
-        <j.2:primaryText>My Primary Text</j.2:primaryText>
-        <j.1:parent rdf:resource="http://localhost:PORT/rm/folders/1"/>
-        <j.0:implementedBy rdf:resource="http://google.com"/>
-        <dcterms:title rdf:parseType="Literal">My new Title</dcterms:title>
-      </j.0:Requirement>
-    </rdf:subject>
-  </rdf:Statement>
-</rdf:RDF>
-
+<http://localhost:PORT/rm/oslc/rm/req01> <http://com.ibm.rdm/navigation#parent> <http://localhost:PORT/rm/folders/1> .
+<http://localhost:PORT/rm/oslc/rm/req01> <http://open-services.net/ns/rm#implementedBy> <http://google.com> .
+<http://localhost:PORT/rm/oslc/rm/req01> <http://purl.org/dc/terms/title> "My new Title"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .
+<http://localhost:PORT/rm/oslc/rm/req01> <http://www.ibm.com/xmlns/rdm/rdf/primaryText> "My Primary Text" .
+<http://localhost:PORT/rm/oslc/rm/req01> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/rm#Requirement> .
+_:b0 <http://purl.org/dc/terms/title> "Link created by an Eclipse Lyo user" .
+_:b0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#object> <http://google.com> .
+_:b0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <http://open-services.net/ns/rm#implementedBy> .
+_:b0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> <http://localhost:PORT/rm/oslc/rm/req01> .
+_:b0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement> .
 --------------------------------------------------
 GET /rm/oslc/contexts/_1/rm/query
 --------------------------------------------------
@@ -179,123 +108,67 @@ GET /rm/oslc/contexts/_1/rm/query
 
 === MOCKED RESPONSES (Fixtures) ===
 --- catalog_rm.xml ---
-<rdf:RDF
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:oslc="http://open-services.net/ns/core#"
-    xmlns:dcterms="http://purl.org/dc/terms/">
-  <oslc:ServiceProviderCatalog rdf:about="http://localhost:PORT/rm/oslc/catalog">
-    <dcterms:title>Requirements Management Catalog</dcterms:title>
-    <oslc:serviceProvider>
-      <oslc:ServiceProvider rdf:about="http://localhost:PORT/rm/oslc/contexts/_1/rm/services.xml">
-        <dcterms:title>JKE Banking (Requirements Management)</dcterms:title>
-      </oslc:ServiceProvider>
-    </oslc:serviceProvider>
-  </oslc:ServiceProviderCatalog>
-</rdf:RDF>
+<http://localhost:PORT/rm/oslc/catalog> <http://open-services.net/ns/core#serviceProvider> <http://localhost:PORT/rm/oslc/contexts/_1/rm/services.xml> .
+<http://localhost:PORT/rm/oslc/catalog> <http://purl.org/dc/terms/title> "Requirements Management Catalog" .
+<http://localhost:PORT/rm/oslc/catalog> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/core#ServiceProviderCatalog> .
+<http://localhost:PORT/rm/oslc/contexts/_1/rm/services.xml> <http://purl.org/dc/terms/title> "JKE Banking (Requirements Management)" .
+<http://localhost:PORT/rm/oslc/contexts/_1/rm/services.xml> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/core#ServiceProvider> .
 
 --- query_empty.xml ---
-<rdf:RDF
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:oslc="http://open-services.net/ns/core#">
-  <oslc:ResponseInfo rdf:about="http://localhost:PORT/rm/oslc/contexts/_1/rm/query">
-    <oslc:totalCount>0</oslc:totalCount>
-  </oslc:ResponseInfo>
-</rdf:RDF>
+<http://localhost:PORT/rm/oslc/contexts/_1/rm/query> <http://open-services.net/ns/core#totalCount> "0" .
+<http://localhost:PORT/rm/oslc/contexts/_1/rm/query> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/core#ResponseInfo> .
 
 --- resource_requirement.xml ---
-<rdf:RDF
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:dcterms="http://purl.org/dc/terms/"
-    xmlns:nav="http://com.ibm.rdm/navigation#"
-    xmlns:rm="http://www.ibm.com/xmlns/rdm/rdf/">
-  <rdf:Description rdf:about="http://localhost:PORT/rm/oslc/rm/req01">
-    <rdf:type rdf:resource="http://open-services.net/ns/rm#Requirement"/>
-    <dcterms:title>Req01</dcterms:title>
-    <nav:parent rdf:resource="http://localhost:PORT/rm/folders/1"/>
-    <rm:primaryText>My Primary Text</rm:primaryText>
-  </rdf:Description>
-</rdf:RDF>
+<http://localhost:PORT/rm/oslc/rm/req01> <http://com.ibm.rdm/navigation#parent> <http://localhost:PORT/rm/folders/1> .
+<http://localhost:PORT/rm/oslc/rm/req01> <http://purl.org/dc/terms/title> "Req01" .
+<http://localhost:PORT/rm/oslc/rm/req01> <http://www.ibm.com/xmlns/rdm/rdf/primaryText> "My Primary Text" .
+<http://localhost:PORT/rm/oslc/rm/req01> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/rm#Requirement> .
 
 --- rootservices_rm.xml ---
-<rdf:RDF
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:oslc_rm="http://open-services.net/xmlns/rm/1.0/"
-    xmlns:jfs="http://jazz.net/xmlns/prod/jazz/jfs/1.0/">
-  <rdf:Description rdf:about="http://localhost:PORT/rm">
-    <oslc_rm:rmServiceProviders rdf:resource="http://localhost:PORT/rm/oslc/catalog"/>
-    <jfs:oauthRequestTokenUrl rdf:resource="http://localhost:PORT/jts/oauth/requestToken"/>
-    <jfs:oauthUserAuthorizationUrl rdf:resource="http://localhost:PORT/jts/oauth/authorize"/>
-    <jfs:oauthAccessTokenUrl rdf:resource="http://localhost:PORT/jts/oauth/accessToken"/>
-  </rdf:Description>
-</rdf:RDF>
+<http://localhost:PORT/rm> <http://jazz.net/xmlns/prod/jazz/jfs/1.0/oauthAccessTokenUrl> <http://localhost:PORT/jts/oauth/accessToken> .
+<http://localhost:PORT/rm> <http://jazz.net/xmlns/prod/jazz/jfs/1.0/oauthRequestTokenUrl> <http://localhost:PORT/jts/oauth/requestToken> .
+<http://localhost:PORT/rm> <http://jazz.net/xmlns/prod/jazz/jfs/1.0/oauthUserAuthorizationUrl> <http://localhost:PORT/jts/oauth/authorize> .
+<http://localhost:PORT/rm> <http://open-services.net/xmlns/rm/1.0/rmServiceProviders> <http://localhost:PORT/rm/oslc/catalog> .
 
 --- serviceprovider_rm.xml ---
-<rdf:RDF
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:oslc="http://open-services.net/ns/core#"
-    xmlns:dcterms="http://purl.org/dc/terms/">
-  <oslc:ServiceProvider rdf:about="http://localhost:PORT/rm/oslc/contexts/_1/rm/services.xml">
-    <dcterms:title>JKE Banking (Requirements Management)</dcterms:title>
-    <oslc:service>
-      <oslc:Service>
-        <oslc:domain rdf:resource="http://open-services.net/ns/rm#"/>
-        <oslc:queryCapability>
-          <oslc:QueryCapability>
-            <dcterms:title>Query Requirements</dcterms:title>
-            <oslc:queryBase rdf:resource="http://localhost:PORT/rm/oslc/contexts/_1/rm/query"/>
-            <oslc:resourceType rdf:resource="http://open-services.net/ns/rm#Requirement"/>
-          </oslc:QueryCapability>
-        </oslc:queryCapability>
-        <oslc:creationFactory>
-          <oslc:CreationFactory>
-            <dcterms:title>Create Requirement</dcterms:title>
-            <oslc:creation rdf:resource="http://localhost:PORT/rm/oslc/contexts/_1/rm/create"/>
-            <oslc:resourceType rdf:resource="http://open-services.net/ns/rm#Requirement"/>
-            <oslc:resourceShape rdf:resource="http://localhost:PORT/rm/types/UserRequirement"/>
-          </oslc:CreationFactory>
-        </oslc:creationFactory>
-        <oslc:creationFactory>
-          <oslc:CreationFactory>
-             <dcterms:title>Create Collection</dcterms:title>
-             <oslc:creation rdf:resource="http://localhost:PORT/rm/oslc/contexts/_1/rm/create"/>
-             <oslc:resourceType rdf:resource="http://open-services.net/ns/rm#RequirementCollection"/>
-             <oslc:resourceShape rdf:resource="http://localhost:PORT/rm/types/Collection"/>
-          </oslc:CreationFactory>
-        </oslc:creationFactory>
-      </oslc:Service>
-    </oslc:service>
-  </oslc:ServiceProvider>
-</rdf:RDF>
+<http://localhost:PORT/rm/oslc/contexts/_1/rm/services.xml> <http://open-services.net/ns/core#service> _:b0 .
+<http://localhost:PORT/rm/oslc/contexts/_1/rm/services.xml> <http://purl.org/dc/terms/title> "JKE Banking (Requirements Management)" .
+<http://localhost:PORT/rm/oslc/contexts/_1/rm/services.xml> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/core#ServiceProvider> .
+_:b1 <http://open-services.net/ns/core#queryBase> <http://localhost:PORT/rm/oslc/contexts/_1/rm/query> .
+_:b1 <http://open-services.net/ns/core#resourceType> <http://open-services.net/ns/rm#Requirement> .
+_:b1 <http://purl.org/dc/terms/title> "Query Requirements" .
+_:b1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/core#QueryCapability> .
+_:b0 <http://open-services.net/ns/core#creationFactory> _:b2 .
+_:b0 <http://open-services.net/ns/core#creationFactory> _:b3 .
+_:b0 <http://open-services.net/ns/core#domain> <http://open-services.net/ns/rm#> .
+_:b0 <http://open-services.net/ns/core#queryCapability> _:b1 .
+_:b0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/core#Service> .
+_:b2 <http://open-services.net/ns/core#creation> <http://localhost:PORT/rm/oslc/contexts/_1/rm/create> .
+_:b2 <http://open-services.net/ns/core#resourceShape> <http://localhost:PORT/rm/types/UserRequirement> .
+_:b2 <http://open-services.net/ns/core#resourceType> <http://open-services.net/ns/rm#Requirement> .
+_:b2 <http://purl.org/dc/terms/title> "Create Requirement" .
+_:b2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/core#CreationFactory> .
+_:b3 <http://open-services.net/ns/core#creation> <http://localhost:PORT/rm/oslc/contexts/_1/rm/create> .
+_:b3 <http://open-services.net/ns/core#resourceShape> <http://localhost:PORT/rm/types/Collection> .
+_:b3 <http://open-services.net/ns/core#resourceType> <http://open-services.net/ns/rm#RequirementCollection> .
+_:b3 <http://purl.org/dc/terms/title> "Create Collection" .
+_:b3 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/core#CreationFactory> .
 
 --- shape_collection.xml ---
-<rdf:RDF
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:oslc="http://open-services.net/ns/core#"
-    xmlns:dcterms="http://purl.org/dc/terms/">
-  <oslc:ResourceShape rdf:about="http://localhost:PORT/rm/types/Collection">
-    <dcterms:title>Collection</dcterms:title>
-    <oslc:describes rdf:resource="http://open-services.net/ns/rm#RequirementCollection"/>
-  </oslc:ResourceShape>
-</rdf:RDF>
+<http://localhost:PORT/rm/types/Collection> <http://open-services.net/ns/core#describes> <http://open-services.net/ns/rm#RequirementCollection> .
+<http://localhost:PORT/rm/types/Collection> <http://purl.org/dc/terms/title> "Collection" .
+<http://localhost:PORT/rm/types/Collection> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/core#ResourceShape> .
 
 --- shape_requirement.xml ---
-<rdf:RDF
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:oslc="http://open-services.net/ns/core#"
-    xmlns:dcterms="http://purl.org/dc/terms/">
-  <oslc:ResourceShape rdf:about="http://localhost:PORT/rm/types/UserRequirement">
-    <dcterms:title>User Requirement</dcterms:title>
-    <oslc:describes rdf:resource="http://open-services.net/ns/rm#Requirement"/>
-    <oslc:property>
-      <oslc:Property>
-        <oslc:name>title</oslc:name>
-        <oslc:propertyDefinition rdf:resource="http://purl.org/dc/terms/title"/>
-        <oslc:occurs rdf:resource="http://open-services.net/ns/core#Exactly-one"/>
-        <oslc:valueType rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-      </oslc:Property>
-    </oslc:property>
-  </oslc:ResourceShape>
-</rdf:RDF>
+<http://localhost:PORT/rm/types/UserRequirement> <http://open-services.net/ns/core#describes> <http://open-services.net/ns/rm#Requirement> .
+<http://localhost:PORT/rm/types/UserRequirement> <http://open-services.net/ns/core#property> _:b0 .
+<http://localhost:PORT/rm/types/UserRequirement> <http://purl.org/dc/terms/title> "User Requirement" .
+<http://localhost:PORT/rm/types/UserRequirement> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/core#ResourceShape> .
+_:b0 <http://open-services.net/ns/core#name> "title" .
+_:b0 <http://open-services.net/ns/core#occurs> <http://open-services.net/ns/core#Exactly-one> .
+_:b0 <http://open-services.net/ns/core#propertyDefinition> <http://purl.org/dc/terms/title> .
+_:b0 <http://open-services.net/ns/core#valueType> <http://www.w3.org/2001/XMLSchema#string> .
+_:b0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/core#Property> .
 
 
 ╔═ etmSnapshot ═╗
@@ -316,122 +189,61 @@ GET /qm/oslc/contexts/_1/qm/query
 GET /qm/oslc/contexts/_1/qm/services.xml
 --------------------------------------------------
 POST /qm/oslc/contexts/_1/qm/create
-<?xml version="1.0" encoding="UTF-8"?>
-<rdf:RDF
-    xmlns:dcterms="http://purl.org/dc/terms/"
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:oslc="http://open-services.net/ns/core#"
-    xmlns:j.0="http://open-services.net/ns/qm#"
-    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
-  <rdf:Statement>
-    <dcterms:title>Implement accessibility in Pet Store application</dcterms:title>
-    <rdf:object rdf:resource="http://cmprovider/changerequest/1"/>
-    <rdf:predicate rdf:resource="http://open-services.net/ns/qm#testsChangeRequest"/>
-    <rdf:subject>
-      <j.0:TestCase>
-        <dcterms:title rdf:parseType="Literal">Accessibility verification using a screen reader</dcterms:title>
-        <j.0:testsChangeRequest rdf:resource="http://cmprovider/changerequest/1"/>
-        <dcterms:description rdf:parseType="Literal">This test case uses a screen reader application to ensure that the web browser content fully complies with accessibility standards</dcterms:description>
-      </j.0:TestCase>
-    </rdf:subject>
-  </rdf:Statement>
-</rdf:RDF>
-
+_:b0 <http://open-services.net/ns/qm#testsChangeRequest> <http://cmprovider/changerequest/1> .
+_:b0 <http://purl.org/dc/terms/description> "This test case uses a screen reader application to ensure that the web browser content fully complies with accessibility standards"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .
+_:b0 <http://purl.org/dc/terms/title> "Accessibility verification using a screen reader"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .
+_:b0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/qm#TestCase> .
+_:b1 <http://purl.org/dc/terms/title> "Implement accessibility in Pet Store application" .
+_:b1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#object> <http://cmprovider/changerequest/1> .
+_:b1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <http://open-services.net/ns/qm#testsChangeRequest> .
+_:b1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> _:b0 .
+_:b1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement> .
 --------------------------------------------------
 GET /qm/oslc/qm/tc1
 --------------------------------------------------
 PUT /qm/oslc/qm/tc1
-<?xml version="1.0" encoding="UTF-8"?>
-<rdf:RDF
-    xmlns:dcterms="http://purl.org/dc/terms/"
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:oslc="http://open-services.net/ns/core#"
-    xmlns:j.0="http://open-services.net/ns/qm#"
-    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
-  <j.0:TestCase rdf:about="http://localhost:PORT/qm/oslc/qm/tc1">
-    <dcterms:title rdf:parseType="Literal">TC (updated)</dcterms:title>
-  </j.0:TestCase>
-</rdf:RDF>
-
+<http://localhost:PORT/qm/oslc/qm/tc1> <http://purl.org/dc/terms/title> "TC (updated)"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .
+<http://localhost:PORT/qm/oslc/qm/tc1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/qm#TestCase> .
 --------------------------------------------------
 
 === MOCKED RESPONSES (Fixtures) ===
 --- catalog_qm.xml ---
-<rdf:RDF
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:oslc="http://open-services.net/ns/core#"
-    xmlns:dcterms="http://purl.org/dc/terms/">
-  <oslc:ServiceProviderCatalog rdf:about="http://localhost:PORT/qm/oslc/catalog">
-    <dcterms:title>Quality Management Catalog</dcterms:title>
-    <oslc:serviceProvider>
-      <oslc:ServiceProvider rdf:about="http://localhost:PORT/qm/oslc/contexts/_1/qm/services.xml">
-        <dcterms:title>JKE Banking (Quality Management)</dcterms:title>
-      </oslc:ServiceProvider>
-    </oslc:serviceProvider>
-  </oslc:ServiceProviderCatalog>
-</rdf:RDF>
+<http://localhost:PORT/qm/oslc/catalog> <http://open-services.net/ns/core#serviceProvider> <http://localhost:PORT/qm/oslc/contexts/_1/qm/services.xml> .
+<http://localhost:PORT/qm/oslc/catalog> <http://purl.org/dc/terms/title> "Quality Management Catalog" .
+<http://localhost:PORT/qm/oslc/catalog> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/core#ServiceProviderCatalog> .
+<http://localhost:PORT/qm/oslc/contexts/_1/qm/services.xml> <http://purl.org/dc/terms/title> "JKE Banking (Quality Management)" .
+<http://localhost:PORT/qm/oslc/contexts/_1/qm/services.xml> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/core#ServiceProvider> .
 
 --- query_empty.xml ---
-<rdf:RDF
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:oslc="http://open-services.net/ns/core#">
-  <oslc:ResponseInfo rdf:about="http://localhost:PORT/qm/oslc/contexts/_1/qm/query">
-    <oslc:totalCount>0</oslc:totalCount>
-  </oslc:ResponseInfo>
-</rdf:RDF>
+<http://localhost:PORT/qm/oslc/contexts/_1/qm/query> <http://open-services.net/ns/core#totalCount> "0" .
+<http://localhost:PORT/qm/oslc/contexts/_1/qm/query> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/core#ResponseInfo> .
 
 --- resource_testcase.xml ---
-<rdf:RDF
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:dcterms="http://purl.org/dc/terms/"
-    xmlns:oslc_qm="http://open-services.net/ns/qm#">
-  <rdf:Description rdf:about="http://localhost:PORT/qm/oslc/qm/tc1">
-    <rdf:type rdf:resource="http://open-services.net/ns/qm#TestCase"/>
-    <dcterms:title>TC</dcterms:title>
-  </rdf:Description>
-</rdf:RDF>
+<http://localhost:PORT/qm/oslc/qm/tc1> <http://purl.org/dc/terms/title> "TC" .
+<http://localhost:PORT/qm/oslc/qm/tc1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/qm#TestCase> .
 
 --- rootservices_qm.xml ---
-<rdf:RDF
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:oslc_qm="http://open-services.net/xmlns/qm/1.0/"
-    xmlns:jfs="http://jazz.net/xmlns/prod/jazz/jfs/1.0/">
-  <rdf:Description rdf:about="http://localhost:PORT/qm">
-    <oslc_qm:qmServiceProviders rdf:resource="http://localhost:PORT/qm/oslc/catalog"/>
-    <jfs:oauthRequestTokenUrl rdf:resource="http://localhost:PORT/jts/oauth/requestToken"/>
-    <jfs:oauthUserAuthorizationUrl rdf:resource="http://localhost:PORT/jts/oauth/authorize"/>
-    <jfs:oauthAccessTokenUrl rdf:resource="http://localhost:PORT/jts/oauth/accessToken"/>
-  </rdf:Description>
-</rdf:RDF>
+<http://localhost:PORT/qm> <http://jazz.net/xmlns/prod/jazz/jfs/1.0/oauthAccessTokenUrl> <http://localhost:PORT/jts/oauth/accessToken> .
+<http://localhost:PORT/qm> <http://jazz.net/xmlns/prod/jazz/jfs/1.0/oauthRequestTokenUrl> <http://localhost:PORT/jts/oauth/requestToken> .
+<http://localhost:PORT/qm> <http://jazz.net/xmlns/prod/jazz/jfs/1.0/oauthUserAuthorizationUrl> <http://localhost:PORT/jts/oauth/authorize> .
+<http://localhost:PORT/qm> <http://open-services.net/xmlns/qm/1.0/qmServiceProviders> <http://localhost:PORT/qm/oslc/catalog> .
 
 --- serviceprovider_qm.xml ---
-<rdf:RDF
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:oslc="http://open-services.net/ns/core#"
-    xmlns:dcterms="http://purl.org/dc/terms/">
-  <oslc:ServiceProvider rdf:about="http://localhost:PORT/qm/oslc/contexts/_1/qm/services.xml">
-    <dcterms:title>JKE Banking (Quality Management)</dcterms:title>
-    <oslc:service>
-      <oslc:Service>
-        <oslc:domain rdf:resource="http://open-services.net/ns/qm#"/>
-        <oslc:queryCapability>
-          <oslc:QueryCapability>
-            <dcterms:title>Query Test Plans</dcterms:title>
-            <oslc:queryBase rdf:resource="http://localhost:PORT/qm/oslc/contexts/_1/qm/query"/>
-            <oslc:resourceType rdf:resource="http://open-services.net/ns/qm#TestResultQuery"/>
-          </oslc:QueryCapability>
-        </oslc:queryCapability>
-        <oslc:creationFactory>
-          <oslc:CreationFactory>
-            <dcterms:title>Create Test Case</dcterms:title>
-            <oslc:creation rdf:resource="http://localhost:PORT/qm/oslc/contexts/_1/qm/create"/>
-            <oslc:resourceType rdf:resource="http://open-services.net/ns/qm#TestCase"/>
-          </oslc:CreationFactory>
-        </oslc:creationFactory>
-      </oslc:Service>
-    </oslc:service>
-  </oslc:ServiceProvider>
-</rdf:RDF>
+<http://localhost:PORT/qm/oslc/contexts/_1/qm/services.xml> <http://open-services.net/ns/core#service> _:b0 .
+<http://localhost:PORT/qm/oslc/contexts/_1/qm/services.xml> <http://purl.org/dc/terms/title> "JKE Banking (Quality Management)" .
+<http://localhost:PORT/qm/oslc/contexts/_1/qm/services.xml> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/core#ServiceProvider> .
+_:b0 <http://open-services.net/ns/core#creationFactory> _:b1 .
+_:b0 <http://open-services.net/ns/core#domain> <http://open-services.net/ns/qm#> .
+_:b0 <http://open-services.net/ns/core#queryCapability> _:b2 .
+_:b0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/core#Service> .
+_:b2 <http://open-services.net/ns/core#queryBase> <http://localhost:PORT/qm/oslc/contexts/_1/qm/query> .
+_:b2 <http://open-services.net/ns/core#resourceType> <http://open-services.net/ns/qm#TestResultQuery> .
+_:b2 <http://purl.org/dc/terms/title> "Query Test Plans" .
+_:b2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/core#QueryCapability> .
+_:b1 <http://open-services.net/ns/core#creation> <http://localhost:PORT/qm/oslc/contexts/_1/qm/create> .
+_:b1 <http://open-services.net/ns/core#resourceType> <http://open-services.net/ns/qm#TestCase> .
+_:b1 <http://purl.org/dc/terms/title> "Create Test Case" .
+_:b1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/core#CreationFactory> .
 
 
 ╔═ ewmSnapshot ═╗
@@ -456,47 +268,24 @@ GET /ccm/oslc/contexts/_1/ccm/shapes/workitem
 GET /ccm/oslc/contexts/_1/ccm/allowedValues/filedAgainst
 --------------------------------------------------
 POST /ccm/oslc/contexts/_1/ccm/create
-<?xml version="1.0" encoding="UTF-8"?>
-<rdf:RDF
-    xmlns:dcterms="http://purl.org/dc/terms/"
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:oslc="http://open-services.net/ns/core#"
-    xmlns:j.0="http://open-services.net/ns/cm#"
-    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-    xmlns:j.1="http://jazz.net/xmlns/prod/jazz/rtc/cm/1.0/">
-  <rdf:Statement>
-    <dcterms:title>Accessibility verification using a screen reader</dcterms:title>
-    <rdf:object rdf:resource="http://qmprovider/testcase/1"/>
-    <rdf:predicate rdf:resource="http://open-services.net/ns/cm#testedByTestCase"/>
-    <rdf:subject>
-      <j.0:ChangeRequest>
-        <j.1:filedAgainst rdf:resource="http://example.com/cat2"/>
-        <j.0:testedByTestCase rdf:resource="http://qmprovider/testcase/1"/>
-        <dcterms:type>task</dcterms:type>
-        <dcterms:title rdf:parseType="Literal">Implement accessibility in Pet Store application</dcterms:title>
-        <dcterms:description rdf:parseType="Literal">Image elements must provide a description in the 'alt' attribute for consumption by screen readers.</dcterms:description>
-      </j.0:ChangeRequest>
-    </rdf:subject>
-  </rdf:Statement>
-</rdf:RDF>
-
+_:b0 <http://jazz.net/xmlns/prod/jazz/rtc/cm/1.0/filedAgainst> <http://example.com/cat2> .
+_:b0 <http://open-services.net/ns/cm#testedByTestCase> <http://qmprovider/testcase/1> .
+_:b0 <http://purl.org/dc/terms/description> "Image elements must provide a description in the 'alt' attribute for consumption by screen readers."^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .
+_:b0 <http://purl.org/dc/terms/title> "Implement accessibility in Pet Store application"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .
+_:b0 <http://purl.org/dc/terms/type> "task" .
+_:b0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/cm#ChangeRequest> .
+_:b1 <http://purl.org/dc/terms/title> "Accessibility verification using a screen reader" .
+_:b1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#object> <http://qmprovider/testcase/1> .
+_:b1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <http://open-services.net/ns/cm#testedByTestCase> .
+_:b1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> _:b0 .
+_:b1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement> .
 --------------------------------------------------
 GET /ccm/oslc/ccm/task1
 --------------------------------------------------
 PUT /ccm/oslc/ccm/task1
-<?xml version="1.0" encoding="UTF-8"?>
-<rdf:RDF
-    xmlns:dcterms="http://purl.org/dc/terms/"
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:oslc="http://open-services.net/ns/core#"
-    xmlns:j.0="http://open-services.net/ns/cm#"
-    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
-  <j.0:ChangeRequest rdf:about="http://localhost:PORT/ccm/oslc/ccm/task1">
-    <dcterms:title rdf:parseType="Literal">Task (updated)</dcterms:title>
-    <dcterms:identifier>1</dcterms:identifier>
-  </j.0:ChangeRequest>
-</rdf:RDF>
-
+<http://localhost:PORT/ccm/oslc/ccm/task1> <http://purl.org/dc/terms/identifier> "1" .
+<http://localhost:PORT/ccm/oslc/ccm/task1> <http://purl.org/dc/terms/title> "Task (updated)"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .
+<http://localhost:PORT/ccm/oslc/ccm/task1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/cm#ChangeRequest> .
 --------------------------------------------------
 GET /ccm/oslc/contexts/_1/ccm/services.xml
 --------------------------------------------------
@@ -505,149 +294,81 @@ GET /ccm/oslc/contexts/_1/ccm/shapes/workitem
 GET /ccm/oslc/contexts/_1/ccm/allowedValues/filedAgainst
 --------------------------------------------------
 POST /ccm/oslc/contexts/_1/ccm/create
-<?xml version="1.0" encoding="UTF-8"?>
-<rdf:RDF
-    xmlns:dcterms="http://purl.org/dc/terms/"
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:oslc="http://open-services.net/ns/core#"
-    xmlns:j.0="http://open-services.net/ns/cm#"
-    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-    xmlns:j.1="http://jazz.net/xmlns/prod/jazz/rtc/cm/1.0/">
-  <rdf:Statement>
-    <dcterms:title>Global Verifcation Test</dcterms:title>
-    <rdf:object rdf:resource="http://qmprovider/testcase/3"/>
-    <rdf:predicate rdf:resource="http://open-services.net/ns/cm#testedByTestCase"/>
-    <rdf:subject>
-      <j.0:ChangeRequest>
-        <j.1:filedAgainst rdf:resource="http://example.com/cat1"/>
-        <j.0:testedByTestCase rdf:resource="http://qmprovider/testcase/3"/>
-        <dcterms:type>defect</dcterms:type>
-        <dcterms:title rdf:parseType="Literal">Error logging in</dcterms:title>
-        <dcterms:description rdf:parseType="Literal">An error occurred when I tried to log in with a user ID that contained the '@' symbol.</dcterms:description>
-      </j.0:ChangeRequest>
-    </rdf:subject>
-  </rdf:Statement>
-</rdf:RDF>
-
+_:b0 <http://jazz.net/xmlns/prod/jazz/rtc/cm/1.0/filedAgainst> <http://example.com/cat1> .
+_:b0 <http://open-services.net/ns/cm#testedByTestCase> <http://qmprovider/testcase/3> .
+_:b0 <http://purl.org/dc/terms/description> "An error occurred when I tried to log in with a user ID that contained the '@' symbol."^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .
+_:b0 <http://purl.org/dc/terms/title> "Error logging in"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .
+_:b0 <http://purl.org/dc/terms/type> "defect" .
+_:b0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/cm#ChangeRequest> .
+_:b1 <http://purl.org/dc/terms/title> "Global Verifcation Test" .
+_:b1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#object> <http://qmprovider/testcase/3> .
+_:b1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <http://open-services.net/ns/cm#testedByTestCase> .
+_:b1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> _:b0 .
+_:b1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement> .
 --------------------------------------------------
 
 === MOCKED RESPONSES (Fixtures) ===
 --- allowedvalues_filedAgainst.xml ---
-<rdf:RDF
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:oslc="http://open-services.net/ns/core#"
-    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
-  <oslc:AllowedValues rdf:about="http://localhost:PORT/ccm/oslc/contexts/_1/ccm/allowedValues/filedAgainst">
-    <oslc:allowedValue rdf:resource="http://example.com/cat1"/>
-    <oslc:allowedValue rdf:resource="http://example.com/cat2"/>
-  </oslc:AllowedValues>
-</rdf:RDF>
+<http://localhost:PORT/ccm/oslc/contexts/_1/ccm/allowedValues/filedAgainst> <http://open-services.net/ns/core#allowedValue> <http://example.com/cat1> .
+<http://localhost:PORT/ccm/oslc/contexts/_1/ccm/allowedValues/filedAgainst> <http://open-services.net/ns/core#allowedValue> <http://example.com/cat2> .
+<http://localhost:PORT/ccm/oslc/contexts/_1/ccm/allowedValues/filedAgainst> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/core#AllowedValues> .
 
 --- catalog_ccm.xml ---
-<rdf:RDF
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:oslc="http://open-services.net/ns/core#"
-    xmlns:dcterms="http://purl.org/dc/terms/">
-  <oslc:ServiceProviderCatalog rdf:about="http://localhost:PORT/ccm/oslc/catalog">
-    <dcterms:title>Change Management Catalog</dcterms:title>
-    <oslc:serviceProvider>
-      <oslc:ServiceProvider rdf:about="http://localhost:PORT/ccm/oslc/contexts/_1/ccm/services.xml">
-        <dcterms:title>JKE Banking (Change Management)</dcterms:title>
-      </oslc:ServiceProvider>
-    </oslc:serviceProvider>
-  </oslc:ServiceProviderCatalog>
-</rdf:RDF>
+<http://localhost:PORT/ccm/oslc/catalog> <http://open-services.net/ns/core#serviceProvider> <http://localhost:PORT/ccm/oslc/contexts/_1/ccm/services.xml> .
+<http://localhost:PORT/ccm/oslc/catalog> <http://purl.org/dc/terms/title> "Change Management Catalog" .
+<http://localhost:PORT/ccm/oslc/catalog> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/core#ServiceProviderCatalog> .
+<http://localhost:PORT/ccm/oslc/contexts/_1/ccm/services.xml> <http://purl.org/dc/terms/title> "JKE Banking (Change Management)" .
+<http://localhost:PORT/ccm/oslc/contexts/_1/ccm/services.xml> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/core#ServiceProvider> .
 
 --- query_empty.xml ---
-<rdf:RDF
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:oslc="http://open-services.net/ns/core#">
-  <oslc:ResponseInfo rdf:about="http://localhost:PORT/ccm/oslc/contexts/_1/ccm/query">
-    <oslc:totalCount>0</oslc:totalCount>
-  </oslc:ResponseInfo>
-</rdf:RDF>
+<http://localhost:PORT/ccm/oslc/contexts/_1/ccm/query> <http://open-services.net/ns/core#totalCount> "0" .
+<http://localhost:PORT/ccm/oslc/contexts/_1/ccm/query> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/core#ResponseInfo> .
 
 --- resource_task.xml ---
-<rdf:RDF
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:dcterms="http://purl.org/dc/terms/"
-    xmlns:oslc_cm="http://open-services.net/ns/cm#">
-  <rdf:Description rdf:about="http://localhost:PORT/ccm/oslc/ccm/task1">
-    <rdf:type rdf:resource="http://open-services.net/ns/cm#ChangeRequest"/>
-    <dcterms:title>Task</dcterms:title>
-    <dcterms:identifier>1</dcterms:identifier>
-  </rdf:Description>
-</rdf:RDF>
+<http://localhost:PORT/ccm/oslc/ccm/task1> <http://purl.org/dc/terms/identifier> "1" .
+<http://localhost:PORT/ccm/oslc/ccm/task1> <http://purl.org/dc/terms/title> "Task" .
+<http://localhost:PORT/ccm/oslc/ccm/task1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/cm#ChangeRequest> .
 
 --- rootservices_ccm.xml ---
-<rdf:RDF
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:oslc_cm="http://open-services.net/xmlns/cm/1.0/"
-    xmlns:jfs="http://jazz.net/xmlns/prod/jazz/jfs/1.0/">
-  <rdf:Description rdf:about="http://localhost:PORT/ccm">
-    <oslc_cm:cmServiceProviders rdf:resource="http://localhost:PORT/ccm/oslc/catalog"/>
-    <jfs:oauthRequestTokenUrl rdf:resource="http://localhost:PORT/jts/oauth/requestToken"/>
-    <jfs:oauthUserAuthorizationUrl rdf:resource="http://localhost:PORT/jts/oauth/authorize"/>
-    <jfs:oauthAccessTokenUrl rdf:resource="http://localhost:PORT/jts/oauth/accessToken"/>
-  </rdf:Description>
-</rdf:RDF>
+<http://localhost:PORT/ccm> <http://jazz.net/xmlns/prod/jazz/jfs/1.0/oauthAccessTokenUrl> <http://localhost:PORT/jts/oauth/accessToken> .
+<http://localhost:PORT/ccm> <http://jazz.net/xmlns/prod/jazz/jfs/1.0/oauthRequestTokenUrl> <http://localhost:PORT/jts/oauth/requestToken> .
+<http://localhost:PORT/ccm> <http://jazz.net/xmlns/prod/jazz/jfs/1.0/oauthUserAuthorizationUrl> <http://localhost:PORT/jts/oauth/authorize> .
+<http://localhost:PORT/ccm> <http://open-services.net/xmlns/cm/1.0/cmServiceProviders> <http://localhost:PORT/ccm/oslc/catalog> .
 
 --- serviceprovider_ccm.xml ---
-<rdf:RDF
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:oslc="http://open-services.net/ns/core#"
-    xmlns:dcterms="http://purl.org/dc/terms/">
-  <oslc:ServiceProvider rdf:about="http://localhost:PORT/ccm/oslc/contexts/_1/ccm/services.xml">
-    <dcterms:title>JKE Banking (Change Management)</dcterms:title>
-    <oslc:service>
-      <oslc:Service>
-        <oslc:domain rdf:resource="http://open-services.net/ns/cm#"/>
-        <oslc:queryCapability>
-          <oslc:QueryCapability>
-            <dcterms:title>Query Change Requests</dcterms:title>
-            <oslc:queryBase rdf:resource="http://localhost:PORT/ccm/oslc/contexts/_1/ccm/query"/>
-            <oslc:resourceType rdf:resource="http://open-services.net/ns/cm#ChangeRequest"/>
-          </oslc:QueryCapability>
-        </oslc:queryCapability>
-        <oslc:creationFactory>
-          <oslc:CreationFactory>
-            <dcterms:title>Create Task</dcterms:title>
-            <oslc:creation rdf:resource="http://localhost:PORT/ccm/oslc/contexts/_1/ccm/create"/>
-            <oslc:resourceType rdf:resource="http://open-services.net/ns/cm#ChangeRequest"/>
-            <oslc:usage rdf:resource="http://open-services.net/ns/cm#task"/>
-            <oslc:resourceShape rdf:resource="http://localhost:PORT/ccm/oslc/contexts/_1/ccm/shapes/workitem"/>
-          </oslc:CreationFactory>
-        </oslc:creationFactory>
-        <oslc:creationFactory>
-          <oslc:CreationFactory>
-            <dcterms:title>Create Defect</dcterms:title>
-            <oslc:creation rdf:resource="http://localhost:PORT/ccm/oslc/contexts/_1/ccm/create"/>
-            <oslc:resourceType rdf:resource="http://open-services.net/ns/cm#ChangeRequest"/>
-            <oslc:usage rdf:resource="http://open-services.net/ns/cm#defect"/>
-            <oslc:resourceShape rdf:resource="http://localhost:PORT/ccm/oslc/contexts/_1/ccm/shapes/workitem"/>
-          </oslc:CreationFactory>
-        </oslc:creationFactory>
-      </oslc:Service>
-    </oslc:service>
-  </oslc:ServiceProvider>
-</rdf:RDF>
+<http://localhost:PORT/ccm/oslc/contexts/_1/ccm/services.xml> <http://open-services.net/ns/core#service> _:b0 .
+<http://localhost:PORT/ccm/oslc/contexts/_1/ccm/services.xml> <http://purl.org/dc/terms/title> "JKE Banking (Change Management)" .
+<http://localhost:PORT/ccm/oslc/contexts/_1/ccm/services.xml> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/core#ServiceProvider> .
+_:b0 <http://open-services.net/ns/core#creationFactory> _:b1 .
+_:b0 <http://open-services.net/ns/core#creationFactory> _:b2 .
+_:b0 <http://open-services.net/ns/core#domain> <http://open-services.net/ns/cm#> .
+_:b0 <http://open-services.net/ns/core#queryCapability> _:b3 .
+_:b0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/core#Service> .
+_:b1 <http://open-services.net/ns/core#creation> <http://localhost:PORT/ccm/oslc/contexts/_1/ccm/create> .
+_:b1 <http://open-services.net/ns/core#resourceShape> <http://localhost:PORT/ccm/oslc/contexts/_1/ccm/shapes/workitem> .
+_:b1 <http://open-services.net/ns/core#resourceType> <http://open-services.net/ns/cm#ChangeRequest> .
+_:b1 <http://open-services.net/ns/core#usage> <http://open-services.net/ns/cm#task> .
+_:b1 <http://purl.org/dc/terms/title> "Create Task" .
+_:b1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/core#CreationFactory> .
+_:b2 <http://open-services.net/ns/core#creation> <http://localhost:PORT/ccm/oslc/contexts/_1/ccm/create> .
+_:b2 <http://open-services.net/ns/core#resourceShape> <http://localhost:PORT/ccm/oslc/contexts/_1/ccm/shapes/workitem> .
+_:b2 <http://open-services.net/ns/core#resourceType> <http://open-services.net/ns/cm#ChangeRequest> .
+_:b2 <http://open-services.net/ns/core#usage> <http://open-services.net/ns/cm#defect> .
+_:b2 <http://purl.org/dc/terms/title> "Create Defect" .
+_:b2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/core#CreationFactory> .
+_:b3 <http://open-services.net/ns/core#queryBase> <http://localhost:PORT/ccm/oslc/contexts/_1/ccm/query> .
+_:b3 <http://open-services.net/ns/core#resourceType> <http://open-services.net/ns/cm#ChangeRequest> .
+_:b3 <http://purl.org/dc/terms/title> "Query Change Requests" .
+_:b3 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/core#QueryCapability> .
 
 --- shape_workitem.xml ---
-<rdf:RDF
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:oslc="http://open-services.net/ns/core#"
-    xmlns:dcterms="http://purl.org/dc/terms/">
-  <oslc:ResourceShape rdf:about="http://localhost:PORT/ccm/oslc/contexts/_1/ccm/shapes/workitem">
-    <dcterms:title>Work Item</dcterms:title>
-    <oslc:property>
-      <oslc:Property>
-        <oslc:name>filedAgainst</oslc:name>
-        <oslc:propertyDefinition rdf:resource="http://jazz.net/xmlns/prod/jazz/rtc/cm/1.0/filedAgainst"/>
-        <oslc:allowedValues rdf:resource="http://localhost:PORT/ccm/oslc/contexts/_1/ccm/allowedValues/filedAgainst"/>
-      </oslc:Property>
-    </oslc:property>
-  </oslc:ResourceShape>
-</rdf:RDF>
+<http://localhost:PORT/ccm/oslc/contexts/_1/ccm/shapes/workitem> <http://open-services.net/ns/core#property> _:b0 .
+<http://localhost:PORT/ccm/oslc/contexts/_1/ccm/shapes/workitem> <http://purl.org/dc/terms/title> "Work Item" .
+<http://localhost:PORT/ccm/oslc/contexts/_1/ccm/shapes/workitem> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/core#ResourceShape> .
+_:b0 <http://open-services.net/ns/core#allowedValues> <http://localhost:PORT/ccm/oslc/contexts/_1/ccm/allowedValues/filedAgainst> .
+_:b0 <http://open-services.net/ns/core#name> "filedAgainst" .
+_:b0 <http://open-services.net/ns/core#propertyDefinition> <http://jazz.net/xmlns/prod/jazz/rtc/cm/1.0/filedAgainst> .
+_:b0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/core#Property> .
 
 
 ╔═ [end of file] ═╗
