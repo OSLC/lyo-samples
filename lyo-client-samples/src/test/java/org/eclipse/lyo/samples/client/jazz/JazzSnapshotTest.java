@@ -8,7 +8,6 @@ import static org.mockserver.model.HttpResponse.response;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import org.eclipse.lyo.samples.client.SnapshotUtils;
@@ -50,7 +49,7 @@ class JazzSnapshotTest {
         mockServerClient.reset();
         loadedFixtures.clear();
 
-        Path recordedDir = Paths.get("src/test/resources/fixtures/recorded");
+        Path recordedDir = Path.of("src/test/resources/fixtures/recorded");
         if (Files.exists(recordedDir) && Files.isDirectory(recordedDir)) {
             try {
                 if (Files.list(recordedDir).findAny().isPresent()) {
@@ -283,7 +282,7 @@ class JazzSnapshotTest {
     }
 
     private String loadFixture(String filename, Map<String, String> replacements) throws IOException {
-        Path path = Paths.get("src/test/resources/fixtures", filename);
+        Path path = Path.of("src/test/resources/fixtures", filename);
         String content = Files.readString(path);
         for (Map.Entry<String, String> entry : replacements.entrySet()) {
             content = content.replace("{{" + entry.getKey() + "}}", entry.getValue());

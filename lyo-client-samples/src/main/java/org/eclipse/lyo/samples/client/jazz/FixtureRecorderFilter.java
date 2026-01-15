@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.concurrent.atomic.AtomicInteger;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 public class FixtureRecorderFilter implements ClientRequestFilter, ClientResponseFilter {
 
     private static final AtomicInteger counter = new AtomicInteger(0);
-    private static final Path OUTPUT_DIR = Paths.get("src/test/resources/fixtures/recorded");
+    private static final Path OUTPUT_DIR = Path.of("src/test/resources/fixtures/recorded");
 
     static {
         if (Boolean.getBoolean("lyo.record.fixtures")) {
@@ -45,7 +44,7 @@ public class FixtureRecorderFilter implements ClientRequestFilter, ClientRespons
         int id = counter.incrementAndGet();
         String method = requestContext.getMethod();
         String path = requestContext.getUri().getPath();
-        String filename = String.format("%03d_%s_%s.xml", id, method, sanitize(path));
+        String filename = "%03d_%s_%s.xml".formatted(id, method, sanitize(path));
         Path filePath = OUTPUT_DIR.resolve(filename);
 
         if (responseContext.hasEntity()) {

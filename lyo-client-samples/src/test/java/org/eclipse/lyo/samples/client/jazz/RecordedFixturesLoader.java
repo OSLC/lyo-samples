@@ -3,7 +3,6 @@ package org.eclipse.lyo.samples.client.jazz;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -11,17 +10,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import lombok.extern.slf4j.Slf4j;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
 import org.mockserver.model.MediaType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+@Slf4j
 public class RecordedFixturesLoader {
-
-    private static final Logger log = LoggerFactory.getLogger(RecordedFixturesLoader.class);
-    private static final Path FIXTURES_DIR = Paths.get("src/test/resources/fixtures/recorded");
+    private static final Path FIXTURES_DIR = Path.of("src/test/resources/fixtures/recorded");
     private static final Pattern FILENAME_PATTERN = Pattern.compile("(\\d{3})_([A-Z]+)_(.*)\\.xml");
 
     public static void loadFixtures(
