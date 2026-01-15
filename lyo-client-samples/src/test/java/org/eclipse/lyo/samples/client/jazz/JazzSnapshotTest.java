@@ -23,7 +23,7 @@ import org.mockserver.model.HttpRequest;
 import org.mockserver.model.MediaType;
 
 class JazzSnapshotTest {
-    // SELFIEWRITE
+
     private static final MediaType RDF_XML = MediaType.parse("application/rdf+xml");
     private static ClientAndServer mockServer;
     private static MockServerClient mockServerClient;
