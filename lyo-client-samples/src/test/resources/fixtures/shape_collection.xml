@@ -1,0 +1,9 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:oslc="http://open-services.net/ns/core#"
+    xmlns:dcterms="http://purl.org/dc/terms/">
+  <oslc:ResourceShape rdf:about="{{baseUri}}/rm/types/Collection">
+    <dcterms:title>Collection</dcterms:title>
+    <oslc:describes rdf:resource="http://open-services.net/ns/rm#RequirementCollection"/>
+  </oslc:ResourceShape>
+</rdf:RDF>

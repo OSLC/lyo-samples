@@ -1,0 +1,11 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:oslc_rm="http://open-services.net/xmlns/rm/1.0/"
+    xmlns:jfs="http://jazz.net/xmlns/prod/jazz/jfs/1.0/">
+  <rdf:Description rdf:about="{{baseUri}}/rm">
+    <oslc_rm:rmServiceProviders rdf:resource="{{baseUri}}/rm/oslc/catalog"/>
+    <jfs:oauthRequestTokenUrl rdf:resource="{{baseUri}}/jts/oauth/requestToken"/>
+    <jfs:oauthUserAuthorizationUrl rdf:resource="{{baseUri}}/jts/oauth/authorize"/>
+    <jfs:oauthAccessTokenUrl rdf:resource="{{baseUri}}/jts/oauth/accessToken"/>
+  </rdf:Description>
+</rdf:RDF>

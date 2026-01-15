@@ -1,0 +1,12 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:dcterms="http://purl.org/dc/terms/"
+    xmlns:nav="http://com.ibm.rdm/navigation#"
+    xmlns:rm="http://www.ibm.com/xmlns/rdm/rdf/">
+  <rdf:Description rdf:about="{{baseUri}}/rm/oslc/rm/req01">
+    <rdf:type rdf:resource="http://open-services.net/ns/rm#Requirement"/>
+    <dcterms:title>Req01</dcterms:title>
+    <nav:parent rdf:resource="{{baseUri}}/rm/folders/1"/>
+    <rm:primaryText>My Primary Text</rm:primaryText>
+  </rdf:Description>
+</rdf:RDF>

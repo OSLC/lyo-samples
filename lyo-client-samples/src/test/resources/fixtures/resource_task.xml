@@ -1,0 +1,10 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:dcterms="http://purl.org/dc/terms/"
+    xmlns:oslc_cm="http://open-services.net/ns/cm#">
+  <rdf:Description rdf:about="{{baseUri}}/ccm/oslc/ccm/task1">
+    <rdf:type rdf:resource="http://open-services.net/ns/cm#ChangeRequest"/>
+    <dcterms:title>Task</dcterms:title>
+    <dcterms:identifier>1</dcterms:identifier>
+  </rdf:Description>
+</rdf:RDF>
