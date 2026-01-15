@@ -1,0 +1,38 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:oslc="http://open-services.net/ns/core#"
+    xmlns:dcterms="http://purl.org/dc/terms/">
+  <oslc:ServiceProvider rdf:about="{{baseUri}}/ccm/oslc/contexts/_1/ccm/services.xml">
+    <dcterms:title>{{projectArea}}</dcterms:title>
+    <oslc:service>
+      <oslc:Service>
+        <oslc:domain rdf:resource="http://open-services.net/ns/cm#"/>
+        <oslc:queryCapability>
+          <oslc:QueryCapability>
+            <dcterms:title>Query Change Requests</dcterms:title>
+            <oslc:queryBase rdf:resource="{{baseUri}}/ccm/oslc/contexts/_1/ccm/query"/>
+            <oslc:resourceType rdf:resource="http://open-services.net/ns/cm#ChangeRequest"/>
+          </oslc:QueryCapability>
+        </oslc:queryCapability>
+        <oslc:creationFactory>
+          <oslc:CreationFactory>
+            <dcterms:title>Create Task</dcterms:title>
+            <oslc:creation rdf:resource="{{baseUri}}/ccm/oslc/contexts/_1/ccm/create"/>
+            <oslc:resourceType rdf:resource="http://open-services.net/ns/cm#ChangeRequest"/>
+            <oslc:usage rdf:resource="http://open-services.net/ns/cm#task"/>
+            <oslc:resourceShape rdf:resource="{{baseUri}}/ccm/oslc/contexts/_1/ccm/shapes/workitem"/>
+          </oslc:CreationFactory>
+        </oslc:creationFactory>
+        <oslc:creationFactory>
+          <oslc:CreationFactory>
+            <dcterms:title>Create Defect</dcterms:title>
+            <oslc:creation rdf:resource="{{baseUri}}/ccm/oslc/contexts/_1/ccm/create"/>
+            <oslc:resourceType rdf:resource="http://open-services.net/ns/cm#ChangeRequest"/>
+            <oslc:usage rdf:resource="http://open-services.net/ns/cm#defect"/>
+            <oslc:resourceShape rdf:resource="{{baseUri}}/ccm/oslc/contexts/_1/ccm/shapes/workitem"/>
+          </oslc:CreationFactory>
+        </oslc:creationFactory>
+      </oslc:Service>
+    </oslc:service>
+  </oslc:ServiceProvider>
+</rdf:RDF>

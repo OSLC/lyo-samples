@@ -1,0 +1,9 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:dcterms="http://purl.org/dc/terms/"
+    xmlns:oslc_qm="http://open-services.net/ns/qm#">
+  <rdf:Description rdf:about="{{baseUri}}/qm/oslc/qm/tc1">
+    <rdf:type rdf:resource="http://open-services.net/ns/qm#TestCase"/>
+    <dcterms:title>TC</dcterms:title>
+  </rdf:Description>
+</rdf:RDF>

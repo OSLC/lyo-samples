@@ -1,0 +1,36 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:oslc="http://open-services.net/ns/core#"
+    xmlns:dcterms="http://purl.org/dc/terms/">
+  <oslc:ServiceProvider rdf:about="{{baseUri}}/rm/oslc/contexts/_1/rm/services.xml">
+    <dcterms:title>{{projectArea}}</dcterms:title>
+    <oslc:service>
+      <oslc:Service>
+        <oslc:domain rdf:resource="http://open-services.net/ns/rm#"/>
+        <oslc:queryCapability>
+          <oslc:QueryCapability>
+            <dcterms:title>Query Requirements</dcterms:title>
+            <oslc:queryBase rdf:resource="{{baseUri}}/rm/oslc/contexts/_1/rm/query"/>
+            <oslc:resourceType rdf:resource="http://open-services.net/ns/rm#Requirement"/>
+          </oslc:QueryCapability>
+        </oslc:queryCapability>
+        <oslc:creationFactory>
+          <oslc:CreationFactory>
+            <dcterms:title>Create Requirement</dcterms:title>
+            <oslc:creation rdf:resource="{{baseUri}}/rm/oslc/contexts/_1/rm/create"/>
+            <oslc:resourceType rdf:resource="http://open-services.net/ns/rm#Requirement"/>
+            <oslc:resourceShape rdf:resource="{{baseUri}}/rm/types/UserRequirement"/>
+          </oslc:CreationFactory>
+        </oslc:creationFactory>
+        <oslc:creationFactory>
+          <oslc:CreationFactory>
+             <dcterms:title>Create Collection</dcterms:title>
+             <oslc:creation rdf:resource="{{baseUri}}/rm/oslc/contexts/_1/rm/create"/>
+             <oslc:resourceType rdf:resource="http://open-services.net/ns/rm#RequirementCollection"/>
+             <oslc:resourceShape rdf:resource="{{baseUri}}/rm/types/Collection"/>
+          </oslc:CreationFactory>
+        </oslc:creationFactory>
+      </oslc:Service>
+    </oslc:service>
+  </oslc:ServiceProvider>
+</rdf:RDF>

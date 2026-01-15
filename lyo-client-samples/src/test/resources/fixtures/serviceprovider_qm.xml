@@ -1,0 +1,27 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:oslc="http://open-services.net/ns/core#"
+    xmlns:dcterms="http://purl.org/dc/terms/">
+  <oslc:ServiceProvider rdf:about="{{baseUri}}/qm/oslc/contexts/_1/qm/services.xml">
+    <dcterms:title>{{projectArea}}</dcterms:title>
+    <oslc:service>
+      <oslc:Service>
+        <oslc:domain rdf:resource="http://open-services.net/ns/qm#"/>
+        <oslc:queryCapability>
+          <oslc:QueryCapability>
+            <dcterms:title>Query Test Plans</dcterms:title>
+            <oslc:queryBase rdf:resource="{{baseUri}}/qm/oslc/contexts/_1/qm/query"/>
+            <oslc:resourceType rdf:resource="http://open-services.net/ns/qm#TestResultQuery"/>
+          </oslc:QueryCapability>
+        </oslc:queryCapability>
+        <oslc:creationFactory>
+          <oslc:CreationFactory>
+            <dcterms:title>Create Test Case</dcterms:title>
+            <oslc:creation rdf:resource="{{baseUri}}/qm/oslc/contexts/_1/qm/create"/>
+            <oslc:resourceType rdf:resource="http://open-services.net/ns/qm#TestCase"/>
+          </oslc:CreationFactory>
+        </oslc:creationFactory>
+      </oslc:Service>
+    </oslc:service>
+  </oslc:ServiceProvider>
+</rdf:RDF>
