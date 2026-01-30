@@ -834,10 +834,10 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
 
             Object relationObj = script.getExtendedProperties().get(PROPERTY_DC_RELATION);
             URI scriptUri = null;
-            if (relationObj instanceof URI) {
-                scriptUri = (URI) relationObj;
-            } else if (relationObj instanceof Link) {
-                scriptUri = ((Link) relationObj).getValue();
+            if (relationObj instanceof URI rI) {
+                scriptUri = rI;
+            } else if (relationObj instanceof Link link) {
+                scriptUri = link.getValue();
             }
 
             if (scriptUri == null) {
