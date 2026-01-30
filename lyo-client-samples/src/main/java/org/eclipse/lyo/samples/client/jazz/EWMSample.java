@@ -248,7 +248,9 @@ public class EWMSample {
         task.getExtendedProperties()
                 .put(
                         PROPERTY_TESTED_BY_TEST_CASE,
-                        new Link(new URI("http://qmprovider/testcase/1"), "Accessibility verification using a screen reader"));
+                        new Link(
+                                new URI("http://qmprovider/testcase/1"),
+                                "Accessibility verification using a screen reader"));
         task.getExtendedProperties().put(PROPERTY_DCTERMS_TYPE, "task");
         task.setTypes(Collections.singleton(URI.create(OSLCConstants.CM_CHANGE_REQUEST_TYPE)));
 
@@ -333,7 +335,9 @@ public class EWMSample {
                 "An error occurred when I tried to log in with a user ID that contained the '@'" + " symbol.");
 
         defect.getExtendedProperties()
-                .put(PROPERTY_TESTED_BY_TEST_CASE, new Link(new URI("http://qmprovider/testcase/3"), "Global Verifcation Test"));
+                .put(
+                        PROPERTY_TESTED_BY_TEST_CASE,
+                        new Link(new URI("http://qmprovider/testcase/3"), "Global Verifcation Test"));
 
         defect.getExtendedProperties().put(PROPERTY_DCTERMS_TYPE, "defect");
         defect.setTypes(Collections.singleton(URI.create(OSLCConstants.CM_CHANGE_REQUEST_TYPE)));
