@@ -821,17 +821,7 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
             TestScript script = client.getResource(scriptURI.toString(), OslcMediaType.APPLICATION_RDF_XML)
                     .readEntity(TestScript.class);
 
-            // oslc-domains TestScript uses Link for dcterms:relation, likely extended property in old code?
-            // Actually in oslc-domains ILinkType has Set<Link> relation.
-            // But TestScript implements ITestScript.
-            // AbstractResource has extendedProperties.
-            // The old code used PROPERTY_DC_RELATION from extended properties if not in class.
-            // In oslc-domains, TestScript might not have relation getter.
-            // AbstractResource does not have relation.
-
-            // PROPERTY_DC_RELATION is "http://purl.org/dc/terms/relation".
-            // Let's use extended properties as before.
-
+            // Access dcterms:relation via extended properties because TestScript does not provide a direct getter for this property.
             Object relationObj = script.getExtendedProperties().get(PROPERTY_DC_RELATION);
             URI scriptUri = null;
             if (relationObj instanceof URI rI) {
