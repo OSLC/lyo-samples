@@ -8,6 +8,7 @@ on:
     paths:
       - '.github/workflows/**'
       - 'lyo-client-samples/**'
+      - '**/pom.xml'
   schedule:
     - cron: "01 13 1-7 * 5" # catch SNAPSHOT breaking changes
   merge_group:
