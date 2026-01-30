@@ -1,6 +1,7 @@
 # Smoke testing client samples on Jazz sandbox instances
 
-name: Smoke testing (Lyo HEAD)
+name: Acceptance test (Lyo HEAD)
+run-name: "acceptance@${{ github.ref_name }} (Lyo@${{ github.event.inputs.lyoBranch }}; comment: ${{ inputs.comment }})"
 
 on:
   workflow_dispatch:
@@ -17,7 +18,7 @@ on:
         description: 'PR/issue link (e.g., to Lyo)'
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event.inputs.lyoRepo }}-${{ github.event.inputs.lyoBranch }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/master' && github.ref != 'refs/heads/main' }}
 
 jobs:

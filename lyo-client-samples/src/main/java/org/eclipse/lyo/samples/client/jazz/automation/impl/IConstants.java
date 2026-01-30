@@ -48,11 +48,15 @@ public interface IConstants {
     // Oslc_qmDomainConstants.QUALITY_MANAGEMENT_NAMSPACE is http://open-services.net/ns/qm#
     // OSLCConstants.OSLC_QM_V2 is http://open-services.net/ns/qm#
 
-    QName PROPERTY_QM_REPORTS_ON_TEST_CASE = new QName(Oslc_qmDomainConstants.QUALITY_MANAGEMENT_NAMSPACE, "reportsOnTestCase");
+    QName PROPERTY_QM_REPORTS_ON_TEST_CASE =
+            new QName(Oslc_qmDomainConstants.QUALITY_MANAGEMENT_NAMSPACE, "reportsOnTestCase");
     QName PROPERTY_QM_RUNS_TEST_CASE = new QName(Oslc_qmDomainConstants.QUALITY_MANAGEMENT_NAMSPACE, "runsTestCase");
-    QName PROPERTY_QM_EXECUTES_TEST_SCRIPT = new QName(Oslc_qmDomainConstants.QUALITY_MANAGEMENT_NAMSPACE, "executesTestScript");
-    QName PROPERTY_QM_REPORTS_ON_TEST_PLAN = new QName(Oslc_qmDomainConstants.QUALITY_MANAGEMENT_NAMSPACE, "reportsOnTestPlan");
-    QName PROPERTY_QM_PRODUCES_TEST_RESULT = new QName(Oslc_qmDomainConstants.QUALITY_MANAGEMENT_NAMSPACE, "producesTestResult");
+    QName PROPERTY_QM_EXECUTES_TEST_SCRIPT =
+            new QName(Oslc_qmDomainConstants.QUALITY_MANAGEMENT_NAMSPACE, "executesTestScript");
+    QName PROPERTY_QM_REPORTS_ON_TEST_PLAN =
+            new QName(Oslc_qmDomainConstants.QUALITY_MANAGEMENT_NAMSPACE, "reportsOnTestPlan");
+    QName PROPERTY_QM_PRODUCES_TEST_RESULT =
+            new QName(Oslc_qmDomainConstants.QUALITY_MANAGEMENT_NAMSPACE, "producesTestResult");
 
     QName PROPERTY_RQM_TAKEN = new QName(IConstants.NAMESPACE_URI_JAZZ_AUTO_RQM, "taken");
     QName PROPERTY_RQM_PROGRESS = new QName(IConstants.NAMESPACE_URI_JAZZ_AUTO_RQM, "progress");

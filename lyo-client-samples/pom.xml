@@ -72,6 +72,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.14.1</version>
         <configuration>
           <annotationProcessorPaths>
             <path>
@@ -91,11 +92,11 @@
       <plugin>
         <groupId>org.openrewrite.maven</groupId>
         <artifactId>rewrite-maven-plugin</artifactId>
-        <version>6.25.0</version>
+        <version>6.27.1</version>
         <configuration>
           <activeRecipes>
             <!-- <recipe>org.openrewrite.java.migrate.UpgradeToJava17</recipe> -->
-            <!-- <recipe>org.openrewrite.java.migrate.UpgradeToJava21</recipe> -->
+            <recipe>org.openrewrite.java.migrate.UpgradeToJava21</recipe>
             <recipe>org.openrewrite.java.testing.junit5.JUnit5BestPractices</recipe>
             <recipe>org.openrewrite.java.logging.slf4j.ParameterizedLogging</recipe>
             <!-- <recipe>org.openrewrite.java.logging.slf4j.Log4jToSlf4j</recipe> -->
@@ -109,17 +110,17 @@
           <dependency>
             <groupId>org.openrewrite.recipe</groupId>
             <artifactId>rewrite-migrate-java</artifactId>
-            <version>3.21.1</version>
+            <version>3.25.0</version>
           </dependency>
           <dependency>
             <groupId>org.openrewrite.recipe</groupId>
             <artifactId>rewrite-testing-frameworks</artifactId>
-            <version>3.22.0</version>
+            <version>3.25.0</version>
           </dependency>
           <dependency>
             <groupId>org.openrewrite.recipe</groupId>
             <artifactId>rewrite-logging-frameworks</artifactId>
-            <version>3.17.0</version>
+            <version>3.21.0</version>
           </dependency>
         </dependencies>
       </plugin>
@@ -127,7 +128,7 @@
       <plugin>
         <groupId>com.diffplug.spotless</groupId>
         <artifactId>spotless-maven-plugin</artifactId>
-        <version>3.0.0</version>
+        <version>3.1.0</version>
         <executions>
           <execution>
             <id>auto-style</id>
@@ -286,7 +287,7 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
-      <version>6.0.1</version>
+      <version>6.0.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -300,6 +301,30 @@
           <artifactId>jaxb-impl</artifactId>
         </exclusion>
       </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.diffplug.selfie</groupId>
+      <artifactId>selfie-runner-junit5</artifactId>
+      <version>2.5.5</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>testcontainers</artifactId>
+      <version>1.20.4</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>1.20.4</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>mockserver</artifactId>
+      <version>1.20.4</version>
+      <scope>test</scope>
     </dependency>
 
   </dependencies>

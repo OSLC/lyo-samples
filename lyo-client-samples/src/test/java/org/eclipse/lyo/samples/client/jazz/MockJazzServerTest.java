@@ -13,14 +13,14 @@ import org.mockserver.client.MockServerClient;
 import org.mockserver.integration.ClientAndServer;
 import org.mockserver.matchers.Times;
 
-public class MockJazzServerTest {
+class MockJazzServerTest {
 
     private static ClientAndServer mockServer;
     private static MockServerClient mockServerClient;
     private static String baseUri;
 
     @BeforeAll
-    public static void startServer() {
+    static void startServer() {
         System.setProperty("lyo.test.mode", "true");
         mockServer = startClientAndServer(0);
         mockServerClient = new MockServerClient("localhost", mockServer.getPort());
@@ -28,18 +28,18 @@ public class MockJazzServerTest {
     }
 
     @AfterAll
-    public static void stopServer() {
+    static void stopServer() {
         mockServer.stop();
         System.clearProperty("lyo.test.mode");
     }
 
     @BeforeEach
-    public void reset() {
+    void reset() {
         mockServerClient.reset();
     }
 
     @Test
-    public void testEWMSample() throws Exception {
+    void ewmSample() throws Exception {
         String projectArea = "JKE Banking (Change Management)";
         String context = "/ccm";
         String rootServicesUrl = baseUri + context + "/rootservices";
@@ -235,7 +235,7 @@ public class MockJazzServerTest {
     }
 
     @Test
-    public void testETMSample() throws Exception {
+    void etmSample() throws Exception {
         String projectArea = "JKE Banking (Quality Management)";
         String context = "/qm";
         String rootServicesUrl = baseUri + context + "/rootservices";
@@ -379,7 +379,7 @@ public class MockJazzServerTest {
     }
 
     @Test
-    public void testERMSample() throws Exception {
+    void ermSample() throws Exception {
         String projectArea = "JKE Banking (Requirements Management)";
         String context = "/rm";
         String rootServicesUrl = baseUri + context + "/rootservices";

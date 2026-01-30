@@ -15,7 +15,7 @@
     <maven.compiler.target>17</maven.compiler.target>
     <!-- Jersey version compatible with Jakarta EE -->
     <version.jersey>3.1.10</version.jersey>
-    <version.swagger>2.2.35</version.swagger>
+    <version.swagger>2.2.41</version.swagger>
     <version.lyo>7.0.0.Alpha3</version.lyo>
   </properties>
   <repositories>
@@ -127,7 +127,7 @@
       <plugin>
         <groupId>org.eclipse.jetty.ee10</groupId>
         <artifactId>jetty-ee10-maven-plugin</artifactId>
-        <version>12.0.24</version>
+        <version>12.1.4</version>
         <configuration>
           <webApp>
             <contextPath>/</contextPath>
@@ -160,7 +160,7 @@
       <plugin>
         <groupId>com.diffplug.spotless</groupId>
         <artifactId>spotless-maven-plugin</artifactId>
-        <version>3.0.0</version>
+        <version>3.1.0</version>
         <executions>
           <execution>
             <id>auto-style</id>
@@ -206,7 +206,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
-        <version>3.5.0</version>
+        <version>3.5.1</version>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

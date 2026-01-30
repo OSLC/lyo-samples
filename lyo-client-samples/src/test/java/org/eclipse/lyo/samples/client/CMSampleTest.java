@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation
+ *
+ *  All rights reserved. This program and the accompanying materials
+ *  are made available under the terms of the Eclipse Public License v1.0
+ *  and Eclipse Distribution License v. 1.0 which accompanies this distribution.
+ *
+ *  The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
+ *  and the Eclipse Distribution License is available at
+ *  http://www.eclipse.org/org/documents/edl-v10.php.
+ *
+ *  SPDX-License-Identifier: EPL-1.0 OR BSD-3-Clause
+ */
 package org.eclipse.lyo.samples.client;
 
 import static org.mockserver.model.HttpRequest.request;
@@ -11,25 +24,24 @@ import org.mockserver.integration.ClientAndServer;
 import org.mockserver.model.MediaType;
 import org.mockserver.verify.VerificationTimes;
 
-public class CMSampleTest {
+class CMSampleTest {
 
     private ClientAndServer mockServer;
 
     @BeforeEach
-    public void startServer() {
+    void startServer() {
         mockServer = ClientAndServer.startClientAndServer(1080);
     }
 
     @AfterEach
-    public void stopServer() {
+    void stopServer() {
         mockServer.stop();
     }
 
     @Test
-    public void testMain() throws Exception {
+    void main() throws Exception {
         // 1. Catalog Request
-        String catalogBody =
-                """
+        String catalogBody = """
                 <?xml version="1.0" encoding="UTF-8"?>
                 <oslc:ServiceProviderCatalog xmlns:oslc="http://open-services.net/ns/core#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
                     <oslc:serviceProvider>
@@ -45,8 +57,7 @@ public class CMSampleTest {
                 .respond(response().withStatusCode(200).withBody(catalogBody, MediaType.APPLICATION_XML));
 
         // 2. Service Provider Request
-        String serviceProviderBody =
-                """
+        String serviceProviderBody = """
                 <?xml version="1.0" encoding="UTF-8"?>
                 <oslc:ServiceProvider
                     rdf:about="http://localhost:1080/services/serviceProvider"
@@ -78,8 +89,7 @@ public class CMSampleTest {
                 .respond(response().withStatusCode(200).withBody(serviceProviderBody, MediaType.APPLICATION_XML));
 
         // 3. Query Capability Request
-        String queryResultBody =
-                """
+        String queryResultBody = """
                 <?xml version="1.0" encoding="UTF-8"?>
                 <rdf:RDF
                     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -99,8 +109,7 @@ public class CMSampleTest {
                 .respond(response().withStatusCode(200).withBody(queryResultBody, MediaType.APPLICATION_XML));
 
         // 4. Get single artifact (used in processPagedQueryResults)
-        String changeRequestBody1 =
-                """
+        String changeRequestBody1 = """
                 <?xml version="1.0" encoding="UTF-8"?>
                 <rdf:RDF
                     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -121,8 +130,7 @@ public class CMSampleTest {
         // CMSample.java modified to use localhost:1080 when catalogURL has localhost:1080
         // URL: http://localhost:1080/services/changeRequests/2
 
-        String changeRequestBody2 =
-                """
+        String changeRequestBody2 = """
                 <?xml version="1.0" encoding="UTF-8"?>
                 <rdf:RDF
                     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -151,8 +159,7 @@ public class CMSampleTest {
         // 7. Update ChangeRequest (Scenario C)
         // PUT to http://localhost:1080/services/changeRequests/new
 
-        String newChangeRequestBody =
-                """
+        String newChangeRequestBody = """
                 <?xml version="1.0" encoding="UTF-8"?>
                 <rdf:RDF
                     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
