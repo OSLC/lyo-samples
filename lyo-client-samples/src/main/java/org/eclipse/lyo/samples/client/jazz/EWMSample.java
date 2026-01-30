@@ -337,7 +337,7 @@ public class EWMSample {
         defect.getExtendedProperties()
                 .put(
                         PROPERTY_TESTED_BY_TEST_CASE,
-                        new Link(new URI("http://qmprovider/testcase/3"), "Global Verifcation Test"));
+                        new Link(new URI("http://qmprovider/testcase/3"), "Global Verification Test"));
 
         defect.getExtendedProperties().put(PROPERTY_DCTERMS_TYPE, "defect");
         defect.setTypes(Collections.singleton(URI.create(OSLCConstants.CM_CHANGE_REQUEST_TYPE)));

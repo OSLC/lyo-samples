@@ -821,7 +821,8 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
             TestScript script = client.getResource(scriptURI.toString(), OslcMediaType.APPLICATION_RDF_XML)
                     .readEntity(TestScript.class);
 
-            // Access dcterms:relation via extended properties because TestScript does not provide a direct getter for this property.
+            // Access dcterms:relation via extended properties because TestScript does not provide a direct getter for
+            // this property.
             Object relationObj = script.getExtendedProperties().get(PROPERTY_DC_RELATION);
             URI scriptUri = null;
             if (relationObj instanceof URI rI) {
