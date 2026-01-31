@@ -1,0 +1,12 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:oslc_cm="http://open-services.net/xmlns/cm/1.0/"
+    xmlns:jfs="http://jazz.net/xmlns/prod/jazz/jfs/1.0/"
+    xmlns:jd="http://jazz.net/xmlns/prod/jazz/discovery/1.0/">
+  <rdf:Description rdf:about="{{baseUri}}/polarion/oslc/rootservices">
+    <oslc_cm:cmServiceProviders rdf:resource="{{baseUri}}/polarion/oslc/catalog" />
+    <jfs:oauthRequestTokenUrl rdf:resource="{{baseUri}}/polarion/oauth/requestToken" />
+    <jfs:oauthUserAuthorizationUrl rdf:resource="{{baseUri}}/polarion/oauth/authorize" />
+    <jfs:oauthAccessTokenUrl rdf:resource="{{baseUri}}/polarion/oauth/accessToken" />
+  </rdf:Description>
+</rdf:RDF>

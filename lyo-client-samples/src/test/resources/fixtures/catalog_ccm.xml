@@ -1,0 +1,13 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:oslc="http://open-services.net/ns/core#"
+    xmlns:dcterms="http://purl.org/dc/terms/">
+  <oslc:ServiceProviderCatalog rdf:about="{{baseUri}}/ccm/oslc/catalog">
+    <dcterms:title>Change Management Catalog</dcterms:title>
+    <oslc:serviceProvider>
+      <oslc:ServiceProvider rdf:about="{{baseUri}}/ccm/oslc/contexts/_1/ccm/services.xml">
+        <dcterms:title>{{projectArea}}</dcterms:title>
+      </oslc:ServiceProvider>
+    </oslc:serviceProvider>
+  </oslc:ServiceProviderCatalog>
+</rdf:RDF>

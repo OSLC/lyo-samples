@@ -1,0 +1,15 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:oslc="http://open-services.net/ns/core#"
+    xmlns:dcterms="http://purl.org/dc/terms/">
+  <oslc:ResourceShape rdf:about="{{baseUri}}/ccm/oslc/contexts/_1/ccm/shapes/workitem">
+    <dcterms:title>Work Item</dcterms:title>
+    <oslc:property>
+      <oslc:Property>
+        <oslc:name>filedAgainst</oslc:name>
+        <oslc:propertyDefinition rdf:resource="http://jazz.net/xmlns/prod/jazz/rtc/cm/1.0/filedAgainst"/>
+        <oslc:allowedValues rdf:resource="{{baseUri}}/ccm/oslc/contexts/_1/ccm/allowedValues/filedAgainst"/>
+      </oslc:Property>
+    </oslc:property>
+  </oslc:ResourceShape>
+</rdf:RDF>
