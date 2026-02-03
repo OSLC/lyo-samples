@@ -16,7 +16,7 @@
 package org.eclipse.lyo.samples.client.jazz.automation.impl;
 
 import java.io.Serial;
-import org.eclipse.lyo.client.oslc.resources.AutomationRequest;
+import org.eclipse.lyo.oslc.domains.auto.AutomationRequest;
 
 /** An exception thrown when an AutomationRequest has been canceled */
 public class AutomationRequestCanceledException extends AutomationException {

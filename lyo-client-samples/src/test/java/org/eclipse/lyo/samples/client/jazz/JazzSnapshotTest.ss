@@ -300,7 +300,7 @@ _:Bb1 <http://purl.org/dc/terms/description> "An error occurred when I tried to 
 _:Bb1 <http://purl.org/dc/terms/title> "Error logging in"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .
 _:Bb1 <http://purl.org/dc/terms/type> "defect" .
 _:Bb1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://open-services.net/ns/cm#ChangeRequest> .
-_:Bb2 <http://purl.org/dc/terms/title> "Global Verifcation Test" .
+_:Bb2 <http://purl.org/dc/terms/title> "Global Verification Test" .
 _:Bb2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#object> <http://qmprovider/testcase/3> .
 _:Bb2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <http://open-services.net/ns/cm#testedByTestCase> .
 _:Bb2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> _:Bb1 .
