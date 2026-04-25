@@ -24,6 +24,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Date;
 import java.util.Properties;
+import java.util.Set;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -33,10 +34,10 @@ import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.eclipse.lyo.client.JEEFormAuthenticator;
 import org.eclipse.lyo.client.OslcClient;
-import org.eclipse.lyo.client.oslc.resources.AutomationConstants;
-import org.eclipse.lyo.client.oslc.resources.AutomationRequest;
-import org.eclipse.lyo.client.oslc.resources.AutomationResult;
-import org.eclipse.lyo.client.oslc.resources.ParameterInstance;
+import org.eclipse.lyo.oslc.domains.auto.AutomationRequest;
+import org.eclipse.lyo.oslc.domains.auto.AutomationResult;
+import org.eclipse.lyo.oslc.domains.auto.Oslc_autoDomainConstants;
+import org.eclipse.lyo.oslc4j.core.model.Link;
 import org.eclipse.lyo.samples.client.jazz.automation.impl.AutomationAdapter;
 import org.eclipse.lyo.samples.client.jazz.automation.impl.AutomationException;
 import org.eclipse.lyo.samples.client.jazz.automation.impl.AutomationRequestCanceledException;
@@ -191,7 +192,7 @@ public class ETMAutomationSample implements IConstants, IAutomationRequestHandle
             adapter.sendProgressForRequest(50, request);
 
             // execute the script with the parameters from the Automation Request
-            executeScript(script, request.getInputParameters(), adapter, request);
+            executeScript(script, request.getInputParameter(), adapter, request);
 
             // Upload an attachment for the result
             File attachment = getSampleFile();
@@ -202,11 +203,11 @@ public class ETMAutomationSample implements IConstants, IAutomationRequestHandle
 
             // Add some rich text to the result
             Element xhtmlTableElement = createXhtmlTable();
-            QName contributionQname = new QName(AutomationConstants.AUTOMATION_DOMAIN, "contribution");
+            QName contributionQname = new QName(Oslc_autoDomainConstants.AUTOMATION_NAMSPACE, "contribution");
             result.getExtendedProperties().put(contributionQname, xhtmlTableElement);
 
             // Set the verdict for the result
-            result.addVerdict(new URI(AutomationConstants.VERDICT_PASSED));
+            result.addVerdict(new Link(new URI(VERDICT_PASSED)));
 
             // Save the end time in the result
             result.getExtendedProperties().put(PROPERTY_RQM_END_TIME, new Date(System.currentTimeMillis()));
@@ -214,7 +215,10 @@ public class ETMAutomationSample implements IConstants, IAutomationRequestHandle
             // update progress indication
             adapter.sendProgressForRequest(99, request);
 
-            log.info("Returning a result with verdict {}", result.getVerdicts()[0]);
+            Link[] verdicts = result.getVerdict().toArray(new Link[0]);
+            if (verdicts.length > 0) {
+                log.info("Returning a result with verdict {}", verdicts[0]);
+            }
 
         } catch (AutomationRequestCanceledException e) {
 
@@ -248,7 +252,7 @@ public class ETMAutomationSample implements IConstants, IAutomationRequestHandle
      * @throws IOException
      */
     private void executeScript(
-            Document script, ParameterInstance[] inputParameters, AutomationAdapter adapter, AutomationRequest request)
+            Document script, Set<Link> inputParameters, AutomationAdapter adapter, AutomationRequest request)
             throws InterruptedException, AutomationException, IOException, URISyntaxException {
 
         String scriptTitle = script.getDocumentElement()
@@ -258,10 +262,17 @@ public class ETMAutomationSample implements IConstants, IAutomationRequestHandle
 
         log.info("Running script named '{}'", scriptTitle);
 
-        log.info("Input parameters:");
-        for (ParameterInstance parameter : inputParameters) {
-            String paramStr = "\t" + parameter.getName() + ": " + parameter.getValue();
-            log.info(paramStr);
+        // oslc-domains models inputParameter as Set<Link>; inline ParameterInstance name/value are
+        // not exposed via the Link itself — fetch each link or parse the RDF model to recover them.
+        log.info("Input parameter links:");
+        if (inputParameters != null) {
+            for (Link parameterLink : inputParameters) {
+                String paramStr = "\t" + parameterLink.getValue();
+                if (parameterLink.getLabel() != null) {
+                    paramStr += " (" + parameterLink.getLabel() + ")";
+                }
+                log.info(paramStr);
+            }
         }
 
         /*
