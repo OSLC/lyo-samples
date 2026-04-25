@@ -17,6 +17,8 @@ package org.eclipse.lyo.samples.client.jazz.automation.impl;
 
 import javax.xml.namespace.QName;
 import org.eclipse.lyo.client.OSLCConstants;
+import org.eclipse.lyo.oslc.domains.auto.Oslc_autoDomainConstants;
+import org.eclipse.lyo.oslc.domains.qm.Oslc_qmDomainConstants;
 
 public interface IConstants {
 
@@ -28,13 +30,26 @@ public interface IConstants {
     String TYPE_STATUS_RESPONSE = NAMESPACE_URI_JAZZ_AUTO_RQM + "StatusResponse";
     String TYPE_MESSAGE = NAMESPACE_URI_JAZZ_AUTO_RQM + "Message";
 
+    String AUTOMATION_DOMAIN = Oslc_autoDomainConstants.AUTOMATION_DOMAIN;
+    String TYPE_AUTOMATION_REQUEST = Oslc_autoDomainConstants.AUTOMATIONREQUEST_TYPE;
+    String TYPE_AUTOMATION_RESULT = Oslc_autoDomainConstants.AUTOMATIONRESULT_TYPE;
+    // States and verdicts are not exposed as constants by oslc-domains; build them from the namespace.
+    String STATE_COMPLETE = Oslc_autoDomainConstants.AUTOMATION_NAMSPACE + "Complete";
+    String STATE_IN_PROGRESS = Oslc_autoDomainConstants.AUTOMATION_NAMSPACE + "InProgress";
+    String STATE_CANCELED = Oslc_autoDomainConstants.AUTOMATION_NAMSPACE + "Canceled";
+    String VERDICT_PASSED = Oslc_autoDomainConstants.AUTOMATION_NAMSPACE + "Passed";
+
     QName PROPERTY_DC_RELATION = new QName(OSLCConstants.DC, "relation");
 
-    QName PROPERTY_QM_REPORTS_ON_TEST_CASE = new QName(OSLCConstants.OSLC_QM_V2, "reportsOnTestCase");
-    QName PROPERTY_QM_RUNS_TEST_CASE = new QName(OSLCConstants.OSLC_QM_V2, "runsTestCase");
-    QName PROPERTY_QM_EXECUTES_TEST_SCRIPT = new QName(OSLCConstants.OSLC_QM_V2, "executesTestScript");
-    QName PROPERTY_QM_REPORTS_ON_TEST_PLAN = new QName(OSLCConstants.OSLC_QM_V2, "reportsOnTestPlan");
-    QName PROPERTY_QM_PRODUCES_TEST_RESULT = new QName(OSLCConstants.OSLC_QM_V2, "producesTestResult");
+    QName PROPERTY_QM_REPORTS_ON_TEST_CASE =
+            new QName(Oslc_qmDomainConstants.QUALITY_MANAGEMENT_NAMSPACE, "reportsOnTestCase");
+    QName PROPERTY_QM_RUNS_TEST_CASE = new QName(Oslc_qmDomainConstants.QUALITY_MANAGEMENT_NAMSPACE, "runsTestCase");
+    QName PROPERTY_QM_EXECUTES_TEST_SCRIPT =
+            new QName(Oslc_qmDomainConstants.QUALITY_MANAGEMENT_NAMSPACE, "executesTestScript");
+    QName PROPERTY_QM_REPORTS_ON_TEST_PLAN =
+            new QName(Oslc_qmDomainConstants.QUALITY_MANAGEMENT_NAMSPACE, "reportsOnTestPlan");
+    QName PROPERTY_QM_PRODUCES_TEST_RESULT =
+            new QName(Oslc_qmDomainConstants.QUALITY_MANAGEMENT_NAMSPACE, "producesTestResult");
 
     QName PROPERTY_RQM_TAKEN = new QName(IConstants.NAMESPACE_URI_JAZZ_AUTO_RQM, "taken");
     QName PROPERTY_RQM_PROGRESS = new QName(IConstants.NAMESPACE_URI_JAZZ_AUTO_RQM, "progress");

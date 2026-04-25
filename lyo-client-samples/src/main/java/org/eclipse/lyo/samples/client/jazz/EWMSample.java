@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
+import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 import javax.xml.namespace.QName;
 import lombok.extern.slf4j.Slf4j;
@@ -45,10 +46,10 @@ import org.eclipse.lyo.client.OSLCConstants;
 import org.eclipse.lyo.client.OslcClient;
 import org.eclipse.lyo.client.RootServicesHelper;
 import org.eclipse.lyo.client.exception.RootServicesException;
-import org.eclipse.lyo.client.oslc.resources.ChangeRequest;
 import org.eclipse.lyo.client.query.OslcQuery;
 import org.eclipse.lyo.client.query.OslcQueryParameters;
 import org.eclipse.lyo.client.query.OslcQueryResult;
+import org.eclipse.lyo.oslc.domains.cm.ChangeRequest;
 import org.eclipse.lyo.oslc4j.core.model.AllowedValues;
 import org.eclipse.lyo.oslc4j.core.model.CreationFactory;
 import org.eclipse.lyo.oslc4j.core.model.Link;
@@ -73,6 +74,9 @@ public class EWMSample {
 
     private static final String RTC_NAMESPACE = "http://jazz.net/xmlns/prod/jazz/rtc/cm/1.0/";
     private static final String RTC_FILED_AGAINST = "filedAgainst";
+    private static final String DCTERMS_NAMESPACE = "http://purl.org/dc/terms/";
+    private static final QName PROPERTY_DCTERMS_TYPE = new QName(DCTERMS_NAMESPACE, "type");
+    private static final QName PROPERTY_TESTED_BY_TEST_CASE = new QName(OSLCConstants.OSLC_CM_V2, "testedByTestCase");
 
     @lombok.Data
     public static class Report {
@@ -241,15 +245,20 @@ public class EWMSample {
         task.setTitle("Implement accessibility in Pet Store application");
         task.setDescription("Image elements must provide a description in the 'alt' attribute for"
                 + " consumption by screen readers.");
-        task.addTestedByTestCase(
-                new Link(new URI("http://qmprovider/testcase/1"), "Accessibility verification using a screen reader"));
-        task.addDctermsType("task");
+        task.getExtendedProperties()
+                .put(
+                        PROPERTY_TESTED_BY_TEST_CASE,
+                        new Link(
+                                new URI("http://qmprovider/testcase/1"),
+                                "Accessibility verification using a screen reader"));
+        task.getExtendedProperties().put(PROPERTY_DCTERMS_TYPE, "task");
+        task.setTypes(Collections.singleton(URI.create(OSLCConstants.CM_CHANGE_REQUEST_TYPE)));
 
         // Get the Creation Factory URL for task change requests so that we can create one
         CreationFactory taskCreation = client.lookupCreationFactoryResource(
                 serviceProviderUrl,
                 OSLCConstants.OSLC_CM_V2,
-                task.getRdfTypes()[0].toString(),
+                task.getTypes().iterator().next().toString(),
                 OSLCConstants.OSLC_CM_V2 + "task");
         String factoryUrl = taskCreation.getCreation().toString();
 
@@ -325,16 +334,20 @@ public class EWMSample {
         defect.setDescription(
                 "An error occurred when I tried to log in with a user ID that contained the '@'" + " symbol.");
 
-        defect.addTestedByTestCase(new Link(new URI("http://qmprovider/testcase/3"), "Global Verifcation Test"));
+        defect.getExtendedProperties()
+                .put(
+                        PROPERTY_TESTED_BY_TEST_CASE,
+                        new Link(new URI("http://qmprovider/testcase/3"), "Global Verification Test"));
 
-        defect.addDctermsType("defect");
+        defect.getExtendedProperties().put(PROPERTY_DCTERMS_TYPE, "defect");
+        defect.setTypes(Collections.singleton(URI.create(OSLCConstants.CM_CHANGE_REQUEST_TYPE)));
 
         // Get the Creation Factory URL for change requests so that we can create one
 
         CreationFactory defectCreation = client.lookupCreationFactoryResource(
                 serviceProviderUrl,
                 OSLCConstants.OSLC_CM_V2,
-                defect.getRdfTypes()[0].toString(),
+                defect.getTypes().iterator().next().toString(),
                 OSLCConstants.OSLC_CM_V2 + "defect");
 
         factoryUrl = defectCreation.getCreation().toString();
