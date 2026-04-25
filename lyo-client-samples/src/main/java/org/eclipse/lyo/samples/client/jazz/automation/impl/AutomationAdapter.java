@@ -821,8 +821,7 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
             TestScript script = client.getResource(scriptURI.toString(), OslcMediaType.APPLICATION_RDF_XML)
                     .readEntity(TestScript.class);
 
-            // Access dcterms:relation via extended properties because TestScript does not provide a direct getter for
-            // this property.
+            // TestScript has no getter for dcterms:relation; read it from extended properties.
             Object relationObj = script.getExtendedProperties().get(PROPERTY_DC_RELATION);
             URI scriptUri = null;
             if (relationObj instanceof URI rI) {
@@ -832,7 +831,6 @@ public class AutomationAdapter extends AbstractResource implements IConstants {
             }
 
             if (scriptUri == null) {
-                // Try to find if it's mapped to a field? No easy way.
                 throw new AutomationException("TestScript relation property not found.");
             }
 

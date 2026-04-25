@@ -262,14 +262,12 @@ public class ETMAutomationSample implements IConstants, IAutomationRequestHandle
 
         log.info("Running script named '{}'", scriptTitle);
 
-        log.info("Input parameters:");
+        // oslc-domains models inputParameter as Set<Link>; inline ParameterInstance name/value are
+        // not exposed via the Link itself — fetch each link or parse the RDF model to recover them.
+        log.info("Input parameter links:");
         if (inputParameters != null) {
             for (Link parameterLink : inputParameters) {
-                // Note: The new oslc-domains AutomationRequest maps inputParameter to Set<Link>.
-                // If the parameter is an inline resource (as is common in Automation), the Link might
-                // not contain the detailed properties (name, value) unless we fetch it or parse the model manually.
-                // For now, we log the link.
-                String paramStr = "\tParameter Link: " + parameterLink.getValue();
+                String paramStr = "\t" + parameterLink.getValue();
                 if (parameterLink.getLabel() != null) {
                     paramStr += " (" + parameterLink.getLabel() + ")";
                 }

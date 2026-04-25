@@ -30,23 +30,16 @@ public interface IConstants {
     String TYPE_STATUS_RESPONSE = NAMESPACE_URI_JAZZ_AUTO_RQM + "StatusResponse";
     String TYPE_MESSAGE = NAMESPACE_URI_JAZZ_AUTO_RQM + "Message";
 
-    // OSLC Automation Constants
     String AUTOMATION_DOMAIN = Oslc_autoDomainConstants.AUTOMATION_DOMAIN;
     String TYPE_AUTOMATION_REQUEST = Oslc_autoDomainConstants.AUTOMATIONREQUEST_TYPE;
     String TYPE_AUTOMATION_RESULT = Oslc_autoDomainConstants.AUTOMATIONRESULT_TYPE;
-    // Constants for States and Verdicts are not in Oslc_autoDomainConstants, but defined in spec.
-    // We keep them here or use hardcoded strings if not available in domains library.
-    // The constants AUTOMATION_NAMSPACE is available.
+    // States and verdicts are not exposed as constants by oslc-domains; build them from the namespace.
     String STATE_COMPLETE = Oslc_autoDomainConstants.AUTOMATION_NAMSPACE + "Complete";
     String STATE_IN_PROGRESS = Oslc_autoDomainConstants.AUTOMATION_NAMSPACE + "InProgress";
     String STATE_CANCELED = Oslc_autoDomainConstants.AUTOMATION_NAMSPACE + "Canceled";
     String VERDICT_PASSED = Oslc_autoDomainConstants.AUTOMATION_NAMSPACE + "Passed";
 
     QName PROPERTY_DC_RELATION = new QName(OSLCConstants.DC, "relation");
-
-    // OSLC QM constants from Oslc_qmDomainConstants where possible
-    // Oslc_qmDomainConstants.QUALITY_MANAGEMENT_NAMSPACE is http://open-services.net/ns/qm#
-    // OSLCConstants.OSLC_QM_V2 is http://open-services.net/ns/qm#
 
     QName PROPERTY_QM_REPORTS_ON_TEST_CASE =
             new QName(Oslc_qmDomainConstants.QUALITY_MANAGEMENT_NAMSPACE, "reportsOnTestCase");

@@ -74,13 +74,7 @@ import org.w3c.dom.Element;
 @Slf4j
 public class ERMSample {
 
-    // Constants not present in standard oslc-domains or need replacement
-    // RmConstants were in oslc-java-client-resources.
-    // JAZZ_RM_NAMESPACE = "http://jazz.net/xmlns/prod/jazz/rm/1.0/"
-    // PROPERTY_PRIMARY_TEXT = new QName(JAZZ_RM_NAMESPACE, "primaryText")
-    // PROPERTY_PARENT_FOLDER = new QName(JAZZ_RM_NAMESPACE, "parent")
-    // NAMESPACE_URI_XHTML = "http://www.w3.org/1999/xhtml"
-
+    // Inlined from the legacy oslc-java-client-resources RmConstants — not present in oslc-domains.
     public static final String JAZZ_RM_NAMESPACE = "http://jazz.net/ns/rm#";
     public static final QName PROPERTY_PRIMARY_TEXT = new QName(JAZZ_RM_NAMESPACE, "primaryText");
     public static final QName PROPERTY_PARENT_FOLDER = new QName(JAZZ_RM_NAMESPACE, "parent");
