@@ -18,6 +18,8 @@ import jakarta.ws.rs.client.ClientRequestContext;
 import jakarta.ws.rs.client.ClientRequestFilter;
 import jakarta.ws.rs.core.Response;
 import java.io.IOException;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -59,12 +61,10 @@ public class PolarionSample {
         private String sampleResourceUrl;
     }
 
+    @RequiredArgsConstructor
     public static class BearerAuthFilter implements ClientRequestFilter {
+        @NonNull
         private final String token;
-
-        public BearerAuthFilter(String token) {
-            this.token = token;
-        }
 
         @Override
         public void filter(ClientRequestContext requestContext) throws IOException {
