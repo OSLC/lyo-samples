@@ -157,7 +157,7 @@ public class ETMSample {
 
         // STEP 6: Get the Query Capabilities URL so that we can run some OSLC queries
         String queryCapability = client.lookupQueryCapability(
-                serviceProviderUrl, OSLCConstants.OSLC_QM_V2, OSLCConstants.QM_TEST_RESULT);
+                serviceProviderUrl, OSLCConstants.OSLC_QM_V2, OSLCConstants.QM_TEST_RESULT_QUERY);
 
         // SCENARIO A: Query passed TestResults (paged)
         OslcQueryParameters queryParams = new OslcQueryParameters();
