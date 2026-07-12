@@ -23,7 +23,7 @@ import java.io.InputStreamReader;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.http.HttpStatus;
@@ -59,7 +59,7 @@ public class RMSample {
         options.addOption("url", true, "url"); // the OSLC catalog URL
         options.addOption("providerTitle", true, "Service Provider title");
 
-        CommandLineParser cliParser = new GnuParser();
+        CommandLineParser cliParser = new DefaultParser();
 
         // Parse the command line
         CommandLine cmd = cliParser.parse(options, args);

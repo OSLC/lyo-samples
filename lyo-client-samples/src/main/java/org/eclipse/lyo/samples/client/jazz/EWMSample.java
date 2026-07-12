@@ -31,7 +31,7 @@ import javax.xml.namespace.QName;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.http.HttpHeaders;
@@ -50,13 +50,13 @@ import org.eclipse.lyo.client.query.OslcQuery;
 import org.eclipse.lyo.client.query.OslcQueryParameters;
 import org.eclipse.lyo.client.query.OslcQueryResult;
 import org.eclipse.lyo.oslc.domains.cm.ChangeRequest;
+import org.eclipse.lyo.oslc4j.core.OSLC4JConstants;
 import org.eclipse.lyo.oslc4j.core.model.AllowedValues;
 import org.eclipse.lyo.oslc4j.core.model.CreationFactory;
 import org.eclipse.lyo.oslc4j.core.model.Link;
 import org.eclipse.lyo.oslc4j.core.model.OslcMediaType;
 import org.eclipse.lyo.oslc4j.core.model.Property;
 import org.eclipse.lyo.oslc4j.core.model.ResourceShape;
-import org.eclipse.lyo.oslc4j.provider.jena.AbstractOslcRdfXmlProvider;
 import org.glassfish.jersey.apache.connector.ApacheClientProperties;
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
@@ -101,7 +101,7 @@ public class EWMSample {
         options.addOption("project", true, "project area");
         options.addOption("b", "basic", false, "Use Basic auth (use if JAS is enabled)");
 
-        CommandLineParser cliParser = new GnuParser();
+        CommandLineParser cliParser = new DefaultParser();
 
         // Parse the command line
         CommandLine cmd = cliParser.parse(options, args);
@@ -119,7 +119,7 @@ public class EWMSample {
         // EWM sometimes will declare a property's type, but leave the value
         // empty, which causes errors when parsed by OSLC4J. Set a system property
         // to tell OSLC4J to skip these invalid values.
-        System.setProperty(AbstractOslcRdfXmlProvider.OSLC4J_STRICT_DATATYPES, "false");
+        System.setProperty(OSLC4JConstants.OSLC4J_STRICT_DATATYPES, "false");
 
         String webContextUrl = cmd.getOptionValue("url");
         String userId = cmd.getOptionValue("user");

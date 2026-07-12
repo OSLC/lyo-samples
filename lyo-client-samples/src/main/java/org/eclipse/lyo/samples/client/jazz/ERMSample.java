@@ -34,7 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.oauth.OAuthException;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.http.HttpHeaders;
@@ -52,7 +52,7 @@ import org.eclipse.lyo.client.exception.RootServicesException;
 import org.eclipse.lyo.client.query.OslcQuery;
 import org.eclipse.lyo.client.query.OslcQueryParameters;
 import org.eclipse.lyo.client.query.OslcQueryResult;
-import org.eclipse.lyo.client.resources.RmUtil;
+import org.eclipse.lyo.client.resources.ResourceShapeClient;
 import org.eclipse.lyo.oslc.domains.rm.Requirement;
 import org.eclipse.lyo.oslc.domains.rm.RequirementCollection;
 import org.eclipse.lyo.oslc4j.core.OSLC4JUtils;
@@ -115,7 +115,7 @@ public class ERMSample {
         options.addOption("project", true, "project area");
         options.addOption("b", "basic", false, "Use Basic auth (use if JAS is enabled)");
 
-        CommandLineParser cliParser = new GnuParser();
+        CommandLineParser cliParser = new DefaultParser();
         CommandLine cmd = cliParser.parse(options, args);
 
         if (!validateOptions(cmd)) {
@@ -212,12 +212,9 @@ public class ERMSample {
                         null);
             }
 
-            collectionInstanceShape = RmUtil.lookupRequirementsInstanceShapes(
-                    serviceProviderUrl,
-                    OSLCConstants.OSLC_RM_V2,
-                    OSLCConstants.RM_REQUIREMENT_COLLECTION_TYPE,
-                    client,
-                    "Collection");
+            var shapeClient = new ResourceShapeClient(client);
+            collectionInstanceShape =
+                    shapeClient.lookupRequirementCollectionShape(URI.create(serviceProviderUrl), "Collection");
 
             List<ResourceShape> shapes = new ArrayList<>();
             shapes.add(featureInstanceShape);
