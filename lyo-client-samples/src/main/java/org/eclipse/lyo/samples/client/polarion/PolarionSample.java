@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.http.client.config.CookieSpecs;
@@ -80,7 +80,7 @@ public class PolarionSample {
         options.addOption("token", true, "Personal Access Token (PAT)");
         options.addOption("project", true, "Project Name (Service Provider Title)");
 
-        CommandLineParser cliParser = new GnuParser();
+        CommandLineParser cliParser = new DefaultParser();
 
         try {
             CommandLine cmd = cliParser.parse(options, args);
