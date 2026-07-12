@@ -30,7 +30,7 @@ public interface IConstants {
     String TYPE_STATUS_RESPONSE = NAMESPACE_URI_JAZZ_AUTO_RQM + "StatusResponse";
     String TYPE_MESSAGE = NAMESPACE_URI_JAZZ_AUTO_RQM + "Message";
 
-    String AUTOMATION_DOMAIN = Oslc_autoDomainConstants.AUTOMATION_DOMAIN;
+    String AUTOMATION_DOMAIN = Oslc_autoDomainConstants.AUTOMATION_NAMSPACE;
     String TYPE_AUTOMATION_REQUEST = Oslc_autoDomainConstants.AUTOMATIONREQUEST_TYPE;
     String TYPE_AUTOMATION_RESULT = Oslc_autoDomainConstants.AUTOMATIONRESULT_TYPE;
     // States and verdicts are not exposed as constants by oslc-domains; build them from the namespace.
