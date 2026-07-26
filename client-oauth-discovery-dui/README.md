@@ -2,7 +2,7 @@
 
 ## OSLC Client Authentication, Service Discovery & Delegated UIs
 
-This is a sample OSLC client application that explores the different client authentication alternatives of (1) oauth (2) basic authentication (3) no authentication.
+This is a sample OSLC client application that explores OAuth 1.0a+j (OAuth 1.0a with the Jazz provisional-client extension), basic authentication, and no authentication.
 
 The application also demonstrates how to discover OSLC services.
 

@@ -21,6 +21,9 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import net.oauth.OAuth;
+import net.oauth.ParameterStyle;
+import net.oauth.client.OAuthClient;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
@@ -33,7 +36,6 @@ import org.eclipse.lyo.client.OslcClient;
 import org.eclipse.lyo.client.OslcClientBuilder;
 import org.eclipse.lyo.client.OslcClientFactory;
 import org.eclipse.lyo.client.OslcOAuthClient;
-import org.eclipse.lyo.client.OslcOAuthClientBuilder;
 import org.eclipse.lyo.client.RootServicesHelper;
 import org.eclipse.lyo.client.UnderlyingHttpClient;
 import org.eclipse.lyo.client.exception.ResourceNotFoundException;
@@ -50,15 +52,28 @@ import org.slf4j.LoggerFactory;
 
 @Path("discovery")
 public class DiscoveryServices {
+
+    /**
+     * Despite claiming to support OAuth 1.0a, Jazz servers by default use the OAuth
+     * 1.0-style flow.
+     * <p>
+     * Using the value true will use the OAuth1aStrictClient, which enforces the
+     * OAuth 1.0a flow.
+     */
+    private static final boolean USE_OAUTH_1A_STRICT_CLIENT = false;
+
     @Context private HttpServletRequest httpServletRequest;
     @Context private HttpServletResponse httpServletResponse;
 
     private static final Logger logger = LoggerFactory.getLogger(DiscoveryServices.class);
 
     /**
-     * Return a catalog, with the details (services) of each of its ServiceProviders.
+     * Return a catalog, with the details (services) of each of its
+     * ServiceProviders.
      * Filter the catalog to only include SPs with a given title.
-     * Filter each SP, so that only the dialogs of the provided oslcResourceType are included.
+     * Filter each SP, so that only the dialogs of the provided oslcResourceType are
+     * included.
+     *
      * @param client
      * @param catalog
      * @param serviceProviderTitle
@@ -138,7 +153,8 @@ public class DiscoveryServices {
         ClientBuilder clientBuilder = ClientBuilder.newBuilder();
         clientBuilder.withConfig(clientConfig);
 
-        // Setup SSL support to ignore self-assigned SSL certificates - for testing only!!
+        // Setup SSL support to ignore self-assigned SSL certificates - for testing
+        // only!!
         if (selfAssignedSSL) {
             SSLContextBuilder sslContextBuilder = new SSLContextBuilder();
             sslContextBuilder.loadTrustMaterial(TrustSelfSignedStrategy.INSTANCE);
@@ -164,17 +180,23 @@ public class DiscoveryServices {
     }
 
     public static void bindClientToSession(
-            HttpServletRequest request, OslcOAuthClient client, String consumerKey) {
+            HttpServletRequest request,
+            IOslcClient client,
+            String consumerKey,
+            ParameterStyle parameterStyle) {
         request.getSession().setAttribute("client", client);
         request.getSession().setAttribute("consumerKey", consumerKey);
+        request.getSession().setAttribute("parameterStyle", parameterStyle.name());
     }
 
-    public static OslcOAuthClient getClientFromSession(
-            HttpServletRequest request, String consumerKey) {
+    public static IOslcClient getClientFromSession(
+            HttpServletRequest request, String consumerKey, ParameterStyle parameterStyle) {
         HttpSession session = request.getSession();
         Object key = session.getAttribute("consumerKey");
-        if (consumerKey.equalsIgnoreCase(String.valueOf(key))) {
-            return (OslcOAuthClient) session.getAttribute("client");
+        Object sessionParameterStyle = session.getAttribute("parameterStyle");
+        if (consumerKey.equalsIgnoreCase(String.valueOf(key))
+                && parameterStyle.name().equals(sessionParameterStyle)) {
+            return (IOslcClient) session.getAttribute("client");
         } else {
             // reset the client for a new consumer key
             session.setAttribute("client", null);
@@ -184,12 +206,102 @@ public class DiscoveryServices {
 
     private String getCompleteUri(HttpServletRequest httpServletRequest) {
         UriBuilder uriBuilder = UriBuilder.fromUri(httpServletRequest.getRequestURL().toString());
-        String queryString = httpServletRequest.getQueryString();
-        if (null != queryString) {
-            uriBuilder.replaceQuery(queryString);
-        }
+        httpServletRequest
+                .getParameterMap()
+                .forEach(
+                        (name, values) -> {
+                            if (!OAuth.OAUTH_TOKEN.equals(name)
+                                    && !OAuth.OAUTH_VERIFIER.equals(name)) {
+                                for (String value : values) {
+                                    uriBuilder.queryParam(name, value);
+                                }
+                            }
+                        });
         URI uri = uriBuilder.build();
         return uri.toString();
+    }
+
+    private OAuth1aStrictClient newOAuth1aClient(
+            RootServicesHelper rootService,
+            String consumerKey,
+            String consumerSecret,
+            ClientBuilder clientBuilder) {
+        net.oauth.OAuthServiceProvider serviceProvider =
+                new net.oauth.OAuthServiceProvider(
+                        rootService.getRequestTokenUrl(),
+                        rootService.getAuthorizationTokenUrl(),
+                        rootService.getAccessTokenUrl());
+        net.oauth.OAuthConsumer consumer =
+                new net.oauth.OAuthConsumer(null, consumerKey, consumerSecret, serviceProvider);
+        return new OAuth1aStrictClient(
+                new net.oauth.OAuthAccessor(consumer),
+                rootService.getAuthorizationRealm(),
+                clientBuilder);
+    }
+
+    private OslcOAuthClient newStockOAuthClient(
+            RootServicesHelper rootService,
+            String consumerKey,
+            String consumerSecret,
+            ClientBuilder clientBuilder,
+            ParameterStyle parameterStyle) {
+        net.oauth.OAuthServiceProvider serviceProvider =
+                new net.oauth.OAuthServiceProvider(
+                        rootService.getRequestTokenUrl(),
+                        rootService.getAuthorizationTokenUrl(),
+                        rootService.getAccessTokenUrl());
+        net.oauth.OAuthConsumer consumer =
+                new net.oauth.OAuthConsumer("", consumerKey, consumerSecret, serviceProvider);
+        consumer.setProperty(OAuthClient.PARAMETER_STYLE, parameterStyle.name());
+        return new OslcOAuthClient(
+                new net.oauth.OAuthAccessor(consumer),
+                rootService.getAuthorizationRealm(),
+                clientBuilder,
+                new UnderlyingHttpClient() {
+                    @Override
+                    public HttpClient get(Client client) {
+                        return ApacheConnectorProvider.getHttpClient(client);
+                    }
+                });
+    }
+
+    private IOslcClient newOAuthClient(
+            RootServicesHelper rootService,
+            String consumerKey,
+            String consumerSecret,
+            ClientBuilder clientBuilder,
+            ParameterStyle parameterStyle) {
+        if (USE_OAUTH_1A_STRICT_CLIENT) {
+            return newOAuth1aClient(rootService, consumerKey, consumerSecret, clientBuilder);
+        }
+        return newStockOAuthClient(
+                rootService, consumerKey, consumerSecret, clientBuilder, parameterStyle);
+    }
+
+    private ParameterStyle getParameterStyle(String parameterStyle) {
+        if (StringUtils.isEmpty(parameterStyle)) {
+            return ParameterStyle.BODY;
+        }
+        try {
+            return ParameterStyle.valueOf(parameterStyle);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(
+                    "Unsupported OAuth parameter style: " + parameterStyle, e);
+        }
+    }
+
+    private Optional<String> performOAuthNegotiation(
+            IOslcClient client, String callbackUrl, String callbackToken, String callbackVerifier)
+            throws Exception {
+        if (client instanceof OAuth1aStrictClient oauth1aClient) {
+            return oauth1aClient.performOAuthNegotiation(
+                    callbackUrl, callbackToken, callbackVerifier);
+        }
+        if (client instanceof OslcOAuthClient stockClient) {
+            return stockClient.performOAuthNegotiation(callbackUrl);
+        }
+        throw new IllegalArgumentException(
+                "Unsupported OAuth client type: " + client.getClass().getName());
     }
 
     @GET
@@ -200,6 +312,7 @@ public class DiscoveryServices {
             @QueryParam("selfAssignedSSL") String selfAssignedSSL,
             @QueryParam("consumerKey") String consumerKey,
             @QueryParam("consumerSecret") String consumerSecret,
+            @QueryParam("parameterStyle") String parameterStyle,
             @QueryParam("serviceProviderTitle") String serviceProviderTitle,
             @QueryParam("oslcResourceType") String oslcResourceType)
             throws Exception {
@@ -208,6 +321,7 @@ public class DiscoveryServices {
         httpServletRequest.setAttribute("selfAssignedSSL", selfAssignedSSL);
         httpServletRequest.setAttribute("consumerKey", consumerKey);
         httpServletRequest.setAttribute("consumerSecret", consumerSecret);
+        httpServletRequest.setAttribute("parameterStyle", parameterStyle);
         httpServletRequest.setAttribute("serviceProviderTitle", serviceProviderTitle);
         httpServletRequest.setAttribute("oslcResourceType", oslcResourceType);
 
@@ -217,7 +331,9 @@ public class DiscoveryServices {
         }
 
         if (!StringUtils.isEmpty(rootServicesUrl)) {
-            // RootServicesHelper wants to add its own "rootservices" to the end of the url. Like it
+            ParameterStyle selectedParameterStyle = getParameterStyle(parameterStyle);
+            // RootServicesHelper wants to add its own "rootservices" to the end of the url.
+            // Like it
             // or not.
             if (rootServicesUrl.endsWith("rootservices")) {
                 rootServicesUrl =
@@ -235,27 +351,27 @@ public class DiscoveryServices {
                             rootServicesUrl, OSLCConstants.OSLC_RM_V2, rootServicesClient);
 
             // Create a new OSLC OAuth capable client
-            OslcOAuthClient client = getClientFromSession(httpServletRequest, consumerKey);
+            IOslcClient client =
+                    getClientFromSession(httpServletRequest, consumerKey, selectedParameterStyle);
             if (null == client) {
-                OslcOAuthClientBuilder oAuthClientBuilder =
-                        OslcClientFactory.oslcOAuthClientBuilder();
-                oAuthClientBuilder.setFromRootService(rootService);
-                oAuthClientBuilder.setOAuthConsumer("", consumerKey, consumerSecret);
-                oAuthClientBuilder.setClientBuilder(clientBuilder);
-                oAuthClientBuilder.setUnderlyingHttpClient(
-                        new UnderlyingHttpClient() {
-                            @Override
-                            public HttpClient get(Client client) {
-                                return ApacheConnectorProvider.getHttpClient(client);
-                            }
-                        });
-                client = (OslcOAuthClient) oAuthClientBuilder.build();
-                bindClientToSession(httpServletRequest, client, consumerKey);
+                client =
+                        newOAuthClient(
+                                rootService,
+                                consumerKey,
+                                consumerSecret,
+                                clientBuilder,
+                                selectedParameterStyle);
+                bindClientToSession(
+                        httpServletRequest, client, consumerKey, selectedParameterStyle);
             }
 
             try {
                 Optional<String> performOAuthNegotiation =
-                        client.performOAuthNegotiation(getCompleteUri(httpServletRequest));
+                        performOAuthNegotiation(
+                                client,
+                                getCompleteUri(httpServletRequest),
+                                httpServletRequest.getParameter(OAuth.OAUTH_TOKEN),
+                                httpServletRequest.getParameter(OAuth.OAUTH_VERIFIER));
                 if (performOAuthNegotiation.isPresent()) {
                     httpServletResponse.sendRedirect(performOAuthNegotiation.get());
                     return;
@@ -285,9 +401,15 @@ public class DiscoveryServices {
                                     rootService,
                                     consumerKey,
                                     consumerSecret,
-                                    clientBuilder);
+                                    clientBuilder,
+                                    selectedParameterStyle);
+
                     Optional<String> negotiation =
-                            client.performOAuthNegotiation(getCompleteUri(httpServletRequest));
+                            performOAuthNegotiation(
+                                    client,
+                                    getCompleteUri(httpServletRequest),
+                                    httpServletRequest.getParameter(OAuth.OAUTH_TOKEN),
+                                    httpServletRequest.getParameter(OAuth.OAUTH_VERIFIER));
                     if (negotiation.isPresent()) {
                         httpServletResponse.sendRedirect(negotiation.get());
                         return;
@@ -373,20 +495,17 @@ public class DiscoveryServices {
         rd.forward(httpServletRequest, httpServletResponse);
     }
 
-    private OslcOAuthClient resetClientNegotiation(
+    private IOslcClient resetClientNegotiation(
             HttpServletRequest request,
             RootServicesHelper rootService,
             String consumerKey,
             String consumerSecret,
-            ClientBuilder clientBuilder) {
-        OslcOAuthClientBuilder oAuthClientBuilder = OslcClientFactory.oslcOAuthClientBuilder();
-        oAuthClientBuilder.setFromRootService(rootService);
-        oAuthClientBuilder.setOAuthConsumer("", consumerKey, consumerSecret);
-        oAuthClientBuilder.setClientBuilder(clientBuilder);
-        oAuthClientBuilder.setUnderlyingHttpClient(
-                client -> ApacheConnectorProvider.getHttpClient(client));
-        OslcOAuthClient client = (OslcOAuthClient) oAuthClientBuilder.build();
-        bindClientToSession(httpServletRequest, client, consumerKey);
+            ClientBuilder clientBuilder,
+            ParameterStyle parameterStyle) {
+        IOslcClient client =
+                newOAuthClient(
+                        rootService, consumerKey, consumerSecret, clientBuilder, parameterStyle);
+        bindClientToSession(httpServletRequest, client, consumerKey, parameterStyle);
         return client;
     }
 
@@ -415,7 +534,8 @@ public class DiscoveryServices {
         }
 
         if (!StringUtils.isEmpty(rootServicesUrl)) {
-            // RootServicesHelper wants to add its own "rootservices" to the end of the url. Like it
+            // RootServicesHelper wants to add its own "rootservices" to the end of the url.
+            // Like it
             // or not.
             if (rootServicesUrl.endsWith("rootservices")) {
                 rootServicesUrl =

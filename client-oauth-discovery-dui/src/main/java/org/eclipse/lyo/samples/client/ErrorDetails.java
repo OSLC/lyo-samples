@@ -10,13 +10,14 @@ public record ErrorDetails(
         String oauthSignature,
         String oauthSignatureBaseString,
         String oauthSignatureMethod,
+        String oauthWwwAuthenticate,
         String generalErrorMessage) {
 
     /**
      * Create ErrorDetails from an HTTP response
      */
     public static ErrorDetails fromHttpResponse(int status, String statusDescription) {
-        return new ErrorDetails(status, statusDescription, null, null, null, null, null);
+        return new ErrorDetails(status, statusDescription, null, null, null, null, null, null);
     }
 
     /**
@@ -24,7 +25,8 @@ public record ErrorDetails(
      */
     public static ErrorDetails fromHttpResponse(jakarta.ws.rs.core.Response response) {
         if (response == null) {
-            return new ErrorDetails(null, null, null, null, null, null, "No response received");
+            return new ErrorDetails(
+                    null, null, null, null, null, null, null, "No response received");
         }
 
         int status = response.getStatus();
@@ -35,6 +37,7 @@ public record ErrorDetails(
         String oauthSignature = null;
         String oauthSignatureBaseString = null;
         String oauthSignatureMethod = null;
+        String oauthWwwAuthenticate = null;
         String generalMessage = null;
 
         if (status == 401) {
@@ -42,6 +45,7 @@ public record ErrorDetails(
                 // Check WWW-Authenticate header for OAuth details
                 String wwwAuthHeader = response.getHeaderString("WWW-Authenticate");
                 if (wwwAuthHeader != null) {
+                    oauthWwwAuthenticate = wwwAuthHeader;
                     oauthProblem = extractParameter(wwwAuthHeader, "oauth_problem");
                     oauthSignature = extractParameter(wwwAuthHeader, "oauth_signature");
                     oauthSignatureBaseString =
@@ -88,6 +92,7 @@ public record ErrorDetails(
                 oauthSignature,
                 oauthSignatureBaseString,
                 oauthSignatureMethod,
+                oauthWwwAuthenticate,
                 generalMessage);
     }
 
@@ -99,6 +104,7 @@ public record ErrorDetails(
         String oauthSignature = null;
         String oauthSignatureBaseString = null;
         String oauthSignatureMethod = null;
+        String oauthWwwAuthenticate = null;
         Integer httpStatus = null;
         String httpStatusDescription = null;
 
@@ -127,6 +133,13 @@ public record ErrorDetails(
             oauthSignature = extractParameter(message, "oauth_signature");
             oauthSignatureBaseString = extractParameter(message, "oauth_signature_base_string");
             oauthSignatureMethod = extractParameter(message, "oauth_signature_method");
+        }
+
+        if (e instanceof net.oauth.OAuthProblemException oauthProblemException) {
+            Object header = oauthProblemException.getParameters().get("www_authenticate");
+            if (header != null) {
+                oauthWwwAuthenticate = header.toString();
+            }
         }
 
         // If no details found in cause, try the main exception message
@@ -216,6 +229,7 @@ public record ErrorDetails(
                 oauthSignature,
                 oauthSignatureBaseString,
                 oauthSignatureMethod,
+                oauthWwwAuthenticate,
                 e.getMessage());
     }
 
@@ -223,7 +237,7 @@ public record ErrorDetails(
      * Create ErrorDetails from a general exception
      */
     public static ErrorDetails fromException(Exception e) {
-        return new ErrorDetails(null, null, null, null, null, null, e.getMessage());
+        return new ErrorDetails(null, null, null, null, null, null, null, e.getMessage());
     }
 
     /**
@@ -239,6 +253,7 @@ public record ErrorDetails(
                 oauthDetails.oauthSignature(),
                 oauthDetails.oauthSignatureBaseString(),
                 oauthDetails.oauthSignatureMethod(),
+                oauthDetails.oauthWwwAuthenticate(),
                 oauthException.getMessage());
     }
 

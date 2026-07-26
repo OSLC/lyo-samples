@@ -50,7 +50,7 @@ String approveKeyUrl = (null == request.getAttribute("approveKeyUrl") ? "" : (St
     </div>
 
  
-<h2>If working with OAuth, you need to make sure you know your Consumer key/secret.</h2>
+<h2>OAuth 1.0a+j uses a Consumer key and secret.</h2>
 A consumer/application would need to first register as a consumer with the target server, in order to be able to access its information. This is a one-off registration.<br>
 If you don't know your consumer key/secret, follow the 3 steps below to acquire new ones.
 

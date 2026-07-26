@@ -24,6 +24,7 @@ String username = (null == request.getAttribute("username") ? "" : (String)reque
 String password = (null == request.getAttribute("password") ? "" : (String)request.getAttribute("password"));
 String consumerKey = (null == request.getAttribute("consumerKey") ? "" : (String)request.getAttribute("consumerKey"));
 String consumerSecret = (null == request.getAttribute("consumerSecret") ? "" : (String)request.getAttribute("consumerSecret"));
+String parameterStyle = (null == request.getAttribute("parameterStyle") ? "BODY" : (String)request.getAttribute("parameterStyle"));
 String serviceProviderTitle = (null == request.getAttribute("serviceProviderTitle") ? "" : (String)request.getAttribute("serviceProviderTitle"));
 String oslcResourceType = (null == request.getAttribute("oslcResourceType") ? "" : (String)request.getAttribute("oslcResourceType"));
 
@@ -49,9 +50,9 @@ String approveKeyUrl = (null == request.getAttribute("approveKeyUrl") ? "" : (St
     <div class="page-header">
     </div>
 
-<h1> OSLC Client Authentication, Service Discovery & Delegated UIs</h1>
+<h1> OSLC Client OAuth 1.0a+j Authentication, Service Discovery & Delegated UIs</h1>
 
-This is a sample OSLC client application that explores the different client authentication alternatives of (1) oauth (2) basic authentication (3) no authentication.<br>
+This is a sample OSLC client application that explores OAuth 1.0a+j (OAuth 1.0a with the Jazz provisional-client extension), basic authentication, and no authentication.<br>
 The application also demonstrates how to discover OSLC services.<br>
 Finally, it demonstrates how to integrate Delegated-UI iframes into your own web-based application.<br>
 
@@ -67,7 +68,7 @@ Alternatively, one can use the <a href="https://github.com/OSLC/oslc-client">OSL
     <div class="card-header" id="altOne">
       <h2 class="mb-0">
         <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-          Alt1 - Discover through a rootServices URL, with OAuth
+          Alt1 - Discover through a rootServices URL, with OAuth 1.0a+j
         </button>
       </h2>
     </div>
@@ -81,6 +82,10 @@ Alternatively, one can use the <a href="https://github.com/OSLC/oslc-client">OSL
 	      <input type="text" name="consumerKey" <%if(!StringUtils.isEmpty(consumerKey)) {%>value="<%=consumerKey%>"<%}%>><br>
 	      consumerSecret:<br>
 	      <input type="text" name="consumerSecret" <%if(!StringUtils.isEmpty(consumerSecret)) {%>value="<%=consumerSecret%>"<%}%>><br>
+	      Stock OAuth token parameter style:<br>
+	      <label><input type="radio" name="parameterStyle" value="BODY" <%if("BODY".equals(parameterStyle)) {%>checked<%}%>> Body (default)</label>
+	      <label><input type="radio" name="parameterStyle" value="AUTHORIZATION_HEADER" <%if("AUTHORIZATION_HEADER".equals(parameterStyle)) {%>checked<%}%>> Authorization header</label>
+	      <label><input type="radio" name="parameterStyle" value="QUERY_STRING" <%if("QUERY_STRING".equals(parameterStyle)) {%>checked<%}%>> Query string</label><br>
 	      Filter on ServiceProvider Title:<br>
 	      <input type="text" name="serviceProviderTitle" size="75" <%if(!StringUtils.isEmpty(serviceProviderTitle)) {%>value="<%=serviceProviderTitle%>"<%}%>><br>
 	      Filter on OSLC Resource Type:<br>
@@ -234,13 +239,20 @@ if (errorDetailsObj instanceof org.eclipse.lyo.samples.client.ErrorDetails) {
                         <li>OAuth Signature Method: <%=errorDetails.oauthSignatureMethod()%></li>
                         <%
                     }
+
+                    if (errorDetails.oauthWwwAuthenticate() != null && !errorDetails.oauthWwwAuthenticate().trim().isEmpty()) {
+                        %>
+                        <li>WWW-Authenticate: <%=errorDetails.oauthWwwAuthenticate()%></li>
+                        <%
+                    }
                     
                     // Show general error message only if no specific OAuth or HTTP details were shown
                     boolean hasSpecificDetails = (errorDetails.httpStatus() != null) ||
                         (errorDetails.oauthProblem() != null && !errorDetails.oauthProblem().equals("unknown_error")) ||
                         (errorDetails.oauthSignatureBaseString() != null && !errorDetails.oauthSignatureBaseString().trim().isEmpty()) ||
                         (errorDetails.oauthSignature() != null && !errorDetails.oauthSignature().trim().isEmpty()) ||
-                        (errorDetails.oauthSignatureMethod() != null && !errorDetails.oauthSignatureMethod().trim().isEmpty());
+                        (errorDetails.oauthSignatureMethod() != null && !errorDetails.oauthSignatureMethod().trim().isEmpty()) ||
+                        (errorDetails.oauthWwwAuthenticate() != null && !errorDetails.oauthWwwAuthenticate().trim().isEmpty());
                         
                     if (!hasSpecificDetails && errorDetails.generalErrorMessage() != null) {
                         %>
