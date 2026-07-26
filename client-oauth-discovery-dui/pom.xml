@@ -10,42 +10,36 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <maven.compiler.source>17</maven.compiler.source>
-    <maven.compiler.release>17</maven.compiler.release>
-    <maven.compiler.target>17</maven.compiler.target>
-    <!-- Jersey version compatible with Jakarta EE -->
-    <version.jersey>3.1.10</version.jersey>
-    <version.swagger>2.2.42</version.swagger>
-    <version.lyo>7.0.0.Alpha3</version.lyo>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.release>21</maven.compiler.release>
+    <maven.compiler.target>21</maven.compiler.target>
   </properties>
-  <repositories>
-    <repository>
-      <id>lyo-snapshots</id>
-      <name>Eclipse Lyo Snapshots</name>
-      <url>https://repo.eclipse.org/content/repositories/lyo-snapshots/</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-    </repository>
-  </repositories>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.eclipse.lyo</groupId>
+        <artifactId>lyo-bom</artifactId>
+        <version>7.0.0.Beta1</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
   <dependencies>
     <!-- Adaptor-specific dependencies -->
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>
-      <version>2.0.0</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>io.swagger.core.v3</groupId>
       <artifactId>swagger-jaxrs2-jakarta</artifactId>
-      <version>${version.swagger}</version>
     </dependency>
     <!-- Lyo dependencies -->
     <dependency>
       <groupId>org.eclipse.lyo.oslc4j.core</groupId>
       <artifactId>oslc4j-core</artifactId>
-      <version>${version.lyo}</version>
       <exclusions>
         <exclusion>
           <groupId>jakarta.servlet</groupId>
@@ -56,7 +50,6 @@
     <dependency>
       <groupId>org.eclipse.lyo.oslc4j.core</groupId>
       <artifactId>oslc4j-jena-provider</artifactId>
-      <version>${version.lyo}</version>
       <exclusions>
         <exclusion>
           <groupId>jakarta.servlet</groupId>
@@ -67,7 +60,6 @@
     <dependency>
       <groupId>org.eclipse.lyo.clients</groupId>
       <artifactId>oslc-client</artifactId>
-      <version>${version.lyo}</version>
       <exclusions>
         <exclusion>
           <groupId>jakarta.servlet</groupId>
@@ -84,13 +76,11 @@
     <dependency>
       <groupId>jakarta.ws.rs</groupId>
       <artifactId>jakarta.ws.rs-api</artifactId>
-      <version>3.1.0</version>
       <!-- <scope>provided</scope> -->
     </dependency>
     <dependency>
       <groupId>org.glassfish.jersey.core</groupId>
       <artifactId>jersey-server</artifactId>
-      <version>${version.jersey}</version>
       <exclusions>
         <exclusion>
           <groupId>jakarta.ws.rs</groupId>
@@ -101,17 +91,14 @@
     <dependency>
       <groupId>org.glassfish.jersey.containers</groupId>
       <artifactId>jersey-container-servlet</artifactId>
-      <version>${version.jersey}</version>
     </dependency>
     <dependency>
       <groupId>org.glassfish.jersey.inject</groupId>
       <artifactId>jersey-hk2</artifactId>
-      <version>${version.jersey}</version>
     </dependency>
     <dependency>
       <groupId>org.glassfish.jersey.connectors</groupId>
       <artifactId>jersey-apache-connector</artifactId>
-      <version>${version.jersey}</version>
     </dependency>
     <!-- Test dependencies -->
     <dependency>
@@ -136,7 +123,8 @@
           <httpConnector>
             <port>8081</port>
           </httpConnector>
-          <jvmArgs>-Djavax.xml.accessExternalDTD= -Djavax.xml.accessExternalSchema= -Djavax.xml.accessExternalStylesheet= -Dxml.catalog.prefer=system</jvmArgs>
+          <jvmArgs>-Djavax.xml.accessExternalDTD= -Djavax.xml.accessExternalSchema=
+            -Djavax.xml.accessExternalStylesheet= -Dxml.catalog.prefer=system</jvmArgs>
           <systemProperties>
             <systemProperty>
               <name>org.apache.jasper.compiler.disablejsr199</name>
