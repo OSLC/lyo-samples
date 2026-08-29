@@ -29,7 +29,7 @@ import java.util.Collections;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.http.HttpHeaders;
@@ -79,7 +79,7 @@ public class ETMSample {
         options.addOption("project", true, "project area");
         options.addOption("b", "basic", false, "Use Basic auth (use if JAS is enabled)");
 
-        CommandLineParser cliParser = new GnuParser();
+        CommandLineParser cliParser = new DefaultParser();
 
         // Parse the command line
         CommandLine cmd = cliParser.parse(options, args);
