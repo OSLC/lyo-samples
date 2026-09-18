@@ -32,7 +32,7 @@ jobs:
           - java-version: '25'
             distribution: 'temurin'
           - java-version: '27'
-            distribution: 'temurin'
+            distribution: 'liberica'
           # - java-version: '26'
           #   distribution: 'oracle'
           # - java-version: '25-ea'
@@ -47,29 +47,29 @@ jobs:
           cache: 'maven'
       - name: Build Lyo Client samples
         run: |
-          mvn -B clean verify --file lyo-client-samples/pom.xml
-      - name: Run Spotless (Maven plugin)
+          mvn -B clean verify -Dspotless.skip=true -Drewrite.skip=true --file lyo-client-samples/pom.xml
+
+  format-client-samples:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - name: Set up JDK 25
+        uses: actions/setup-java@v6
+        with:
+          distribution: 'temurin'
+          java-version: '25'
+          cache: 'maven'
+      - name: Check Spotless formatting
         run: |
-          # set -x
-          mvn -B spotless:apply --file lyo-client-samples/pom.xml
-          # git -C ./ status --porcelain
-          git add -A
-          # git -C ./ status --porcelain
-          if [ -z "$(git -C ./ status --porcelain)" ]; then
-            echo "Spotless PASS"
-          else
-            git -C ./ status --porcelain
-            echo "Spotless FAIL; run 'mvn -B spotless:apply --file lyo-client-samples/pom.xml' locally" >&2
-            exit 1
-          fi
-      - name: Run OpenRewrite (Maven plugin)
+          mvn -B spotless:check --file lyo-client-samples/pom.xml
+      - name: Check OpenRewrite and Spotless stability
         run: |
           mvn -B org.openrewrite.maven:rewrite-maven-plugin:run spotless:apply -DskipTests --file lyo-client-samples/pom.xml
-          git add -A
-          if [ -z "$(git -C ./ status --porcelain)" ]; then
-            echo "rewrite PASS"
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "OpenRewrite and Spotless PASS"
           else
-            git -C ./ status --porcelain
-            echo "rewrite FAIL; run 'mvn -B org.openrewrite.maven:rewrite-maven-plugin:run spotless:apply -DskipTests --file lyo-client-samples/pom.xml' locally" >&2
+            git status --porcelain
+            echo "OpenRewrite or Spotless FAIL; run 'mvn -B org.openrewrite.maven:rewrite-maven-plugin:run spotless:apply -DskipTests --file lyo-client-samples/pom.xml' locally" >&2
             exit 1
           fi

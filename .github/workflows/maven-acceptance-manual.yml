@@ -36,7 +36,7 @@ jobs:
           - java-version: '25'
             distribution: 'temurin'
           - java-version: '27'
-            distribution: 'temurin'
+            distribution: 'liberica'
           # - java-version: '21'
           #   distribution: 'liberica'
           # - java-version: '23'
@@ -63,7 +63,7 @@ jobs:
         run: mvn -B clean install --file lyo-trunk/pom.xml -DskipTests -Dmaven.javadoc.skip=true -P '!spotless'
       - name: Build Lyo Client samples
         run: |
-          mvn -B clean verify --file ./main/lyo-client-samples/pom.xml
+          mvn -B clean verify -Dspotless.skip=true -Drewrite.skip=true --file ./main/lyo-client-samples/pom.xml
       - name: E2E client samples tests on ELM @ Jazz.net
         run: ./main/bin/test-jazz_net.sh
         env:
