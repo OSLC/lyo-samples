@@ -23,7 +23,7 @@ list](https://dev.eclipse.org/mailman/listinfo/lyo-dev)
 
 Below is a selected subset of projects in this repository.
 
-The latest samples target the Lyo release 7.0.0.Beta3 (Jakarta REST / JAX-RS
+The latest samples target the Lyo release 7.0.0-SNAPSHOT (Jakarta REST / JAX-RS
 3.1), and no longer depend on any particular implementation of JAX-RS. This
 gives the developer the chance to adopt any preferred implementation such as
 [Jersey](https://jersey.github.io/), [RESTEasy](https://resteasy.github.io/),
@@ -33,7 +33,7 @@ Earlier samples targetting Lyo 2.4.0 (and earlier) supports JAX-RS 1.0, and
 assumes the [Apache Wink
 implementation](https://svn.apache.org/repos/infra/websites/production/wink/content/index.html).
 
-### [lyo-client-samples](https://github.com/OSLC/lyo-samples/tree/master/lyo-client-samples) - Sample code for Lyo 7.0.0.Beta3 (Jakarta REST / JAX-RS 3.1)
+### [lyo-client-samples](https://github.com/OSLC/lyo-samples/tree/master/lyo-client-samples) - Sample code for Lyo 7.0.0-SNAPSHOT (Jakarta REST / JAX-RS 3.1)
 
 These are client samples for working with:
 
@@ -43,7 +43,7 @@ These are client samples for working with:
 
 using both Basic and Jazz Forms (JFS) auth.
 
-### [OSLC Client Authentication, Service Discovery & Delegated UIs](https://github.com/OSLC/lyo-samples/tree/master/client-oauth-discovery-dui) - Sample code for Lyo 7.0.0.Beta3 (Jakarta REST / JAX-RS 3.1)
+### [OSLC Client Authentication, Service Discovery & Delegated UIs](https://github.com/OSLC/lyo-samples/tree/master/client-oauth-discovery-dui) - Sample code for Lyo 7.0.0-SNAPSHOT (Jakarta REST / JAX-RS 3.1)
 
 This OSLC client application
 
