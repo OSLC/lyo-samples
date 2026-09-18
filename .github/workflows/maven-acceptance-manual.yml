@@ -33,6 +33,10 @@ jobs:
         include:
           - java-version: '21'
             distribution: 'temurin'
+          - java-version: '25'
+            distribution: 'temurin'
+          - java-version: '27'
+            distribution: 'temurin'
           # - java-version: '21'
           #   distribution: 'liberica'
           # - java-version: '23'
