@@ -23,11 +23,16 @@ list](https://dev.eclipse.org/mailman/listinfo/lyo-dev)
 
 Below is a selected subset of projects in this repository.
 
-The latest samples target the Lyo release 7.0.0-SNAPSHOT (Jakarta REST / JAX-RS
-3.1), and no longer depend on any particular implementation of JAX-RS. This
-gives the developer the chance to adopt any preferred implementation such as
-[Jersey](https://jersey.github.io/), [RESTEasy](https://resteasy.github.io/),
-etc.
+The latest samples track Lyo `7.0.0-SNAPSHOT` (Jakarta REST / JAX-RS 3.1) for
+ongoing compatibility testing, and no longer depend on any particular
+implementation of JAX-RS. This gives the developer the chance to adopt any
+preferred implementation such as [Jersey](https://jersey.github.io/),
+[RESTEasy](https://resteasy.github.io/), etc.
+
+The last released compatibility checkpoint is Lyo `7.0.0.Beta3`; use that
+version for a reproducible released dependency set. Jakarta REST/JAX-RS and
+Jersey versions are managed by the imported Lyo BOM and may change as the
+snapshot evolves.
 
 Earlier samples targetting Lyo 2.4.0 (and earlier) supports JAX-RS 1.0, and
 assumes the [Apache Wink
