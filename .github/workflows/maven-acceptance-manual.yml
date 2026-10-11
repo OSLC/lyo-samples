@@ -33,6 +33,10 @@ jobs:
         include:
           - java-version: '21'
             distribution: 'temurin'
+          - java-version: '25'
+            distribution: 'temurin'
+          - java-version: '27'
+            distribution: 'liberica'
           # - java-version: '21'
           #   distribution: 'liberica'
           # - java-version: '23'
@@ -59,13 +63,14 @@ jobs:
         run: mvn -B clean install --file lyo-trunk/pom.xml -DskipTests -Dmaven.javadoc.skip=true -P '!spotless'
       - name: Build Lyo Client samples
         run: |
-          mvn -B clean verify --file ./main/lyo-client-samples/pom.xml
-      - name: E2E client samples tests on ELM @ Jazz.net
-        run: ./main/bin/test-jazz_net.sh
-        env:
-          JAZZ_NET_USERNAME: ${{ secrets.JAZZ_NET_USERNAME }}
-          JAZZ_NET_PASSWORD: ${{ secrets.JAZZ_NET_PASSWORD }}
-          JAZZ_NET_PROJECT_ID: ${{ vars.JAZZ_NET_PROJECT_ID }}
+          mvn -B clean verify -Dspotless.skip=true -Drewrite.skip=true --file ./main/lyo-client-samples/pom.xml
+      # Disabled while the live jazz.net instances are unavailable.
+      # - name: E2E client samples tests on ELM @ Jazz.net
+      #   run: ./main/bin/test-jazz_net.sh
+      #   env:
+      #     JAZZ_NET_USERNAME: ${{ secrets.JAZZ_NET_USERNAME }}
+      #     JAZZ_NET_PASSWORD: ${{ secrets.JAZZ_NET_PASSWORD }}
+      #     JAZZ_NET_PROJECT_ID: ${{ vars.JAZZ_NET_PROJECT_ID }}
       # - name: E2E client samples tests on ELM @ IBM Nordic
       #   run: ./main/bin/test-jazz_nordic.sh
       #   env:
