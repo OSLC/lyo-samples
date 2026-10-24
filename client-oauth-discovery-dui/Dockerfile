@@ -1,6 +1,6 @@
 # Use the official maven/Java 17 image to create a build artifact.
 # https://hub.docker.com/_/maven
-FROM maven:3.9-eclipse-temurin-17 as builder
+FROM maven:3.9-eclipse-temurin-21 as builder
 
 # Copy local code to the container image.
 WORKDIR /app
@@ -9,15 +9,15 @@ WORKDIR /app
 COPY pom.xml .
 
 # Download dependencies (will be cached if pom.xml doesn't change)
-RUN mvn dependency:go-offline
+RUN mvn --batch-mode --no-transfer-progress dependency:go-offline
 
 # Copy source code
 COPY src ./src
 
 # Build a release artifact.
-RUN mvn package -DskipTests
+RUN mvn --batch-mode --no-transfer-progress package -DskipTests
 
-FROM jetty:9-jre17-eclipse-temurin
+FROM jetty:9-jre21-eclipse-temurin
 
 # Add metadata
 LABEL org.opencontainers.image.title="OSLC Client OAuth Discovery DUI"
