@@ -17,7 +17,7 @@
         <wink.version>1.4</wink.version>
         <version-jetty>9.3.30.v20211001</version-jetty>
     <!-- TODO update to 2.4.0 or  4.0.0 -->
-        <lyo.version>2.4.0</lyo.version>
+        <lyo.version>6.0.1.Final</lyo.version>
   </properties>
 
   <dependencies>
