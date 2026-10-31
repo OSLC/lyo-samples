@@ -5,8 +5,8 @@ name: Smoke testing
 on:
 #  push:
 #    branches: [main]
-  schedule:
-    - cron: "11 04 * * 4" # catch SNAPSHOT breaking changes
+  # schedule:
+  #   - cron: "11 04 * * 4" # catch SNAPSHOT breaking changes
   workflow_dispatch:
 
 concurrency:
