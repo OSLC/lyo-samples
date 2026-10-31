@@ -10,8 +10,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.compiler.release>21</maven.compiler.release>
-    <v.lyo>7.0.0-SNAPSHOT</v.lyo>
-    <v.jersey>3.1.10</v.jersey> <!--same as refimpl-->
+    <version.lyo>7.0.0.Beta4</version.lyo>
   </properties>
 
   <build>
@@ -182,7 +181,7 @@
       <dependency>
         <groupId>org.eclipse.lyo</groupId>
         <artifactId>lyo-bom</artifactId>
-        <version>${v.lyo}</version>
+        <version>${version.lyo}</version>
         <scope>import</scope>
         <type>pom</type>
       </dependency>
@@ -245,7 +244,6 @@
     <dependency>
       <groupId>org.eclipse.lyo</groupId>
       <artifactId>oslc-domains</artifactId>
-      <version>${v.lyo}</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.lyo.server</groupId>

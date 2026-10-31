@@ -16,7 +16,12 @@ updates:
       interval: "weekly"
       day: "thursday"
   - package-ecosystem: "maven" # See documentation for possible values
-    directory: "/oauth-twolegged-sample/" # Location of package manifests
+    directories: ["/oauth-twolegged-sample/oauth.sample/", "/oauth-twolegged-sample/oauth-cli-helper/"] # Location of package manifests
+    schedule:
+      interval: "weekly"
+      day: "thursday"
+  - package-ecosystem: "docker"
+    directory: "/client-oauth-discovery-dui/"
     schedule:
       interval: "weekly"
       day: "thursday"
