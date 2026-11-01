@@ -84,7 +84,7 @@ jobs:
         env:
           LYO_VERSION: ${{ steps.lyo-version.outputs.version }}
         run: |
-          mvn -B clean verify -Dspotless.skip=true -Drewrite.skip=true --file ./main/lyo-client-samples/pom.xml "-Dversion.lyo=$LYO_VERSION"
+          mvn -B clean verify -Drewrite.skip=true --file ./main/lyo-client-samples/pom.xml "-Dversion.lyo=$LYO_VERSION"
       - name: Build OAuth discovery sample
         env:
           LYO_VERSION: ${{ steps.lyo-version.outputs.version }}
