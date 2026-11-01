@@ -28,6 +28,8 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
           cache: 'maven'
+      - name: Check OAuth Discovery formatting
+        run: mvn -B spotless:check --file client-oauth-discovery-dui/pom.xml
       - name: Build OAuth Discovery application
         run: |
-          mvn -B clean verify --file client-oauth-discovery-dui/pom.xml
+          mvn -B clean verify -Dspotless.skip=true --file client-oauth-discovery-dui/pom.xml

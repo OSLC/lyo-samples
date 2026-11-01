@@ -25,7 +25,7 @@ jobs:
           distribution: 'temurin'
       - name: Build Lyo Client samples
         run: |
-          mvn -B clean verify --file lyo-client-samples/pom.xml
+          mvn -B clean verify -Dspotless.skip=true --file lyo-client-samples/pom.xml
       - name: E2E client samples tests on Polarion
         run: ./bin/test-polarion.sh
         env:
