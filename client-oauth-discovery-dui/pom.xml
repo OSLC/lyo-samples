@@ -166,10 +166,11 @@
         <version>3.10.4</version>
         <executions>
           <execution>
-            <id>check-format</id>
+            <id>auto-style</id>
             <goals>
-              <goal>check</goal>
+              <goal>apply</goal>
             </goals>
+            <!-- Using validate phase, so this happens before enforce-style -->
             <phase>validate</phase>
           </execution>
         </executions>

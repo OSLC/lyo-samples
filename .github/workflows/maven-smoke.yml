@@ -25,7 +25,7 @@ jobs:
           distribution: 'temurin'
       - name: Build Lyo Client samples
         run: |
-          mvn -B clean verify --file lyo-client-samples/pom.xml
+          mvn -B clean verify -Dspotless.skip=true --file lyo-client-samples/pom.xml
       # Disabled while the live jazz.net instances are unavailable.
       # - name: E2E client samples tests on ELM @ Jazz.net
       #   run: ./bin/test-jazz_net.sh

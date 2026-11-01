@@ -47,7 +47,7 @@ jobs:
           cache: 'maven'
       - name: Build Lyo Client samples
         run: |
-          mvn -B clean verify -Drewrite.skip=true --file lyo-client-samples/pom.xml
+          mvn -B clean verify -Dspotless.skip=true -Drewrite.skip=true --file lyo-client-samples/pom.xml
 
   format-client-samples:
     runs-on: ubuntu-latest
@@ -65,7 +65,7 @@ jobs:
           mvn -B spotless:check --file lyo-client-samples/pom.xml
       - name: Check OpenRewrite and Spotless stability
         run: |
-          mvn -B org.openrewrite.maven:rewrite-maven-plugin:run spotless:check -DskipTests --file lyo-client-samples/pom.xml
+          mvn -B org.openrewrite.maven:rewrite-maven-plugin:run spotless:check -Dspotless.apply.skip=true -DskipTests --file lyo-client-samples/pom.xml
           if [ -z "$(git status --porcelain)" ]; then
             echo "OpenRewrite and Spotless PASS"
           else

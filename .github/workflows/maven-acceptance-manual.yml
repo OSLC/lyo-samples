@@ -84,11 +84,11 @@ jobs:
         env:
           LYO_VERSION: ${{ steps.lyo-version.outputs.version }}
         run: |
-          mvn -B clean verify -Drewrite.skip=true --file ./main/lyo-client-samples/pom.xml "-Dversion.lyo=$LYO_VERSION"
+          mvn -B clean verify -Dspotless.skip=true -Drewrite.skip=true --file ./main/lyo-client-samples/pom.xml "-Dversion.lyo=$LYO_VERSION"
       - name: Build OAuth discovery sample
         env:
           LYO_VERSION: ${{ steps.lyo-version.outputs.version }}
-        run: mvn -B --no-transfer-progress clean verify --file main/client-oauth-discovery-dui/pom.xml "-Dversion.lyo=$LYO_VERSION"
+        run: mvn -B --no-transfer-progress clean verify -Dspotless.skip=true --file main/client-oauth-discovery-dui/pom.xml "-Dversion.lyo=$LYO_VERSION"
       # Disabled while the live jazz.net instances are unavailable.
       # - name: E2E client samples tests on ELM @ Jazz.net
       #   run: ./main/bin/test-jazz_net.sh
