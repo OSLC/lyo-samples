@@ -17,7 +17,7 @@ COPY src ./src
 # Build a release artifact.
 RUN mvn --batch-mode --no-transfer-progress package -DskipTests
 
-FROM jetty:9-jre21-eclipse-temurin
+FROM jetty:12-jre21-eclipse-temurin
 
 # Add metadata
 LABEL org.opencontainers.image.title="OSLC Client OAuth Discovery DUI"
